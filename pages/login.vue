@@ -40,7 +40,7 @@
 
 <script>
 export default {
-  name: "Login",
+  name: "login",
   methods: {
     toggleShowPassword: function () {
       const passForm = document.getElementById("input-password");
@@ -86,7 +86,7 @@ export default {
   #login-component {
     height: 100vh;
     width: 100vw;
-    background: url('~@/assets/images/background-login.jpg') no-repeat center fixed;
+    background: url('~assets/images/background-login.jpg') no-repeat center fixed;
     background-size: cover;
     margin: 0;
   }
