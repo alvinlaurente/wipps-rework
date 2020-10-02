@@ -5,25 +5,15 @@
 export default {
     head() {
         return {
-            title: `${this.title} | Nuxtjs Responsive Bootstrap 4 Admin Dashboard`,
-        };
-    },
-    data() {
-        return {
             title: "Dashboard",
-            items: [{
-                    text: "WIPPS Safety Report",
-                },
-                {
-                    text: "Dashboard",
-                    active: true,
-                },
-            ],
         };
     },
     mounted: function () {
     },
-  middleware: "authentication",
+    middleware: [
+      "authentication",
+      "auth-safety-man"
+    ],
 };
 </script>
 
