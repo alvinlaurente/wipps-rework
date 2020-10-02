@@ -36,16 +36,11 @@ export default {
         <button class="btn btn-danger">Kembali</button>
       </div>
       <div class="col-6">
-        <div class="input-group">
-          <input
-            type="search"
-            class="form-control"
-            placeholder="Cari"
-            aria-label="Default"
-            aria-describedby="inputGroup-sizing-default"
+        <form>
+          <input type="search" class="form-control" placeholder="Cari"
           />
-          <input type="submit" hidden />
-        </div>
+          <input type="submit" hidden/>
+        </form>
       </div>
     </div>
     <div class="row mb-3">
