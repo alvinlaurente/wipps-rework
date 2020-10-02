@@ -25,8 +25,6 @@ export default {
       ],
     };
   },
-  mounted: function () {},
-  middleware: "authentication",
 };
 </script>
 
@@ -36,19 +34,13 @@ export default {
 
     <div class="row">
       <div class="col-12">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col"></th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
+        <table class="table table-light">
           <tr>
-            <td scope="row" class="table-secondary">Area</td>
+            <td class="table-secondary">Area</td>
             <td>H2PLANT</td>
           </tr>
           <tr>
-            <td scope="row" class="table-secondary">Merk</td>
+            <td class="table-secondary">Merk</td>
             <td>Datsun</td>
           </tr>
           <tr>
@@ -85,16 +77,29 @@ export default {
           </tr>
         </table>
       </div>
+
+      <div class="col-12">
+        <button class="btn btn-danger">Kembali</button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-  tr td:first-child {
-    width: 20%;
-  }
+tr td:first-child {
+  width: 20%;
+}
 
-  .table-bordered{
-    border: 1px solid black;
-  }
+table{
+  border-top: 3px solid #4C8EC4;
+  border-radius: 10px;
+}
+
+.table-secondary{
+  background-color: #E7E5E7;
+}
+
+th,td { 
+  border: 1px solid #D5D3D5!important 
+} 
 </style>

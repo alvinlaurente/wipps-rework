@@ -64,19 +64,28 @@ export default {
                 <button class="btn btn-success btn-sm">asd</button>
               </td>
             </tr>
+            <tr class="table-light">
+              <td>1</td>
+              <td>z54</td>
+              <td>datsun</td>
+              <td>
+                <button class="btn btn-primary btn-sm">asd</button>
+                <button class="btn btn-success btn-sm">asd</button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
     <div class="row justify-content-center">
-      <div class="col-1 p-0 mr-3">
+      <div class="col-1 mr-3">
         <nav aria-label="Navigation" class="d-inline">
           <ul class="pagination justify-content-center">
             <li class="page-item disabled">
               <span class="page-link">&lt;</span>
             </li>
             <li class="page-item">
-              <a href="" class="page-link">
+              <a href="" class="page-link angka">
                 1 <span class="sr-only">(current)</span>
               </a>
             </li>
@@ -110,4 +119,7 @@ export default {
 </template>
 
 <style scoped>
+.angka{
+  color: #007bff;
+}
 </style>

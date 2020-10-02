@@ -282,11 +282,11 @@ export default {
 
 <style scoped>
 .btn-orange{
-    background-color: #E55A02;
+    background-color: #EE7E1F;
     color: white;
 }
 
 .btn-orange:hover{
-    background-color: #bf4900;
+    background-color: #ce6b1a;
 }
 </style>
