@@ -29,7 +29,7 @@ export default {
     <PageHeader :title="title" :items="items" />
 
     <div class="row">
-        asdasdasd
+        asdasdas    d
     </div>
 </div>
 </template>
