@@ -149,19 +149,6 @@ export default {
                     <i class="uil uil-user-circle font-size-18 align-middle text-muted mr-1"></i>
                     <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.profile') }}</span>
                 </a>
-                <a class="dropdown-item" href="#">
-                    <i class="uil uil-wallet font-size-18 align-middle mr-1 text-muted"></i>
-                    <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.mywallet') }}</span>
-                </a>
-                <a class="dropdown-item d-block" href="#">
-                    <i class="uil uil-cog font-size-18 align-middle mr-1 text-muted"></i>
-                    <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.settings') }}</span>
-                    <span class="badge badge-soft-success badge-pill mt-1 ml-2">03</span>
-                </a>
-                <a class="dropdown-item" href="#">
-                    <i class="uil uil-lock-alt font-size-18 align-middle mr-1 text-muted"></i>
-                    <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.lockscreen') }}</span>
-                </a>
                 <a class="dropdown-item" @click="logoutUser" href="javascript: void(0);">
                     <i class="uil uil-sign-out-alt font-size-18 align-middle mr-1 text-muted"></i>
                     <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.logout') }}</span>

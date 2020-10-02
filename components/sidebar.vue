@@ -193,10 +193,10 @@ export default {
     <div class="navbar-brand-box">
         <nuxt-link to="/" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="~/assets/images/logo-sm.png" alt height="22" />
+                <img src="~/assets/images/logo-sidebar-sm.png" alt height="22" />
             </span>
             <span class="logo-lg">
-                <img src="~/assets/images/logo-sidebar-full.png" alt height="20" />
+                <img class="d-inline mr-2" src="~/assets/images/logo-sidebar-full.png" alt width="60" /><p class="d-inline" style="font-size:12px;color:white;">WIPPS Safety Report</p>
             </span>
         </nuxt-link>
     </div>

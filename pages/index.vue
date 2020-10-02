@@ -60,12 +60,6 @@ export default {
             <SellingProduct />
         </div>
     </div>
-
-    <div class="row">
-        <TopUsers />
-        <Activity />
-        <SocialSource />
-    </div>
 </div>
 </template>
 
