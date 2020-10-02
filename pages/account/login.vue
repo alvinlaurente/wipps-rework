@@ -90,7 +90,7 @@ export default {
             } else {
               localStorage.setItem('user', JSON.stringify(result.user));
               localStorage.setItem('name',result.user.name);
-              localStorage.setItem('token', JSON.stringify(result.token));
+              localStorage.setItem('token', result.token);
               this.$router.push({
                 path: "/",
               });
