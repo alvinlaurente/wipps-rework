@@ -9,7 +9,7 @@ export default {};
 <footer class="footer">
     <div class="container-fluid">
         <div class="row text-right">
-            <div class="col-sm-12">Copyright © {{ new Date().getFullYear()}} © WIPPS.</div>
+            <div class="col-sm-12">Copyright © {{ new Date().getFullYear()}} WIPPS.</div>
         </div>
     </div>
 </footer>
