@@ -311,7 +311,7 @@ export const menuItems = [
             {
                 id: 89,
                 label: "Logout",
-                link: "javascript: void(0);",
+                link: "",
                 parentId: 88
             }
         ]

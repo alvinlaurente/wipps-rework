@@ -3,10 +3,12 @@ import MetisMenu from "metismenujs/dist/metismenujs";
 import {
     layoutComputed
 } from "~/store/helpers";
-
 import {
     menuItems
 } from "./menu";
+import {
+  authFackMethods
+} from "~/store/helpers";
 
 /**
  * Sidebar component
@@ -99,8 +101,25 @@ export default {
         this.$router.afterEach((routeTo, routeFrom) => {
             this._activateMenuDropdown();
         });
-    },
+
+        var logoutMenu = null;
+        var menus = document.getElementsByClassName("side-nav-link-ref")
+        for (let i = 0; i < menus.length; i++) {
+          if (menus[i].innerText === "Logout") {
+            logoutMenu = menus[i];
+          }
+        }
+
+        logoutMenu.onclick = function(){
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          window.location.href = '/account/login';
+        };
+        document.getElementById('sidebar-user-name').innerText = localStorage.getItem("name")
+
+      },
     methods: {
+        ...authFackMethods,
         /**
          * Toggle menu
          */
@@ -211,11 +230,11 @@ export default {
             <!-- Left Menu Start -->
             <div class="text-center nama-role text-white mb-3">
                 <p>Anda login sebagai</p>
-                <span style="border: 1px solid rgb(255, 255, 255); padding: 7px; margin-top: 10px; border-radius: 5px;"><i class="user circle outline icon"></i>
+                <span style="border: 1px solid rgb(255, 255, 255); padding: 7px; margin-top: 10px; border-radius: 5px;" id="sidebar-user-name"><i class="user circle outline icon"></i>
                 man
                 </span>
             </div>
-            
+
             <ul class="metismenu list-unstyled" id="side-menu">
                 <template v-for="item in menuItems">
                     <li class="menu-title" v-if="item.isTitle" :key="item.id">{{ $t(item.label) }}</li>
@@ -262,6 +281,6 @@ export default {
 
 <style scoped>
     .nama-role{
-        
+
     }
 </style>
