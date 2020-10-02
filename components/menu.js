@@ -6,7 +6,7 @@ export const menuItems = [
   },
   {
     id: 2,
-    label: "menuitems.dashboard.text",
+    label: "Dashboard",
     icon: "uil-home-alt",
     subItems: [
       {
