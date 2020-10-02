@@ -196,16 +196,7 @@ export default {
                 <img src="~/assets/images/logo-sm.png" alt height="22" />
             </span>
             <span class="logo-lg">
-                <img src="~/assets/images/logo-dark.png" alt height="20" />
-            </span>
-        </nuxt-link>
-
-        <nuxt-link to="/" class="logo logo-light">
-            <span class="logo-sm">
-                <img src="~/assets/images/logo-sm.png" alt height="22" />
-            </span>
-            <span class="logo-lg">
-                <img src="~/assets/images/logo-light.png" alt height="20" />
+                <img src="~/assets/images/logo-sidebar-full.png" alt height="20" />
             </span>
         </nuxt-link>
     </div>
