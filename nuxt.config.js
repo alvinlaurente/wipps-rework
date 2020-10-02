@@ -17,6 +17,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-head
    */
   head: {
+    title: "WIPPS",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -40,7 +41,6 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
-    '~/plugins/index.js',
     '~/plugins/i18n.js',
     "~/plugins/simplebar.js",
     "~/plugins/vue-click-outside.js",
@@ -81,5 +81,6 @@ export default {
    */
   build: {},
   env: {
+    baseUrl: 'http://wpds.tukangserver.id:8081'
   }
 };

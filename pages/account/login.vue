@@ -24,7 +24,7 @@
                     <label for="input-password">Password</label>
                     <b-form-input id="input-password" v-model="password" type="password" placeholder="Masukkan Password" value=""></b-form-input>
                   </b-form-group>
-                  <button type="button" class="btn btn-primary col-12" v-on:click="login()">MASUK</button>
+                  <button type="button" class="btn btn-primary col-12" v-on:click="loginBtn()">MASUK</button>
                 </div>
                 <div class="row justify-content-center">
                   <img src="~/assets/images/logo-pertamina.png" alt="WIPPS" height="80"/>
@@ -39,10 +39,15 @@
 </template>
 
 <script>
+import {
+  authFackMethods
+} from "~/store/helpers";
+
 export default {
   layout: "auth",
   name: "login",
   methods: {
+    ...authFackMethods,
     toggleShowPassword: function () {
       const passForm = document.getElementById("input-password");
       const passToggle = document.getElementById("toggle-show-password");
@@ -62,14 +67,34 @@ export default {
       const passToggle = document.getElementById("toggle-show-password");
       passToggle.classList.add("text-muted");
     },
-    login: function () {
-      console.log("click")
+    loginBtn: function () {
       const username = document.getElementById("input-username").value;
       const password = document.getElementById("input-password").value;
       const alert = document.getElementById("alert-auth-error");
       if (username === "" || password === "") {
         alert.innerText = "Username dan Password tidak boleh kosong"
         alert.hidden = false;
+      } else {
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        };
+
+        return fetch( process.env.baseUrl + `/api/login`, requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            if (!result.success) {
+              alert.innerText = "Username atau Password salah"
+              alert.hidden = false;
+            } else {
+              localStorage.setItem('user', JSON.stringify(result.user));
+              localStorage.setItem('token', JSON.stringify(result.token));
+              this.$router.push({
+                path: "/",
+              });
+            }
+          })
       }
     }
 
