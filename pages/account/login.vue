@@ -15,14 +15,14 @@
                 <div class="p-2 mt-1">
                   <div hidden class="alert alert-danger" role="alert" id="alert-auth-error"></div>
                   <b-form-group id="input-username-group" label="Username" label-for="input-username">
-                    <b-form-input id="input-username" v-model="username" type="text" placeholder="Masukkan Username" value=""></b-form-input>
+                    <b-form-input id="input-username" v-model="username" type="text" placeholder="Masukkan Username" value="" @keyup.enter="loginBtn"></b-form-input>
                   </b-form-group>
                   <b-form-group id="input-password-group">
                     <div class="float-right">
                       <p class="text-muted m-0 cursor-pointer" id="toggle-show-password" v-on:click="toggleShowPassword" @mouseover="toggleShowPasswordMouseOver" @mouseleave="toggleShowPasswordMouseLeave">perlihatkan password</p>
                     </div>
                     <label for="input-password">Password</label>
-                    <b-form-input id="input-password" v-model="password" type="password" placeholder="Masukkan Password" value=""></b-form-input>
+                    <b-form-input id="input-password" v-model="password" type="password" placeholder="Masukkan Password" value="" @keyup.enter="loginBtn"></b-form-input>
                   </b-form-group>
                   <button type="button" class="btn btn-primary col-12" v-on:click="loginBtn()">MASUK</button>
                 </div>

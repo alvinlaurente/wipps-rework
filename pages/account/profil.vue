@@ -37,6 +37,9 @@ export default {
             document.getElementById("btn-simpan-info").style.display = "none";
             document.getElementById("btn-cancel-info").style.display = "none";
             document.getElementById("btn-ubah-info").style.display = "";
+            document.getElementById("invalid-name").style.display = "none";
+            document.getElementById("invalid-username").style.display = "none";
+            document.getElementById("invalid-email").style.display = "none";
             for (let element of document.getElementsByClassName("input-info")){
                 element.disabled=true;
             }
@@ -57,6 +60,8 @@ export default {
             for (let element of document.getElementsByClassName("input-pass")){
                 element.disabled=true;
             }
+            document.getElementById("invalid-old-password").style.display = "none";
+            document.getElementById("invalid-new-password").style.display = "none";
         },
         showSavePass() {
             document.getElementById("btn-simpan-pass").style.display = "";
@@ -66,41 +71,111 @@ export default {
                 element.disabled=false;
             }
         },
+        verifyInfoField() {
+            var valid = true;
+            if (document.getElementById("input-username").value === ""){
+                document.getElementById("invalid-username").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("invalid-username").style.display = "none";
+            }
+
+            if (document.getElementById("input-name").value === ""){
+                document.getElementById("invalid-name").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("invalid-name").style.display = "none";
+            }
+
+            if (document.getElementById("input-email").value === ""){
+                document.getElementById("invalid-email").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("invalid-email").style.display = "none";
+            }
+
+            return valid;
+        },
+        verifyPasswordField() {
+            var valid = true;
+            if (document.getElementById("input-old-password").value === ""){
+                document.getElementById("invalid-old-password").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("invalid-old-password").style.display = "none";
+            }
+
+            if (document.getElementById("input-new-password").value === ""){
+                document.getElementById("invalid-new-password").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("invalid-new-password").style.display = "none";
+            }
+            return valid;
+        },
         submitInfo() {
-            fetch( process.env.baseUrl + `/profile/edit`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem("token"),
-                },
-                body: JSON.stringify({
-                    username: document.getElementById("input-username").value,
-                    name: document.getElementById("input-name").value,
-                    email: document.getElementById("input-email").value
+            if (this.verifyInfoField()) {
+                fetch( process.env.baseUrl + `/profile/edit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                    },
+                    body: JSON.stringify({
+                        username: document.getElementById("input-username").value,
+                        name: document.getElementById("input-name").value,
+                        email: document.getElementById("input-email").value
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    document.getElementById("alert-message").innerText = "Ubah profil berhasil";
-                    document.getElementById("alert-div").style.display = "block";
-                    this.user = result.data
-                    localStorage.setItem('user', JSON.stringify(this.user));
-                    localStorage.setItem('name',result.data.name);
-                } else {
-                    document.getElementById("alert-message").innerText = "Ubah profil gagal";
-                    document.getElementById("alert-div").style.display = "block";
-                }
-            })
-            this.hideSaveInfo()
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        document.getElementById("alert-message").innerText = "Ubah profil berhasil";
+                        document.getElementById("alert-div").style.display = "block";
+                        this.user = result.data
+                        localStorage.setItem('user', JSON.stringify(this.user));
+                        localStorage.setItem('name',result.data.name);
+                        document.getElementById('sidebar-user-name').innerText = result.data.name
+                        this.hideSaveInfo()
+                    } else {
+                        document.getElementById("alert-message").innerText = "Ubah profil gagal";
+                        document.getElementById("alert-div").style.display = "block";
+                        this.hideSaveInfo()
+                    }
+                })
+            }
         },
         submitPass() {
-
-            this.hideSavePass()
-            document.getElementById("alert-message").innerText = "Ubah password berhasil";
-            document.getElementById("alert-div").style.display = "block";
+            if (this.verifyPasswordField()){
+                console.log("here")
+                fetch( process.env.baseUrl + `/profile/edit/password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                    },
+                    body: JSON.stringify({
+                        new_password: document.getElementById("input-new-password").value,
+                        old_password: document.getElementById("input-old-password").value,
+                        confirm_password: document.getElementById("input-new-password").value
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        document.getElementById("alert-message").innerText = "Ubah password berhasil";
+                        document.getElementById("alert-div").style.display = "block";
+                        this.hideSavePass()
+                    } else {
+                        document.getElementById("alert-message").innerText = "Ubah password gagal";
+                        document.getElementById("alert-div").style.display = "block";
+                        this.hideSaveInfo()
+                    }
+                })
+            }
         },
         hideAlert() {
+            document.getElementById("alert-div").style.display = "none";
             document.getElementById("alert-div").style.display = "none";
         }
     },
@@ -131,19 +206,19 @@ export default {
                 <div class="card-body">
                     <div class="form-group">
                         <label for="input-name">Nama</label>
-                        <input type="text" class="form-control mb-2 input-info" placeholder="Nama" disabled id="input-name"/>
+                        <input type="text" class="form-control mb-2 input-info" placeholder="Nama" disabled id="input-name" @keyup.enter="submitInfo"/>
                         <div class="invalid-feedback" id="invalid-name">
                             <span>Kolom ini tidak boleh kosong.</span>
                         </div>
 
                         <label for="input-email">Email</label>
-                        <input type="text" class="form-control mb-2 input-info" placeholder="Email" disabled id="input-email"/>
+                        <input type="text" class="form-control mb-2 input-info" placeholder="Email" disabled id="input-email" @keyup.enter="submitInfo"/>
                         <div class="invalid-feedback" id="invalid-email">
                           <span>Kolom ini tidak boleh kosong.</span>
                         </div>
 
                         <label for="input-username">Username</label>
-                        <input type="text" class="form-control mb-2 input-info" placeholder="Username" disabled id="input-username"/>
+                        <input type="text" class="form-control mb-2 input-info" placeholder="Username" disabled id="input-username" @keyup.enter="submitInfo"/>
                         <div class="invalid-feedback" id="invalid-username">
                             <span>Kolom ini tidak boleh kosong.</span>
                         </div>
@@ -172,13 +247,13 @@ export default {
                 <div class="card-body">
                     <div class="form-group">
                         <label for="input-old-password">Password Lama</label>
-                        <input type="text" class="form-control mb-2 input-pass" placeholder="Password Lama" disabled id="input-old-password"/>
+                        <input type="text" class="form-control mb-2 input-pass" placeholder="Password Lama" disabled id="input-old-password" @keyup.enter="submitPass"/>
                         <div class="invalid-feedback" id="invalid-old-password">
                             <span>Kolom ini tidak boleh kosong.</span>
                         </div>
 
                         <label for="input-new-password">Password Baru</label>
-                        <input type="text" class="form-control mb-2 input-pass" placeholder="Password Baru" disabled id="input-new-password"/>
+                        <input type="text" class="form-control mb-2 input-pass" placeholder="Password Baru" disabled id="input-new-password" @keyup.enter="submitPass"/>
                         <div class="invalid-feedback" id="invalid-new-password">
                             <span>Kolom ini tidak boleh kosong.</span>
                         </div>
