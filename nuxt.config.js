@@ -81,6 +81,6 @@ export default {
    */
   build: {},
   env: {
-    baseUrl: 'http://wpds.tukangserver.id:8081'
+    baseUrl: 'http://wpds.tukangserver.id:8081/api'
   }
 };

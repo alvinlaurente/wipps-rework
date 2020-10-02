@@ -81,7 +81,7 @@ export default {
           body: JSON.stringify({ username, password })
         };
 
-        return fetch( process.env.baseUrl + `/api/login`, requestOptions)
+        return fetch( process.env.baseUrl + `/login`, requestOptions)
           .then(response => response.json())
           .then(result => {
             if (!result.success) {
