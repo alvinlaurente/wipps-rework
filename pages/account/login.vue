@@ -40,6 +40,7 @@
 
 <script>
 export default {
+  layout: "auth",
   name: "login",
   methods: {
     toggleShowPassword: function () {
