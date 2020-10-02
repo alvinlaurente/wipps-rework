@@ -261,7 +261,4 @@ export default {
 </template>
 
 <style scoped>
-    .nama-role{
-        
-    }
 </style>

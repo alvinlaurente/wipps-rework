@@ -261,6 +261,10 @@
     width: $sidebar-collapsed-width !important;
     z-index: 1001;
 
+    .nama-role{
+      display: none;
+    }
+
     .simplebar-mask,
     .simplebar-content-wrapper {
       overflow: visible !important;
