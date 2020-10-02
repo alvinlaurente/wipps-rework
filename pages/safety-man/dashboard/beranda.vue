@@ -5,7 +5,21 @@
 export default {
     head() {
         return {
-            title: "Dashboard",
+            title: "Beranda",
+        };
+    },
+    data() {
+        return {
+            title: "Beranda",
+            items: [{
+                    text: "Dashboard",
+                },
+                {
+                    text: "Beranda",
+                    active: true,
+                },
+            ],
+            user: JSON.parse(localStorage.getItem("user"))
         };
     },
     mounted: function () {
