@@ -31,6 +31,7 @@ export default {
     <input type="email" class="form-control mb-3" placeholder="Search">
 
     <div class="row">
+<<<<<<< HEAD
         <div class="col-4">
             <div class="card">
                 <div class="card-body">
@@ -39,6 +40,9 @@ export default {
                 </div>
             </div>
         </div>
+=======
+        asdasdas    d
+>>>>>>> 77962905f0b790e7f0fd162e2e380bd1f1d422f9
     </div>
 </div>
 </template>
