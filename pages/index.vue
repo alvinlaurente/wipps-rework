@@ -21,7 +21,10 @@ export default {
             ],
         };
     },
-    middleware: "authentication",
+    middleware: [
+        "authentication",
+        "authorization"
+    ]
 };
 </script>
 

@@ -46,6 +46,7 @@ import {
 export default {
   layout: "auth",
   name: "login",
+  middleware: "authentication",
   methods: {
     ...authFackMethods,
     toggleShowPassword: function () {
@@ -91,6 +92,7 @@ export default {
               localStorage.setItem('user', JSON.stringify(result.user));
               localStorage.setItem('name',result.user.name);
               localStorage.setItem('token', result.token);
+              localStorage.setItem('role', result.user.role.name)
               this.$router.push({
                 path: "/",
               });
