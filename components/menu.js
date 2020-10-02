@@ -19,7 +19,7 @@ export const menuItems = [
       {
         id: 89,
         label: "Profil",
-        link: "javascript: void(0);",
+        link: "/account/profil",
         parentId: 88
       },
       {
