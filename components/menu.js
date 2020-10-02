@@ -8,6 +8,7 @@ export const menuItems = [
         id: 2,
         label: "menuitems.dashboard.text",
         icon: "uil-home-alt",
+
         link: "/"
     },
     {
@@ -298,33 +299,20 @@ export const menuItems = [
     },
     {
         id: 88,
-        label: "menuitems.multilevel.text",
+        label: "Pengguna",
         icon: "uil-share-alt",
         subItems: [
             {
                 id: 89,
-                label: "menuitems.multilevel.list.level1.1",
+                label: "Profil",
                 link: "javascript: void(0);",
                 parentId: 88
             },
             {
-                id: 90,
-                label: "menuitems.multilevel.list.level1.2",
-                parentId: 88,
-                subItems: [
-                    {
-                        id: 91,
-                        label: "menuitems.multilevel.list.level1.level2.1",
-                        link: "javascript: void(0);",
-                        parentId: 88
-                    },
-                    {
-                        id: 92,
-                        label: "menuitems.multilevel.list.level1.level2.2",
-                        link: "/level2.2",
-                        parentId: 88
-                    }
-                ]
+                id: 89,
+                label: "Logout",
+                link: "javascript: void(0);",
+                parentId: 88
             }
         ]
     }

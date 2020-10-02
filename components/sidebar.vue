@@ -209,6 +209,13 @@ export default {
         <!--- Sidemenu -->
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
+            <div class="text-center nama-role text-white mb-3">
+                <p>Anda login sebagai</p>
+                <span style="border: 1px solid rgb(255, 255, 255); padding: 7px; margin-top: 10px; border-radius: 5px;"><i class="user circle outline icon"></i>
+                man
+                </span>
+            </div>
+            
             <ul class="metismenu list-unstyled" id="side-menu">
                 <template v-for="item in menuItems">
                     <li class="menu-title" v-if="item.isTitle" :key="item.id">{{ $t(item.label) }}</li>
@@ -252,3 +259,9 @@ export default {
 </div>
 <!-- Left Sidebar End -->
 </template>
+
+<style scoped>
+    .nama-role{
+        
+    }
+</style>

@@ -135,26 +135,6 @@ export default {
                 <i class="fa fa-fw fa-bars"></i>
             </button>
         </div>
-
-        <div class="d-flex">
-            <b-dropdown class="d-inline-block" toggle-class="header-item" right variant="white">
-                <template v-slot:button-content>
-                    <img class="rounded-circle header-profile-user" src="~/assets/images/users/avatar-4.jpg" alt="Header Avatar" />
-                    <span class="d-none d-xl-inline-block ml-1 font-weight-medium font-size-15">{{ $t('navbar.dropdown.marcus.text')}}</span>
-                    <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
-                </template>
-
-                <!-- item-->
-                <a class="dropdown-item" href="#">
-                    <i class="uil uil-user-circle font-size-18 align-middle text-muted mr-1"></i>
-                    <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.profile') }}</span>
-                </a>
-                <a class="dropdown-item" @click="logoutUser" href="javascript: void(0);">
-                    <i class="uil uil-sign-out-alt font-size-18 align-middle mr-1 text-muted"></i>
-                    <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.logout') }}</span>
-                </a>
-            </b-dropdown>
-        </div>
     </div>
 </header>
 </template>
