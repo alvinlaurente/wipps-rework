@@ -22,19 +22,6 @@ export default {
         };
     },
     mounted: function () {
-      const user = JSON.parse(localStorage.getItem("user"));
-      console.log(user)
-      function setInfo() {
-        document.getElementById("input-username").value = user.username
-        document.getElementById("input-name").value = user.name
-        document.getElementById("input-email").value = user.email
-      }
-      function setPassword() {
-        document.getElementById("input-new-password").value = ""
-        document.getElementById("input-old-password").value = ""
-      }
-      setInfo();
-      setPassword();
     },
   middleware: "authentication",
 };
