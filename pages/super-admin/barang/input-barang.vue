@@ -20,13 +20,16 @@ export default {
                 },
             ],
         };
-    },
-    mounted: function () {
-    },
-  middleware: "authentication",
+    }
 };
 </script>
 
 <template>
-    <div>asdsad</div>
+<div>
+    <PageHeader :title="title" :items="items" />
+
+    <div class="row">
+        asdasdasd
+    </div>
+</div>
 </template>
