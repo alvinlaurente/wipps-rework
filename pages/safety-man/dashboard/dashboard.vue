@@ -46,15 +46,6 @@ export default {
     <PageHeader :title="title" :items="items" />
 
     <div class="row" id="menu-list">
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                <h4 class="mb-0">Personal Protective Equipment</h4>
-                <p class="text-muted mb-0">2019, 09 Tue 23:13:00</p>
-                <img src="" alt="">
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 </template>
