@@ -12,6 +12,25 @@ export const menuItems = [
         link: "/"
     },
     {
+        id: 88,
+        label: "Pengguna",
+        icon: "uil-share-alt",
+        subItems: [
+            {
+                id: 89,
+                label: "Profil",
+                link: "javascript: void(0);",
+                parentId: 88
+            },
+            {
+                id: 89,
+                label: "Logout",
+                link: "javascript: void(0);",
+                parentId: 88
+            }
+        ]
+    },
+    {
         id: 42,
         label: "menuitems.uielements.text",
         icon: "uil-flask",
@@ -295,25 +314,6 @@ export const menuItems = [
                 link: "/maps/leaflet",
                 parentId: 85
             },
-        ]
-    },
-    {
-        id: 88,
-        label: "Pengguna",
-        icon: "uil-share-alt",
-        subItems: [
-            {
-                id: 89,
-                label: "Profil",
-                link: "javascript: void(0);",
-                parentId: 88
-            },
-            {
-                id: 89,
-                label: "Logout",
-                link: "javascript: void(0);",
-                parentId: 88
-            }
         ]
     }
 ];
