@@ -131,7 +131,7 @@ export default {
                   />
                   <label class="form-check-label">Safe</label>
                 </div>
-                
+
                 <div class="form-check form-check-inline">
                   <input
                     class="form-check-input"
@@ -156,7 +156,11 @@ export default {
 
                 <div class="form-group">
                   <p class="mb-2">Catatan</p>
-                  <textarea class="form-control" rows="5" placeholder="Catatan"></textarea>
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    placeholder="Catatan"
+                  ></textarea>
                 </div>
               </div>
             </div>
