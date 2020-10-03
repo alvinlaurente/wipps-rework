@@ -83,7 +83,12 @@ export default {
         };
 
         return fetch( process.env.baseUrl + `/login`, requestOptions)
-          .then(response => response.json())
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.statusText);
+            }
+            return response.json()
+          })
           .then(result => {
             if (!result.success) {
               alert.innerText = "Username atau Password salah"
@@ -97,6 +102,10 @@ export default {
                 path: "/",
               });
             }
+          })
+          .catch(error => {
+            alert.innerText = error
+            alert.hidden = false;
           })
       }
     }
