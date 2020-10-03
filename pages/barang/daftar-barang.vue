@@ -56,7 +56,7 @@ export default {
       } else {
         document.getElementById("prev-page").classList.remove("disabled")
       }
-      if (this.pageSize*this.page>total) {
+      if (this.pageSize*this.page>=total) {
         document.getElementById("next-page").classList.add("disabled")
       } else {
         document.getElementById("next-page").classList.remove("disabled")
@@ -127,7 +127,7 @@ export default {
               <td>{{ tool.model }}</td>
               <td>{{ tool.merk }}</td>
               <td>
-                <button class="btn btn-primary btn-sm">asd</button>
+                <nuxt-link class="btn btn-primary btn-sm" to="/barang/daftarbarang/daftar-riwayat-inspeksi-barang">show</nuxt-link>
                 <button class="btn btn-success btn-sm">asd</button>
               </td>
             </tr>
@@ -158,7 +158,6 @@ export default {
           style="max-width: 4vw"
           :value="page"
           @keyup.enter="switchPage($event.target.value)"
-          id="jump-page"
         />
         <select
           name=""
