@@ -200,21 +200,14 @@ td {
   border: 1px solid #d5d3d5 !important;
 }
 
-.list-group {
-  border: 2px solid #d5d3d5;
-  cursor: pointer;
-}
-
-.list-group li:hover {
-  font-weight: bold;
-}
-
 .accordion {
   border: 2px solid #d5d3d5;
+  border-radius: 10px;
 }
 
 .accordion .card {
   border-bottom: 1px solid #d5d3d5;
+  border-radius: 10px;
 }
 
 .accordion .card-header button {
