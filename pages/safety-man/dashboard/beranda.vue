@@ -22,33 +22,8 @@ export default {
             user: JSON.parse(localStorage.getItem("user"))
         };
     },
-    methods: {
-        removeAllClass(className) {
-            const els = document.getElementsByClassName(className);
-            while (els[0]) {
-                els[0].classList.remove(className);
-            }
-        },
-        activateMenuDropdown() {
-            this.removeAllClass("mm-active");
-            this.removeAllClass("mm-show");
-
-            var activeMenu = null;
-            var menus = document.getElementsByClassName("side-nav-link-ref")
-            for (let i = 0; i < menus.length; i++) {
-                if (menus[i].innerText === "Beranda") {
-                    activeMenu = menus[i];
-                }
-            }
-
-            activeMenu.classList.add("mm-active")
-            activeMenu.parentElement.classList.add("mm-active")
-            activeMenu.parentElement.parentElement.classList.add("mm-show")
-            activeMenu.parentElement.parentElement.parentElement.classList.add("mm-active")
-        }
-    },
     mounted: function () {
-        this.activateMenuDropdown()
+        this.$activateMenuDropdown("Beranda")
         fetch( process.env.baseUrl + `/form-types/form`, {
             method: 'GET',
             headers: {
