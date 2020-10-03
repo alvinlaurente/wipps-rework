@@ -73,7 +73,7 @@ export default {
                     <input type="file" class="form-control-file" id="exampleFormControlFile1">
                   </div>
                   <div class="input-group mb-3">
-                    <input class="mr-2 my-auto" type="radio" name="safety" gitaria-label="Safe" checked/><span class="mr-3">Safe</span>
+                    <input class="mr-2 my-auto" type="radio" name="safety" aria-label="Safe" checked/><span class="mr-3">Safe</span>
                     <input class="mr-2 my-auto" type="radio" name="safety" aria-label="Safe"/><span class="mr-3">Unsafe</span>
                     <input class="mr-2 my-auto" type="radio" name="safety" aria-label="Safe"/><span class="mr-3">N/A</span>
                   </div>
