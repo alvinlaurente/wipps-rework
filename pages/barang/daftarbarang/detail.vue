@@ -78,6 +78,21 @@ export default {
         </table>
       </div>
 
+      <div class="col-12 mb-3">
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-light">
+            &gt; Ring Windshock
+          </li>
+          <li class="list-group-item list-group-item-light">
+            &gt; Tiang Windshock
+          </li>
+          <li class="list-group-item list-group-item-light">&gt; Windshock</li>
+          <li class="list-group-item list-group-item-light">
+            &gt; Support Tiang
+          </li>
+        </ul>
+      </div>
+
       <div class="col-12">
         <button class="btn btn-danger">Kembali</button>
       </div>
@@ -90,16 +105,26 @@ tr td:first-child {
   width: 20%;
 }
 
-table{
-  border-top: 3px solid #4C8EC4;
+table {
+  border-top: 3px solid #4c8ec4;
   border-radius: 10px;
 }
 
-.table-secondary{
-  background-color: #E7E5E7;
+.table-secondary {
+  background-color: #e7e5e7;
 }
 
-th,td { 
-  border: 1px solid #D5D3D5!important 
-} 
+th,
+td {
+  border: 1px solid #d5d3d5 !important;
+}
+
+.list-group {
+  border: 2px solid #d5d3d5;
+  cursor: pointer;
+}
+
+.list-group li:hover {
+  font-weight: bold;
+}
 </style>
