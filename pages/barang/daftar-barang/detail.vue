@@ -5,12 +5,12 @@
 export default {
   head() {
     return {
-      title: "Daftar Riwayat",
+      title: "Detail",
     };
   },
   data() {
     return {
-      title: "Daftar Riwayat",
+      title: "Daftar Barang",
       items: [
         {
           text: "Barang",
@@ -19,53 +19,109 @@ export default {
           text: "Daftar Barang",
         },
         {
-          text: "Daftar Riwayat Inspeksi Barang",
-        },
-        {
-          text: "Daftar Riwayat",
+          text: "Detail",
           active: true,
         },
       ],
     };
   },
+  methods:{
+    collapseOne(){
+      document.getElementById("collapseOne").classList.toggle("show");
+      },
+    collapseTwo(){
+      document.getElementById("collapseTwo").classList.toggle("show");
+      },
+    collapseThree(){
+      document.getElementById("collapseThree").classList.toggle("show");
+      },
+    collapseFour(){
+      document.getElementById("collapseFour").classList.toggle("show");
+      }
+  }
 };
 </script>
 
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-    <div class="col-12 mb-3">
+
+    <div class="row">
+      <div class="col-12">
+        <table class="table table-light">
+          <tr>
+            <td class="table-secondary">Area</td>
+            <td>H2PLANT</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Merk</td>
+            <td>Datsun</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Pelaksana Pekerjaan</td>
+            <td>CV.ALFAGHA</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Pengguna</td>
+            <td>Admin Balongan</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Keterangan</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Model</td>
+            <td>z54</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Tanggal awal berlaku</td>
+            <td>2020-04-23</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Tanggal akhir berlaku</td>
+            <td>2020-04-30</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Safetyman</td>
+            <td>Paijo</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">Pemeriksa</td>
+            <td>Paijo</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="col-12 mb-3">
         <div class="accordion" id="accordionExample">
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingOne">
               <h5 class="mb-0">
-                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
-                  aria-expanded="true" aria-controls="collapseOne">
-                  ► Ring Windshock
+                <button class="btn btn-link" v-on:click="collapseOne">
+                  ► &nbsp; Ring Windshock
                 </button>
               </h5>
             </div>
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-              data-parent="#accordionExample">
+            <div id="collapseOne" class="collapse">
               <div class="card-body">
                 <div class="mb-3"><b>Status</b> : Unsafe</div>
                 <div class="form-group">
                   <b>Catatan</b><br>
-                  <textarea class="form-control" rows="5"></textarea>
+                  <textarea class="form-control" rows="5" disabled></textarea>
                 </div>
               </div>
             </div>
           </div>
+
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingTwo">
               <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                  data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  ► Tiang Windshock
+                <button class="btn btn-link" v-on:click="collapseTwo">
+                  ► &nbsp; Tiang Windshock
                 </button>
               </h5>
             </div>
-            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
               <div class="card-body">
                 <form>
                   <div class="form-group mb-3">
@@ -73,24 +129,24 @@ export default {
                     <input type="file" class="form-control-file" id="exampleFormControlFile1">
                   </div>
                   <div class="input-group mb-3">
-                    <input class="mr-2 my-auto" type="radio" name="safety" aria-label="Safe" checked/><span class="mr-3">Safe</span>
-                    <input class="mr-2 my-auto" type="radio" name="safety" aria-label="Safe"/><span class="mr-3">Unsafe</span>
-                    <input class="mr-2 my-auto" type="radio" name="safety" aria-label="Safe"/><span class="mr-3">N/A</span>
+                    <input class="mr-2 my-auto" type="radio" aria-label="Safe" checked/><span class="mr-3">Safe</span>
+                    <input class="mr-2 my-auto" type="radio" aria-label="Safe"/><span class="mr-3">Unsafe</span>
+                    <input class="mr-2 my-auto" type="radio" aria-label="Safe"/><span class="mr-3">N/A</span>
                   </div>
                   <div class="form-group">
                     <b>Catatan</b><br>
-                    <textarea class="form-control" rows="5"></textarea>
+                    <textarea class="form-control" rows="5" disabled></textarea>
                   </div>
                 </form>
               </div>
             </div>
           </div>
+
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingThree">
               <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                  data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  ► Windshock
+                <button class="btn btn-link" v-on:click="collapseThree">
+                  ► &nbsp; Windshock
                 </button>
               </h5>
             </div>
@@ -106,12 +162,12 @@ export default {
               </div>
             </div>
           </div>
+          
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingFour">
               <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                  data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  ► Support Tiang
+                <button class="btn btn-link" v-on:click="collapseFour">
+                  ► &nbsp; Support Tiang
                 </button>
               </h5>
             </div>
@@ -130,37 +186,33 @@ export default {
         </div>
       </div>
 
-    <div class="row mb-3">
       <div class="col-12 mb-3">
-        <label>Keterangan</label>
-        <textarea
-          class="form-control"
-          rows="6"
-          placeholder="Keterangan"
-        ></textarea>
-      </div>
-      <div class="col">
-        <label>Tanggal awal berlaku</label>
-        <input type="text" class="form-control" />
-      </div>
-
-      <div class="col">
-        <label>Tanggal akhir berlaku</label>
-        <input type="text" class="form-control" />
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        <button class="btn btn-success">Simpan</button>
-        <button class="btn btn-danger">Batal</button>
+        <button class="btn btn-danger">Kembali</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-  .accordion {
+tr td:first-child {
+  width: 20%;
+}
+
+table {
+  border-top: 3px solid #4c8ec4;
+  border-radius: 10px;
+}
+
+.table-secondary {
+  background-color: #e7e5e7;
+}
+
+th,
+td {
+  border: 1px solid #d5d3d5 !important;
+}
+
+.accordion {
   border: 2px solid #d5d3d5;
   border-radius: 10px;
 }
@@ -178,4 +230,9 @@ export default {
 .accordion .card-header button:hover, .accordion .card-header button:active {
   color: black;
 }
+
+.card-header{
+  padding: 0.3vw;
+}
+
 </style>
