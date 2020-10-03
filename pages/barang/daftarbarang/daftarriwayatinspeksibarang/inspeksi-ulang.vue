@@ -41,7 +41,7 @@ export default {
               <h5 class="mb-0">
                 <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
                   aria-expanded="true" aria-controls="collapseOne">
-                  &gt; Ring Windshock
+                  ► Ring Windshock
                 </button>
               </h5>
             </div>
@@ -61,7 +61,7 @@ export default {
               <h5 class="mb-0">
                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
                   data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  &gt; Tiang Windshock
+                  ► Tiang Windshock
                 </button>
               </h5>
             </div>
@@ -90,7 +90,7 @@ export default {
               <h5 class="mb-0">
                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
                   data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  &gt; Windshock
+                  ► Windshock
                 </button>
               </h5>
             </div>
@@ -111,7 +111,7 @@ export default {
               <h5 class="mb-0">
                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
                   data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  &gt; Support Tiang
+                  ► Support Tiang
                 </button>
               </h5>
             </div>

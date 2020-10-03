@@ -25,6 +25,20 @@ export default {
       ],
     };
   },
+  methods:{
+    collapseOne(){
+      document.getElementById("collapseOne").classList.toggle("show");
+      },
+    collapseTwo(){
+      document.getElementById("collapseTwo").classList.toggle("show");
+      },
+    collapseThree(){
+      document.getElementById("collapseThree").classList.toggle("show");
+      },
+    collapseFour(){
+      document.getElementById("collapseFour").classList.toggle("show");
+      }
+  }
 };
 </script>
 
@@ -83,14 +97,12 @@ export default {
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingOne">
               <h5 class="mb-0">
-                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
-                  aria-expanded="true" aria-controls="collapseOne">
-                  &gt; Ring Windshock
+                <button class="btn btn-link" v-on:click="collapseOne">
+                  ► &nbsp; Ring Windshock
                 </button>
               </h5>
             </div>
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-              data-parent="#accordionExample">
+            <div id="collapseOne" class="collapse">
               <div class="card-body">
                 <div class="mb-3"><b>Status</b> : Unsafe</div>
                 <div class="form-group">
@@ -100,16 +112,16 @@ export default {
               </div>
             </div>
           </div>
+
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingTwo">
               <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                  data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  &gt; Tiang Windshock
+                <button class="btn btn-link" v-on:click="collapseTwo">
+                  ► &nbsp; Tiang Windshock
                 </button>
               </h5>
             </div>
-            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
               <div class="card-body">
                 <form>
                   <div class="form-group mb-3">
@@ -132,9 +144,8 @@ export default {
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingThree">
               <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                  data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  &gt; Windshock
+                <button class="btn btn-link" v-on:click="collapseThree">
+                  ► &nbsp; Windshock
                 </button>
               </h5>
             </div>
@@ -153,9 +164,8 @@ export default {
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingFour">
               <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                  data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  &gt; Support Tiang
+                <button class="btn btn-link" v-on:click="collapseFour">
+                  ► &nbsp; Support Tiang
                 </button>
               </h5>
             </div>
@@ -174,7 +184,7 @@ export default {
         </div>
       </div>
 
-      <div class="col-12">
+      <div class="col-12 mb-3">
         <button class="btn btn-danger">Kembali</button>
       </div>
     </div>
@@ -217,6 +227,10 @@ td {
 
 .accordion .card-header button:hover, .accordion .card-header button:active {
   color: black;
+}
+
+.card-header{
+  padding: 0.3vw;
 }
 
 </style>
