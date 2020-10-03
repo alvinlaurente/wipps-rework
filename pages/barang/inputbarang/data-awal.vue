@@ -58,26 +58,51 @@ export default {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         })
-          .then((response) => response.json())
-          .then((result) => {
-            if (result.success) {
-              document.getElementById("alert-message").innerText =
-                "Input data awal berhasil";
-              document.getElementById("alert-div").style.display = "block";
-              this.user = result.data;
-              localStorage.setItem("user", JSON.stringify(this.user));
-              localStorage.setItem("name", result.data.name);
-            } else {
-              document.getElementById("alert-message").innerText =
-                "Input data awal gagal";
-              document.getElementById("alert-div").style.display = "block";
-            }
-          });
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.success) {
+            document.getElementById("alert-message").innerText =
+              "Input data awal berhasil";
+            document.getElementById("alert-div").style.display = "block";
+            this.user = result.data;
+            localStorage.setItem("user", JSON.stringify(this.user));
+            localStorage.setItem("name", result.data.name);
+          } else {
+            document.getElementById("alert-message").innerText =
+              "Input data awal gagal";
+            document.getElementById("alert-div").style.display = "block";
+          }
+        });
       }
     },
   },
   mounted: function () {
+    this.$activateMenuDropdown("Input Barang")
     this.hideAlert();
+    fetch( process.env.baseUrl + `/companies/list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+      }
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result)
+      this.companies = result.data
+    })
+    fetch( process.env.baseUrl + `/areas/list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+      }
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result)
+      this.areas = result.data
+    })
   },
   middleware: "authentication",
 };
@@ -140,7 +165,7 @@ export default {
               <option value="" disabled selected hidden>
                 Pilih Pelaksanaan Kerja
               </option>
-              <option v-for="company in companies">{{company}}</option>
+              <option v-for="company in companies" :value="company.id">{{company.text}}</option>
             </select>
           </div>
 
@@ -148,7 +173,7 @@ export default {
             <label>Area</label>
             <select class="form-control" required>
               <option value="" disabled selected hidden>Pilih Area</option>
-              <option v-for="area in areas">{{area}}</option>
+              <option v-for="area in areas" :value="area.id">{{area.text}}</option>
             </select>
           </div>
 
@@ -161,9 +186,9 @@ export default {
               >
                 Simpan
               </button>
-              <button type="reset" class="btn btn-danger m-l-5 ml-1">
+              <nuxt-link type="reset" class="btn btn-danger m-l-5 ml-1" to="/barang/input-barang">
                 Batal
-              </button>
+              </nuxt-link>
             </div>
           </div>
         </form>
