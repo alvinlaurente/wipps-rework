@@ -79,7 +79,6 @@ export default {
     show(id) {
       id = id.substring(11)
       localStorage.setItem("selected-id", id)
-      alert(localStorage.getItem("selected-id"))
       this.$router.push('/barang/daftarbarang/daftar-riwayat-inspeksi-barang')
     }
   },

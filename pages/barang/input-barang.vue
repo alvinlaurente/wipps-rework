@@ -24,6 +24,10 @@ export default {
         applyFilter() {
             const filter = document.getElementById("input-filter-tools").value
             this.toolsFiltered = this.tools.filter(function(tool) {return tool.name.toUpperCase().includes(filter.toUpperCase());})
+        },
+        goTo(path) {
+          localStorage.setItem("prevPath", this.$route.path)
+          this.$router.push(path)
         }
     },
     mounted: function () {
@@ -53,12 +57,12 @@ export default {
 
     <div class="row">
         <div v-for="tool in toolsFiltered" class="col-4">
-            <nuxt-link class="card" to="/barang/inputbarang/data-awal">
+            <div class="card" @click="goTo('/form/'+tool.slug)">
                 <div class="card-body">
                     <h4 class="mb-0">{{ tool.name }}</h4>
                     <p class="text-muted mb-0">{{ tool.created }}</p>
                 </div>
-            </nuxt-link>
+            </div>
         </div>
     </div>
 </div>

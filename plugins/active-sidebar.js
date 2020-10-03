@@ -20,10 +20,12 @@ export default (context, inject) => {
             }
 
         }
-        activeMenu.classList.add("mm-active")
-        activeMenu.parentElement.classList.add("mm-active")
-        activeMenu.parentElement.parentElement.classList.add("mm-show")
-        activeMenu.parentElement.parentElement.parentElement.classList.add("mm-active")
+        if (activeMenu) {
+          activeMenu.classList.add("mm-active")
+          activeMenu.parentElement.classList.add("mm-active")
+          activeMenu.parentElement.parentElement.classList.add("mm-show")
+          activeMenu.parentElement.parentElement.parentElement.classList.add("mm-active")
+        }
 
     }
     inject('activateMenuDropdown', activateMenuDropdown)

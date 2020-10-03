@@ -49,6 +49,9 @@ export default {
     hideAlert() {
       document.getElementById("alert-div").style.display = "none";
     },
+    back() {
+      this.$router.push(localStorage.getItem("prevPath"))
+    },
     submitData() {
       if (this.verifyInfoField()) {
         fetch(process.env.baseUrl + `/profile/edit`, {
@@ -77,7 +80,7 @@ export default {
     },
   },
   mounted: function () {
-    this.$activateMenuDropdown("Input Barang")
+    this.$activateMenuDropdown("")
     this.hideAlert();
     fetch( process.env.baseUrl + `/companies/list`, {
       method: 'POST',
@@ -186,9 +189,9 @@ export default {
               >
                 Simpan
               </button>
-              <nuxt-link type="reset" class="btn btn-danger m-l-5 ml-1" to="/barang/input-barang">
+              <button type="reset" class="btn btn-danger m-l-5 ml-1" @click="back">
                 Batal
-              </nuxt-link>
+              </button>
             </div>
           </div>
         </form>
