@@ -19,11 +19,12 @@ export default {
                     active: true,
                 },
             ],
-            user: JSON.parse(localStorage.getItem("user"))
+            user: JSON.parse(localStorage.getItem("user")),
+            menus: []
         };
     },
     mounted: function () {
-        this.$activateMenuDropdown("Beranda")
+        this.$activateMenuDropdown(this.items[1].text)
         fetch( process.env.baseUrl + `/form-types/form`, {
             method: 'GET',
             headers: {
@@ -34,19 +35,7 @@ export default {
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            document.getElementById("menu-list").innerHTML = "";
-            for (let i = 0; i < result.data.length; i++) {
-                document.getElementById("menu-list").innerHTML += "" +
-                    "<div class=\"col-lg-4\">\n" +
-                    "    <div class=\"card\">\n" +
-                    "        <div class=\"card-body\">\n" +
-                    "            <h4 class=\"mb-0\">"+result.data[i].name+"</h4>\n" +
-                    "            <p class=\"text-muted mb-0\">"+result.data[i].created+"</p>\n" +
-                    "            <img src=\""+result.data[i].file+"\" alt=\""+result.data[i].file+"\">\n" +
-                    "        </div>\n" +
-                    "    </div>\n" +
-                    "</div>"
-            }
+            this.menus = result.data
         })
     },
     middleware: [
@@ -61,6 +50,15 @@ export default {
     <PageHeader :title="title" :items="items" />
 
     <div class="row" id="menu-list">
+        <div v-for="menu in menus" class="col-lg-4">
+            <div class="card cursor-pointer">
+                <div class="card-body">
+                    <h4 class="mb-0">{{ menu.name }}</h4>
+                    <p class="text-muted mb-0">{{ menu.created }}</p>
+                    <img :src="menu.file" :alt="menu.name">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </template>

@@ -8,6 +8,10 @@ export default (context, inject) => {
         while (els2[0]) {
             els2[0].classList.remove("mm-show");
         }
+        const els5 = document.getElementsByClassName("active");
+        while (els5[0]) {
+            els5[0].classList.remove("active");
+        }
         var activeMenu = null;
         const menus = document.getElementsByClassName("side-nav-link-ref");
         for (let i = 0; i < menus.length; i++) {

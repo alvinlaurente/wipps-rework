@@ -17,6 +17,8 @@ File: Main Css File
 @import "./node_modules/bootstrap/scss/mixins.scss";
 @import './bootstrap.scss';
 
+@import "custom/global";
+
 // Structure
 @import "custom/structure/general";
 @import "custom/structure/topbar";

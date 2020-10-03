@@ -23,6 +23,8 @@ export default {
           active: true,
         },
       ],
+      companies: ["Pertamina"],
+      areas: ["area 1"]
     };
   },
   methods: {
@@ -138,8 +140,7 @@ export default {
               <option value="" disabled selected hidden>
                 Pilih Pelaksanaan Kerja
               </option>
-              <option>1</option>
-              <option>2</option>
+              <option v-for="company in companies">{{company}}</option>
             </select>
           </div>
 
@@ -147,8 +148,7 @@ export default {
             <label>Area</label>
             <select class="form-control" required>
               <option value="" disabled selected hidden>Pilih Area</option>
-              <option>1</option>
-              <option>2</option>
+              <option v-for="area in areas">{{area}}</option>
             </select>
           </div>
 

@@ -74,13 +74,13 @@ export const menuItems = [
       {
         id: 201,
         label: "Input Barang",
-        link: "/super-admin/barang/input-barang",
+        link: "/barang/input-barang",
         parentId: 200
       },
       {
         id: 201,
         label: "Daftar Barang",
-        link: "/super-admin/barang/daftar-barang",
+        link: "/barang/daftar-barang",
         parentId: 200
       }
     ]
