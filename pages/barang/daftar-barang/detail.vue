@@ -97,7 +97,7 @@ export default {
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingOne">
               <h5 class="mb-0">
-                <button class="btn btn-link" v-on:click="collapseOne">
+                <button class="btn btn-link btn-block text-left" v-on:click="collapseOne">
                   ► &nbsp; Ring Windshock
                 </button>
               </h5>
@@ -116,28 +116,51 @@ export default {
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingTwo">
               <h5 class="mb-0">
-                <button class="btn btn-link" v-on:click="collapseTwo">
+                <button class="btn btn-link btn-block text-left" v-on:click="collapseTwo">
                   ► &nbsp; Tiang Windshock
                 </button>
               </h5>
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
               <div class="card-body">
-                <form>
-                  <div class="form-group mb-3">
-                    <label for="exampleFormControlFile1">Seret gambar kesini</label>
-                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                  <div class="form-check form-check-inline mb-2">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="radio-safe"
+                      value="safe"
+                      checked
+                    />
+                    <label class="form-check-label">Safe</label>
                   </div>
-                  <div class="input-group mb-3">
-                    <input class="mr-2 my-auto" type="radio" aria-label="Safe" checked/><span class="mr-3">Safe</span>
-                    <input class="mr-2 my-auto" type="radio" aria-label="Safe"/><span class="mr-3">Unsafe</span>
-                    <input class="mr-2 my-auto" type="radio" aria-label="Safe"/><span class="mr-3">N/A</span>
+                  
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="radio-unsafe"
+                      value="unsafe"
+                    />
+                    <label class="form-check-label">Unsafe</label>
                   </div>
+
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="radio-na"
+                      value="na"
+                    />
+                    <label class="form-check-label">N/A</label>
+                  </div>
+
                   <div class="form-group">
                     <b>Catatan</b><br>
                     <textarea class="form-control" rows="5" disabled></textarea>
                   </div>
-                </form>
               </div>
             </div>
           </div>
@@ -145,7 +168,7 @@ export default {
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingThree">
               <h5 class="mb-0">
-                <button class="btn btn-link" v-on:click="collapseThree">
+                <button class="btn btn-link btn-block text-left" v-on:click="collapseThree">
                   ► &nbsp; Windshock
                 </button>
               </h5>
@@ -166,7 +189,7 @@ export default {
           <div class="card z-depth-0 bordered m-0">
             <div class="card-header" id="headingFour">
               <h5 class="mb-0">
-                <button class="btn btn-link" v-on:click="collapseFour">
+                <button class="btn btn-link btn-block text-left" v-on:click="collapseFour">
                   ► &nbsp; Support Tiang
                 </button>
               </h5>
