@@ -105,7 +105,7 @@ export default {
     <div class="row mb-3">
       <div class="col-6">
         <button class="btn btn-orange">Inspeksi Ulang</button>
-        <button class="btn btn-danger">Kembali</button>
+        <nuxt-link class="btn btn-danger" to="/barang/daftar-barang">Kembali</nuxt-link>
       </div>
       <div class="col-6">
           <input type="search" class="form-control" placeholder="Cari" id="filter-inspeksi"
@@ -172,6 +172,7 @@ export default {
           id="filter-page-size-inspeksi"
           style="max-width: 10vw"
           required
+          @change="switchPage(page)"
         >
           <option value="2" selected>2/laman</option>
           <option value="10">10/laman</option>

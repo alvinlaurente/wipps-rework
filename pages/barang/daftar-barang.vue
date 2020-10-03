@@ -75,6 +75,12 @@ export default {
       if (!document.getElementById("next-page").classList.contains("disabled")){
         this.switchPage(this.page+1)
       }
+    },
+    show(id) {
+      id = id.substring(11)
+      localStorage.setItem("selected-id", id)
+      alert(localStorage.getItem("selected-id"))
+      this.$router.push('/barang/daftarbarang/daftar-riwayat-inspeksi-barang')
     }
   },
   mounted: function () {
@@ -127,7 +133,7 @@ export default {
               <td>{{ tool.model }}</td>
               <td>{{ tool.merk }}</td>
               <td>
-                <nuxt-link class="btn btn-primary btn-sm" to="/barang/daftarbarang/daftar-riwayat-inspeksi-barang">show</nuxt-link>
+                <button :id="'data-table-'+tool.id" class="btn btn-primary btn-sm" @click="show($event.target.id)">show</button>
                 <button class="btn btn-success btn-sm">asd</button>
               </td>
             </tr>
@@ -165,6 +171,7 @@ export default {
           id="filter-page-size"
           style="max-width: 10vw"
           required
+          @change="switchPage(page)"
         >
           <option value="2" selected>2/laman</option>
           <option value="10">10/laman</option>
