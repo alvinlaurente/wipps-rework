@@ -93,37 +93,37 @@ export const menuItems = [
       {
         id: 301,
         label: "Judul",
-        link: "/super-admin/referensi/judul",
+        link: "/referensi/judul",
         parentId: 300
       },
       {
         id: 301,
         label: "Barang",
-        link: "/super-admin/referensi/barang",
+        link: "/referensi/barang",
         parentId: 300
       },
       {
         id: 301,
         label: "Area",
-        link: "/super-admin/referensi/area",
+        link: "/referensi/area",
         parentId: 300
       },
       {
         id: 301,
         label: "Pekerjaan",
-        link: "/super-admin/referensi/pekerjaan",
+        link: "/referensi/pekerjaan",
         parentId: 300
       },
       {
         id: 301,
         label: "Pelaksanaan Pekerjaan",
-        link: "/super-admin/referensi/pelaksanaan-pekerjaan",
+        link: "/referensi/pelaksanaan-pekerjaan",
         parentId: 300
       },
       {
         id: 301,
         label: "Pengguna",
-        link: "/super-admin/referensi/pengguna",
+        link: "/referensi/pengguna",
         parentId: 300
       }
     ]
