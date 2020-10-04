@@ -5,7 +5,7 @@
 export default {
   head() {
     return {
-      title: "Detail",
+      title: "Detail"
     };
   },
   data() {
@@ -13,34 +13,27 @@ export default {
       title: "Daftar Barang",
       items: [
         {
-          text: "Barang",
+          text: "Barang"
         },
         {
-          text: "Daftar Barang",
+          text: "Daftar Barang"
         },
         {
           text: "Detail",
-          active: true,
-        },
+          active: true
+        }
       ],
+      cardBody: "",
+      status: "Safe",
+      options: [
+        { text: "Safe", value: "Safe" },
+        { text: "Unsafe", value: "Unsafe" },
+        { text: "N/A", value: "N/A" }
+      ]
     };
   },
-  methods: {
-    collapseOne() {
-      document.getElementById("collapseOne").classList.toggle("show");
-    },
-    collapseTwo() {
-      document.getElementById("collapseTwo").classList.toggle("show");
-    },
-    collapseThree() {
-      document.getElementById("collapseThree").classList.toggle("show");
-    },
-    collapseFour() {
-      document.getElementById("collapseFour").classList.toggle("show");
-    },
-  },
-  mounted: function () {
-    this.$activateMenuDropdown("Daftar Barang")
+  mounted: function() {
+    this.$activateMenuDropdown("Daftar Barang");
   }
 };
 </script>
@@ -96,157 +89,129 @@ export default {
       </div>
 
       <div class="col-12 mb-3">
-        <div class="accordion" id="accordionExample">
-          <div class="card z-depth-0 bordered m-0">
-            <div class="card-header" id="headingOne">
-              <h5 class="mb-0">
-                <button
-                  class="btn btn-link btn-block text-left"
-                  v-on:click="collapseOne"
-                >
-                  ► &nbsp; Ring Windshock
-                </button>
-              </h5>
-            </div>
-            <div id="collapseOne" class="collapse">
-              <div class="card-body">
-                <div class="mb-3"><b>Status</b> : Unsafe</div>
-                <div class="form-group">
-                  <b>Catatan</b><br />
-                  <textarea class="form-control" rows="5" disabled></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card z-depth-0 bordered m-0">
-            <div class="card-header" id="headingTwo">
-              <h5 class="mb-0">
-                <button
-                  class="btn btn-link btn-block text-left"
-                  v-on:click="collapseTwo"
-                >
-                  ► &nbsp; Tiang Windshock
-                </button>
-              </h5>
-            </div>
-            <div
-              id="collapseTwo"
-              class="collapse"
-              aria-labelledby="headingTwo"
-              data-parent="#accordionExample"
+        <div class="accordion" role="tablist">
+          <b-card no-body class="mb-1">
+            <b-card-header header-tag="header" class="p-1" role="tab">
+              <b-button
+                block
+                v-b-toggle.accordion-1
+                variant="light"
+                class="buttoncustom"
+                >► &nbsp; Ring Windshock</b-button
+              >
+            </b-card-header>
+            <b-collapse
+              id="accordion-1"
+              accordion="my-accordion"
+              role="tabpanel"
             >
-              <div class="card-body">
-                <div class="form-check form-check-inline mb-2">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="inlineRadioOptions"
-                    id="radio-safe"
-                    value="safe"
-                    checked
-                  />
-                  <label class="form-check-label">Safe</label>
-                </div>
+              <b-card-body>
+                <b-card-text>
+                  <div class="mb-3"><b>Status</b> : Unsafe</div>
+                  <div class="form-group">
+                    <b>Catatan</b><br />
+                    <b-form-textarea
+                      id="textarea"
+                      v-model="text"
+                      placeholder="Enter something..."
+                      rows="3"
+                      max-rows="6"
+                    ></b-form-textarea>
+                  </div>
+                </b-card-text>
+              </b-card-body>
+            </b-collapse>
+          </b-card>
 
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="inlineRadioOptions"
-                    id="radio-unsafe"
-                    value="unsafe"
-                  />
-                  <label class="form-check-label">Unsafe</label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="inlineRadioOptions"
-                    id="radio-na"
-                    value="na"
-                  />
-                  <label class="form-check-label">N/A</label>
-                </div>
-
-                <div class="form-group">
-                  <b>Catatan</b><br />
-                  <textarea class="form-control" rows="5" disabled></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card z-depth-0 bordered m-0">
-            <div class="card-header" id="headingThree">
-              <h5 class="mb-0">
-                <button
-                  class="btn btn-link btn-block text-left"
-                  v-on:click="collapseThree"
-                >
-                  ► &nbsp; Windshock
-                </button>
-              </h5>
-            </div>
-            <div
-              id="collapseThree"
-              class="collapse"
-              aria-labelledby="headingThree"
-              data-parent="#accordionExample"
+          <b-card no-body class="mb-1">
+            <b-card-header header-tag="header" class="p-1" role="tab">
+              <b-button
+                block
+                v-b-toggle.accordion-2
+                variant="light"
+                class="buttoncustom"
+                >► &nbsp; Tiang Windshock</b-button
+              >
+            </b-card-header>
+            <b-collapse
+              id="accordion-2"
+              accordion="my-accordion"
+              role="tabpanel"
             >
-              <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                non cupidatat skateboard dolor brunch. Food truck quinoa
-                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua
-                put a bird on it squid single-origin coffee nulla assumenda
-                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore
-                wes anderson cred nesciunt sapiente ea proident. Ad vegan
-                excepteur butcher vice lomo. Leggings occaecat craft beer
-                farm-to-table, raw denim aesthetic synth nesciunt you probably
-                haven't heard of them accusamus labore sustainable.
-              </div>
-            </div>
-          </div>
+              <b-card-body>
+                <b-card-text>
+                  <b-form-group label="">
+                    <b-form-radio-group
+                      v-model="status"
+                      :options="options"
+                      name="radio-inline"
+                    ></b-form-radio-group>
+                  </b-form-group>
+                  <div class="form-group">
+                    <b>Catatan</b><br />
+                    <b-form-textarea
+                      id="textarea"
+                      v-model="text"
+                      placeholder="Enter something..."
+                      rows="3"
+                      max-rows="6"
+                    ></b-form-textarea>
+                  </div>
+                </b-card-text>
+              </b-card-body>
+            </b-collapse>
+          </b-card>
 
-          <div class="card z-depth-0 bordered m-0">
-            <div class="card-header" id="headingFour">
-              <h5 class="mb-0">
-                <button
-                  class="btn btn-link btn-block text-left"
-                  v-on:click="collapseFour"
-                >
-                  ► &nbsp; Support Tiang
-                </button>
-              </h5>
-            </div>
-            <div
-              id="collapseFour"
-              class="collapse"
-              aria-labelledby="headingFour"
-              data-parent="#accordionExample"
+          <b-card no-body class="mb-1">
+            <b-card-header header-tag="header" class="p-1" role="tab">
+              <b-button
+                block
+                v-b-toggle.accordion-3
+                variant="light"
+                class="buttoncustom"
+                >► &nbsp; Windshock</b-button
+              >
+            </b-card-header>
+            <b-collapse
+              id="accordion-3"
+              accordion="my-accordion"
+              role="tabpanel"
             >
-              <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                non cupidatat skateboard dolor brunch. Food truck quinoa
-                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua
-                put a bird on it squid single-origin coffee nulla assumenda
-                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore
-                wes anderson cred nesciunt sapiente ea proident. Ad vegan
-                excepteur butcher vice lomo. Leggings occaecat craft beer
-                farm-to-table, raw denim aesthetic synth nesciunt you probably
-                haven't heard of them accusamus labore sustainable.
-              </div>
-            </div>
-          </div>
+              <b-card-body>
+                <b-card-text>{{ cardBody }}</b-card-text>
+              </b-card-body>
+            </b-collapse>
+          </b-card>
+
+          <b-card no-body class="mb-1">
+            <b-card-header header-tag="header" class="p-1" role="tab">
+              <b-button
+                block
+                v-b-toggle.accordion-4
+                variant="light"
+                class="buttoncustom"
+                >► &nbsp; Support Tiang</b-button
+              >
+            </b-card-header>
+            <b-collapse
+              id="accordion-4"
+              accordion="my-accordion"
+              role="tabpanel"
+            >
+              <b-card-body>
+                <b-card-text>{{ cardBody }}</b-card-text>
+              </b-card-body>
+            </b-collapse>
+          </b-card>
         </div>
       </div>
 
       <div class="col-12 mb-3">
-        <nuxt-link class="btn btn-danger" to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang">Kembali</nuxt-link>
+        <nuxt-link
+          class="btn btn-danger"
+          to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang"
+          >Kembali</nuxt-link
+        >
       </div>
     </div>
   </div>
@@ -293,5 +258,9 @@ td {
 
 .card-header {
   padding: 0.3vw;
+}
+
+.buttoncustom {
+  text-align: left;
 }
 </style>
