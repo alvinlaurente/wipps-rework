@@ -39,7 +39,7 @@ export default {
         .then(response => response.json())
         .then(result => {
           console.log(result)
-          this.menus = result.data
+          this.menus = result.data.sort((a, b) => (a.name > b.name) ? 1 : -1)
         })
       }
     },
