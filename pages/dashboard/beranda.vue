@@ -24,7 +24,8 @@ export default {
         };
     },
     methods: {
-      goTo(path) {
+      goTo(path, id) {
+        localStorage.setItem("id-form", id)
         localStorage.setItem("prevPath", this.$route.path)
         this.$router.push(path)
       },
@@ -61,7 +62,7 @@ export default {
 
     <div class="row" id="menu-list">
         <div v-for="menu in menus" class="col-lg-4">
-            <div class="card cursor-pointer" @click="goTo('/form/'+menu.slug)">
+            <div class="card cursor-pointer" @click="goTo('/form/'+menu.slug, menu.id)">
                 <div class="card-body">
                     <h4 class="mb-0">{{ menu.name }}</h4>
                     <p class="text-muted mb-0">{{ menu.created }}</p>

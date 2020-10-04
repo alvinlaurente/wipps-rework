@@ -91,7 +91,8 @@ export default {
             name: new Date(),
             context: this.context,
             slug: this.$route.params.id,
-            merk: document.getElementById("input-merk").value,
+            form_type_id: localStorage.getItem("id-form"),
+            brand: document.getElementById("input-merk").value,
             model: document.getElementById("input-model").value,
             companies: document.getElementById("input-pelaksana-pekerjaan").value,
             area_id: document.getElementById("input-area").value
@@ -101,6 +102,7 @@ export default {
             name: new Date(),
             context: this.context,
             slug: this.$route.params.id,
+            form_type_id: localStorage.getItem("id-form"),
             equipment: document.getElementById("input-equipment").value,
             job_id: document.getElementById("input-pekerjaan").value,
             companies: document.getElementById("input-pelaksana-pekerjaan").value,

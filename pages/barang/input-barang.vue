@@ -25,7 +25,8 @@ export default {
             const filter = document.getElementById("input-filter-tools").value
             this.toolsFiltered = this.tools.filter(function(tool) {return tool.name.toUpperCase().includes(filter.toUpperCase());})
         },
-        goTo(path) {
+        goTo(path, id) {
+          localStorage.setItem("id-form", id)
           localStorage.setItem("prevPath", this.$route.path)
           this.$router.push(path)
         }
@@ -42,7 +43,7 @@ export default {
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            this.tools = result.data
+            this.tools = result.data.sort((a, b) => (a.name > b.name) ? 1 : -1)
             this.applyFilter()
         })
     }
@@ -57,7 +58,7 @@ export default {
 
     <div class="row">
         <div v-for="tool in toolsFiltered" class="col-4">
-            <div class="card cursor-pointer" @click="goTo('/form/'+tool.slug)">
+            <div class="card cursor-pointer" @click="goTo('/form/'+tool.slug, tool.id)">
                 <div class="card-body">
                     <h4 class="mb-0">{{ tool.name }}</h4>
                     <p class="text-muted mb-0">{{ tool.created }}</p>
