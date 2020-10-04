@@ -112,21 +112,28 @@ export default {
 
     <div class="row mb-3">
       <div class="col-6">
-      </div>
+            <button class="btn btn-success">Tambah Judul</button>
+        </div>
       <div class="col-6">
-        <input type="search" class="form-control" placeholder="Cari" id="filter-daftar-barang"
+        <input type="search" class="form-control not-daftar-barang" placeholder="Cari" id="filter-daftar-barang"
                @keyup.enter="switchPage(1)"/>
       </div>
     </div>
+
     <div class="row mb-3">
       <div class="col-lg-12">
         <table class="table">
           <thead class="thead-dark">
             <tr>
               <th scope="col">No</th>
-              <th scope="col">Model</th>
-              <th scope="col">Mark</th>
+              <th scope="col not-semuareferensi">Model</th>
+              <th scope="col not-semuareferensi">Mark</th>
               <th scope="col">Aksi</th>
+              <th scope="col not-daftar-barang">Nama</th>
+              <th scope="col not-daftar-barang not-judul not-barang not-area not-pekerjaan not-pengguna">Jenis</th>
+              <th scope="col not-daftar-barang not-judul not-barang not-area not-pekerjaan not-pelaksanaan-pekerjaan">Username</th>
+              <th scope="col not-daftar-barang not-judul not-barang not-area not-pekerjaan not-pelaksanaan-pekerjaan">Email</th>
+              <th scope="col not-daftar-barang not-judul not-barang not-area not-pekerjaan not-pelaksanaan-pekerjaan">Peran</th>
             </tr>
           </thead>
           <tbody>
@@ -137,12 +144,15 @@ export default {
               <td>
                 <button :id="'data-table-'+tool.id" class="btn btn-primary btn-sm" @click="show($event.target.id)">show</button>
                 <button class="btn btn-success btn-sm">asd</button>
+                <button class="btn btn-warning btn-sm not-daftar-barang">edit</button>
+                <button class="btn btn-danger btn-sm not-daftar-barang">delete</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+    
     <div class="row justify-content-center">
       <div class="col-1 mr-3">
         <nav aria-label="Navigation" class="d-inline">
