@@ -1,1 +1,25 @@
 .cursor-pointer {cursor: pointer;}
+
+.accordion {
+  border: 2px solid #d5d3d5;
+  border-radius: 10px;
+}
+
+.accordion .card {
+  border-bottom: 1px solid #d5d3d5;
+  border-radius: 10px;
+}
+
+.accordion .card-header button {
+  text-decoration: none;
+  color: #7f8081;
+}
+
+.accordion .card-header button:hover,
+.accordion .card-header button:active {
+  color: black;
+}
+
+.card-header {
+  padding: 0.3vw;
+}

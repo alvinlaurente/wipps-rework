@@ -44,18 +44,6 @@ export default {
     };
   },
   methods: {
-    collapseOne() {
-      document.getElementById("collapseOne").classList.toggle("show");
-    },
-    collapseTwo() {
-      document.getElementById("collapseTwo").classList.toggle("show");
-    },
-    collapseThree() {
-      document.getElementById("collapseThree").classList.toggle("show");
-    },
-    collapseFour() {
-      document.getElementById("collapseFour").classList.toggle("show");
-    },
   },
   mounted: function () {
     this.$activateMenuDropdown("Daftar Barang")
@@ -75,7 +63,7 @@ export default {
               <h5 class="mb-0">
                 <button
                   class="btn btn-link btn-block text-left"
-                  v-on:click="collapseOne"
+                  v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
                 >
                   ► &nbsp; Ring Windshock
                 </button>
@@ -97,7 +85,7 @@ export default {
               <h5 class="mb-0">
                 <button
                   class="btn btn-link btn-block text-left"
-                  v-on:click="collapseTwo"
+                  v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
                 >
                   ► &nbsp; Tiang Windshock
                 </button>
@@ -174,7 +162,7 @@ export default {
               <h5 class="mb-0">
                 <button
                   class="btn btn-link btn-block text-left"
-                  v-on:click="collapseThree"
+                  v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
                 >
                   ► &nbsp; Windshock
                 </button>
@@ -206,7 +194,7 @@ export default {
               <h5 class="mb-0">
                 <button
                   class="btn btn-link btn-block text-left"
-                  v-on:click="collapseFour"
+                  v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
                 >
                   ► &nbsp; Support Tiang
                 </button>
@@ -267,27 +255,4 @@ export default {
 </template>
 
 <style scoped>
-.accordion {
-  border: 2px solid #d5d3d5;
-  border-radius: 10px;
-}
-
-.accordion .card {
-  border-bottom: 1px solid #d5d3d5;
-  border-radius: 10px;
-}
-
-.accordion .card-header button {
-  text-decoration: none;
-  color: #7f8081;
-}
-
-.accordion .card-header button:hover,
-.accordion .card-header button:active {
-  color: black;
-}
-
-.card-header {
-  padding: 0.3vw;
-}
 </style>

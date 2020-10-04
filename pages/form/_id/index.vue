@@ -13,10 +13,10 @@ export default {
       title: "Data Awal",
       items: [
         {
-          text: "Barang",
+          text: "Form",
         },
         {
-          text: "Input Barang",
+          text: this.$route.params.id,
         },
         {
           text: "Data Awal",
@@ -107,7 +107,7 @@ export default {
       this.areas = result.data
     })
   },
-  middleware: "authentication",
+  // middleware: "authentication",
 };
 </script>
 
