@@ -27,18 +27,21 @@ export default {
       pageSize: 20,
       inspeksi: [
         {
+          id: "1",
           area: "H2PLANT",
           company: "Pertamina",
           model: "i4127yf",
           merk: "Datsun"
         },
         {
+          id: "2",
           area: "H2PLANT",
           company: "PT PT",
           model: "a3howr",
           merk: "Samsung"
         },
         {
+          id: "3",
           area: "SAWAH",
           company: "PT PT",
           model: "zrqrwqo",
@@ -88,13 +91,18 @@ export default {
       if (!document.getElementById("next-page-inspeksi").classList.contains("disabled")){
         this.switchPage(this.page+1)
       }
+    },
+    show(id) {
+      id = id.substring(14)
+      localStorage.setItem("selected-id-inspeksi", id)
+      this.$router.push('/barang/daftar-barang/detail')
     }
   },
   mounted: function () {
     this.$activateMenuDropdown("Daftar Barang")
     this.switchPage(1)
   },
-  middleware: "authentication",
+  // middleware: "authentication",
 };
 </script>
 
@@ -104,7 +112,7 @@ export default {
 
     <div class="row mb-3">
       <div class="col-6">
-        <button class="btn btn-orange">Inspeksi Ulang</button>
+        <nuxt-link class="btn btn-orange" to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang/inspeksi-ulang">Inspeksi Ulang</nuxt-link>
         <nuxt-link class="btn btn-danger" to="/barang/daftar-barang">Kembali</nuxt-link>
       </div>
       <div class="col-6">
@@ -133,7 +141,7 @@ export default {
               <td>{{ inspeksi.model }}</td>
               <td>{{ inspeksi.merk }}</td>
               <td>
-                <button class="btn btn-primary btn-sm">asd</button>
+                <button :id="'data-inspeksi-'+inspeksi.id" class="btn btn-primary btn-sm" @click="show($event.target.id)">show</button>
                 <button class="btn btn-warning btn-sm">asd</button>
                 <button class="btn btn-success btn-sm">asd</button>
               </td>

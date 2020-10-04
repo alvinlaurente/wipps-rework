@@ -39,6 +39,9 @@ export default {
       document.getElementById("collapseFour").classList.toggle("show");
     },
   },
+  mounted: function () {
+    this.$activateMenuDropdown("Daftar Barang")
+  }
 };
 </script>
 
@@ -243,7 +246,7 @@ export default {
       </div>
 
       <div class="col-12 mb-3">
-        <button class="btn btn-danger">Kembali</button>
+        <nuxt-link class="btn btn-danger" to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang">Kembali</nuxt-link>
       </div>
     </div>
   </div>

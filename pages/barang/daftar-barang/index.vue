@@ -24,14 +24,17 @@ export default {
       pageSize: 20,
       tools: [
         {
+          id: 1,
           model: "i4127yf",
           merk: "Datsun"
         },
         {
+          id: 2,
           model: "a3howr",
           merk: "Samsung"
         },
         {
+          id: 3,
           model: "zrqrwqo",
           merk: "Samsung"
         }
@@ -78,8 +81,8 @@ export default {
     },
     show(id) {
       id = id.substring(11)
-      localStorage.setItem("selected-id", id)
-      this.$router.push('/barang/daftarbarang/daftar-riwayat-inspeksi-barang')
+      localStorage.setItem("selected-id-barang", id)
+      this.$router.push('/barang/daftar-barang/daftar-riwayat-inspeksi-barang')
     }
   },
   mounted: function () {
@@ -99,7 +102,7 @@ export default {
     //   this.switchPage(1)
     // })
   },
-  middleware: "authentication",
+  // middleware: "authentication",
 };
 </script>
 
