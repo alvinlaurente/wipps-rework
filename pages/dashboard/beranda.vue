@@ -23,6 +23,12 @@ export default {
             menus: []
         };
     },
+    methods: {
+      goTo(path) {
+        localStorage.setItem("prevPath", this.$route.path)
+        this.$router.push(path)
+      }
+    },
     mounted: function () {
         this.$activateMenuDropdown(this.items[1].text)
         fetch( process.env.baseUrl + `/form-types/form`, {
@@ -39,8 +45,7 @@ export default {
         })
     },
     middleware: [
-      "authentication",
-      "auth-safety-man"
+      "authentication"
     ],
 };
 </script>
@@ -51,7 +56,7 @@ export default {
 
     <div class="row" id="menu-list">
         <div v-for="menu in menus" class="col-lg-4">
-            <div class="card cursor-pointer">
+            <div class="card cursor-pointer" @click="goTo('/form/'+menu.slug)">
                 <div class="card-body">
                     <h4 class="mb-0">{{ menu.name }}</h4>
                     <p class="text-muted mb-0">{{ menu.created }}</p>

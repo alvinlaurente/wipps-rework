@@ -4,16 +4,16 @@
 
     <div class="row">
       <div class="col-12 mb-3" v-for="d in data" >
-        <label>{{ d.name }}</label>
+        <label>{{ d.sub }}</label>
         <div class="accordion">
-          <div v-for="f in d.form" class="card z-depth-0 bordered m-0">
+          <div v-for="f in d.content" class="card z-depth-0 bordered m-0">
             <div class="card-header">
               <h5 class="mb-0">
                 <button
                   class="btn btn-link btn-block text-left"
                   v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
                 >
-                  ► &nbsp; {{ f.name }}
+                  ► &nbsp; {{ f.component }}
                 </button>
               </h5>
             </div>
@@ -80,7 +80,7 @@
         </div>
       </div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-3 for-barang">
       <div class="col-12 mb-3">
         <label>Keterangan</label>
         <textarea
@@ -101,7 +101,7 @@
       </div>
     </div>
 
-    <div class="row mb-3">
+    <div class="row mb-3 for-barang">
       <div class="col-6">
         <label>Safety man</label>
         <b-form-input placeholder="pemeriksa"></b-form-input>
@@ -144,32 +144,8 @@ export default {
           active: true,
         },
       ],
-      data: [
-        {
-          id: 1,
-          name: "Tripod",
-          form: [
-            {
-              id: 1,
-              name: "Adjustable locking Legs/Pin pengunci kaki"
-            },
-            {
-              id: 2,
-              name: "Aluminum Tripod"
-            }
-          ]
-        },
-        {
-          id: 2,
-          name: "Winch",
-          form: [
-            {
-              id: 3,
-              name: "Aluminum Housing"
-            }
-          ]
-        }
-      ],
+      prevData: {},
+      data: [],
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 150,
@@ -182,6 +158,43 @@ export default {
   },
   mounted: function () {
     this.$activateMenuDropdown("")
+    this.prevData = JSON.parse(localStorage.getItem("temp_form"))
+    if (this.prevData.context === "beranda") {
+      let notNeededElement = document.getElementsByClassName("for-barang")
+      for (let i = 0; i < notNeededElement.length; i++) {
+        notNeededElement[i].innerHTML = ""
+      }
+    }
+    fetch(process.env.baseUrl + `/form-components?form=` + this.prevData.slug, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+      }
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result)
+      let subs = []
+      for (let i = 0; i < result.data.length; i++) {
+        subs.push(result.data[i].sub)
+      }
+      subs = [...new Set(subs)]
+      this.data = []
+      for (let i = 0; i < subs.length; i++) {
+        this.data.push({
+          sub: subs[i],
+          content: []
+        })
+      }
+      for (let i = 0; i < result.data.length; i++) {
+        for (let j = 0; j < this.data.length; j++) {
+          if (result.data[i].sub === this.data[j].sub) {
+            this.data[j].content.push(result.data[i])
+          }
+        }
+      }
+    })
   }
 }
 </script>
