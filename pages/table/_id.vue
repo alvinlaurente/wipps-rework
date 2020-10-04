@@ -112,7 +112,7 @@ export default {
     },
     showInspeksi(id) {
       id = id.substring(11)
-      localStorage.setItem("selected-id-barang", id)
+      localStorage.setItem("tmp_barcode", id)
       this.$router.push('/barang/daftar-barang/daftar-riwayat-inspeksi-barang')
     },
     async loadData() {
@@ -191,7 +191,7 @@ export default {
               <td>{{ item.model }}</td>
               <td>{{ item.brand }}</td>
               <td>
-                <button :id="'show-table-'+item.item_id" class="btn btn-primary btn-sm" @click="showInspeksi($event.target.id)">show</button>
+                <button :id="'show-table-'+item.barcode" class="btn btn-primary btn-sm" @click="showInspeksi($event.target.id)">show</button>
                 <button class="btn btn-success btn-sm">asd</button>
               </td>
             </tr>
@@ -202,7 +202,7 @@ export default {
               <td>{{ (page-1)*pageSize+index+1 }}</td>
               <td>{{ item.name }}</td>
               <td>
-                <button :id="'show-table-'+item.item_id" class="btn btn-primary btn-sm">show</button>
+                <button :id="'show-table-'+item.slug" class="btn btn-primary btn-sm">show</button>
                 <button class="btn btn-warning btn-sm">edit</button>
                 <button class="btn btn-danger btn-sm">delete</button>
               </td>
@@ -214,7 +214,7 @@ export default {
               <td>{{ item.name }}</td>
               <td>{{ item.type }}</td>
               <td>
-                <button :id="'show-table-'+item.item_id" class="btn btn-primary btn-sm">show</button>
+                <button :id="'show-table-'+item.slug" class="btn btn-primary btn-sm">show</button>
                 <button class="btn btn-warning btn-sm">edit</button>
                 <button class="btn btn-danger btn-sm">delete</button>
               </td>
@@ -228,7 +228,7 @@ export default {
             <td>{{ item.email }}</td>
             <td>{{ item.role }}</td>
             <td>
-              <button :id="'show-table-'+item.item_id" class="btn btn-primary btn-sm">show</button>
+              <button :id="'show-table-'+item.slug" class="btn btn-primary btn-sm">show</button>
               <button class="btn btn-warning btn-sm">edit</button>
               <button class="btn btn-danger btn-sm">delete</button>
             </td>

@@ -25,29 +25,7 @@ export default {
       ],
       page: 1,
       pageSize: 20,
-      inspeksi: [
-        {
-          id: "1",
-          area: "H2PLANT",
-          company: "Pertamina",
-          model: "i4127yf",
-          merk: "Datsun"
-        },
-        {
-          id: "2",
-          area: "H2PLANT",
-          company: "PT PT",
-          model: "a3howr",
-          merk: "Samsung"
-        },
-        {
-          id: "3",
-          area: "SAWAH",
-          company: "PT PT",
-          model: "zrqrwqo",
-          merk: "Samsung"
-        }
-      ],
+      inspeksi: [],
       inspeksiFiltered: []
     };
   },
@@ -55,15 +33,9 @@ export default {
     applyFilter() {
       const filter = document.getElementById("filter-inspeksi").value
       this.pageSize = document.getElementById("filter-page-size-inspeksi").value
-      this.inspeksiFiltered = this.inspeksi.filter(function(tool) {return tool.merk.toUpperCase().includes(filter.toUpperCase())})
-        .concat(this.inspeksi.filter(function(tool) {return tool.model.toUpperCase().includes(filter.toUpperCase())}))
-        .concat(this.inspeksi.filter(function(tool) {return tool.area.toUpperCase().includes(filter.toUpperCase())}))
-        .concat(this.inspeksi.filter(function(tool) {return tool.company.toUpperCase().includes(filter.toUpperCase())}))
-        .sort((a, b) => (a.area.toUpperCase() > b.area.toUpperCase()) ? -1 : 1)
-        .sort((a, b) => (a.company.toUpperCase() > b.company.toUpperCase()) ? -1 : 1)
-        .sort((a, b) => (a.model.toUpperCase() > b.model.toUpperCase()) ? -1 : 1)
-        .sort((a, b) => (a.merk.toUpperCase() > b.merk.toUpperCase()) ? 1 : -1)
-      this.inspeksiFiltered = [...new Set(this.inspeksiFiltered)]
+      this.inspeksiFiltered = this.inspeksi.filter(function (item) {
+        return item.searchHelper.toLowerCase().includes(filter.toLowerCase())
+      })
       const total = this.inspeksiFiltered.length
       document.getElementById("count-filtered-inspeksi").innerText = "Total "+total
       this.inspeksiFiltered = this.inspeksiFiltered.slice(this.pageSize*(this.page-1), this.pageSize*this.page)
@@ -77,6 +49,27 @@ export default {
       } else {
         document.getElementById("next-page-inspeksi").classList.remove("disabled")
       }
+    },
+    async loadData() {
+      let url = process.env.baseUrl
+      url += `/barcode-item-inspections?search[value]=&start=0&length=2000&order[0][column]=0&order[0][dir]=asc&barcode=` +
+        localStorage.getItem("tmp_barcode")
+      await fetch( url , {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        }
+      })
+        .then(response => response.json())
+        .then(result => {
+          this.inspeksi = result.data
+          for (let i = 0; i < this.inspeksi.length; i++) {
+            this.inspeksi[i]["searchHelper"] = this.inspeksi[i].area + ' ' +
+              this.inspeksi[i].company + ' ' + this.inspeksi[i].model + ' ' + this.inspeksi[i].brand
+          }
+          console.log(this.inspeksi)
+          this.switchPage(1)
+        })
     },
     switchPage(newPage) {
       this.page = newPage
@@ -100,6 +93,7 @@ export default {
   },
   mounted: function () {
     this.$activateMenuDropdown("Daftar Barang")
+    this.loadData()
     this.switchPage(1)
   },
   // middleware: "authentication",
@@ -139,9 +133,9 @@ export default {
               <td>{{ inspeksi.area }}</td>
               <td>{{ inspeksi.company }}</td>
               <td>{{ inspeksi.model }}</td>
-              <td>{{ inspeksi.merk }}</td>
+              <td>{{ inspeksi.brand }}</td>
               <td>
-                <button :id="'data-inspeksi-'+inspeksi.id" class="btn btn-primary btn-sm" @click="show($event.target.id)">show</button>
+                <button :id="'data-inspeksi-'+inspeksi.slug" class="btn btn-primary btn-sm" @click="show($event.target.id)">show</button>
                 <button class="btn btn-warning btn-sm">asd</button>
                 <button class="btn btn-success btn-sm">asd</button>
               </td>

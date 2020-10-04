@@ -23,8 +23,10 @@ export default {
           active: true
         }
       ],
+      response: {
+        user: {}
+      },
       cardBody: "",
-
       status: "Safe",
       options: [
         { text: "Safe", value: "Safe" },
@@ -33,8 +35,33 @@ export default {
       ],
     };
   },
+  methods: {
+    convertSafe(code) {
+      switch (code) {
+        case 1:
+          return "Safe"
+        case 2:
+          return "Unsafe"
+      }
+    },
+    async getData() {
+      await fetch(process.env.baseUrl + `/item-inspections/` +
+        localStorage.getItem("selected-id-inspeksi") , {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        }
+      })
+      .then(response => response.json())
+      .then(result => {
+        this.response = result.data
+        console.log(result.data)
+      })
+    }
+  },
   mounted: function() {
     this.$activateMenuDropdown("Daftar Barang");
+    this.getData()
   }
 };
 </script>
@@ -42,168 +69,88 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-
     <div class="row">
       <div class="col-12">
         <table class="table table-light">
           <tr>
             <td class="table-secondary">Area</td>
-            <td>H2PLANT</td>
+            <td>{{this.response.area_id}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Merk</td>
-            <td>Datsun</td>
+            <td>{{this.response.brand}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Pelaksana Pekerjaan</td>
-            <td>CV.ALFAGHA</td>
+            <td>{{this.response.company_id}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Pengguna</td>
-            <td>Admin Balongan</td>
+            <td>{{this.response.user.name}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Keterangan</td>
-            <td></td>
+            <td>{{this.response.description}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Model</td>
-            <td>z54</td>
+            <td>{{this.response.model}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Tanggal awal berlaku</td>
-            <td>2020-04-23</td>
+            <td>{{this.response.start_date}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Tanggal akhir berlaku</td>
-            <td>2020-04-30</td>
+            <td>{{this.response.due_date}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Safetyman</td>
-            <td>Paijo</td>
+            <td>{{this.response.safetyman}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Pemeriksa</td>
-            <td>Paijo</td>
+            <td>{{this.response.inspector}}</td>
           </tr>
         </table>
       </div>
 
       <div class="col-12 mb-3">
         <div class="accordion" role="tablist">
-          <b-card no-body class="mb-0">
-            <b-card-header header-tag="header" class="" role="tab">
-              <b-button
-                block
-                v-b-toggle.accordion-1
-                variant="light"
-                class="buttoncustom"
-                >► &nbsp; Ring Windshock</b-button
-              >
-            </b-card-header>
-            <b-collapse
-              id="accordion-1"
-              accordion="my-accordion"
-              role="tabpanel"
+          <div v-for="component in response.components" class="card z-depth-0 bordered m-0">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <button
+                  class="btn btn-link btn-block text-left"
+                  v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
+                >
+                  ► &nbsp;
+                  <i class="fas fa-exclamation-triangle text-danger" v-if="component.status!==1"></i>
+                  {{ component.text }}
+                  <i class="fas fa-exclamation-triangle text-danger" v-if="component.status!==1"></i>
+                </button>
+              </h5>
+            </div>
+            <div
+              class="collapse"
+              aria-labelledby="headingTwo"
+              data-parent="#accordionExample"
             >
               <b-card-body>
                 <b-card-text>
-                  <div class="mb-3"><b>Status</b> : Unsafe</div>
+                  <div class="mb-3"><b>Status</b> : {{ convertSafe(component.status) }}</div>
                   <div class="form-group">
                     <b>Catatan</b><br />
-                    <b-form-textarea
-                      id="textarea"
-                      v-model="text"
-                      placeholder="Enter something..."
-                      rows="3"
-                      max-rows="6"
+                    <b-form-textarea disabled
+                                     rows="3"
+                                     max-rows="6"
+                                     :value="component.note"
                     ></b-form-textarea>
                   </div>
                 </b-card-text>
               </b-card-body>
-            </b-collapse>
-          </b-card>
-
-          <b-card no-body class="mb-0">
-            <b-card-header header-tag="header" class="" role="tab">
-              <b-button
-                block
-                v-b-toggle.accordion-2
-                variant="light"
-                class="buttoncustom"
-                >► &nbsp; Tiang Windshock</b-button
-              >
-            </b-card-header>
-            <b-collapse
-              id="accordion-2"
-              accordion="my-accordion"
-              role="tabpanel"
-            >
-              <b-card-body>
-                <b-card-text>
-                  <b-form-group label="">
-                    <b-form-radio-group
-                      v-model="status"
-                      :options="options"
-                      name="radio-inline"
-                    ></b-form-radio-group>
-                  </b-form-group>
-                  <div class="form-group">
-                    <b>Catatan</b><br />
-                    <b-form-textarea
-                      id="textarea"
-                      v-model="text"
-                      placeholder="Enter something..."
-                      rows="3"
-                      max-rows="6"
-                    ></b-form-textarea>
-                  </div>
-                </b-card-text>
-              </b-card-body>
-            </b-collapse>
-          </b-card>
-
-          <b-card no-body class="mb-0">
-            <b-card-header header-tag="header" class="p-1" role="tab">
-              <b-button
-                block
-                v-b-toggle.accordion-3
-                variant="light"
-                class="buttoncustom"
-                >► &nbsp; Windshock</b-button
-              >
-            </b-card-header>
-            <b-collapse
-              id="accordion-3"
-              accordion="my-accordion"
-              role="tabpanel"
-            >
-              <b-card-body>
-                <b-card-text>{{ cardBody }}</b-card-text>
-              </b-card-body>
-            </b-collapse>
-          </b-card>
-
-          <b-card no-body class="mb-0">
-            <b-card-header header-tag="header" class="p-1" role="tab">
-              <b-button
-                block
-                v-b-toggle.accordion-4
-                variant="light"
-                class="buttoncustom"
-                >► &nbsp; Support Tiang</b-button
-              >
-            </b-card-header>
-            <b-collapse
-              id="accordion-4"
-              accordion="my-accordion"
-              role="tabpanel"
-            >
-              <b-card-body>
-                <b-card-text>{{ cardBody }}</b-card-text>
-              </b-card-body>
-            </b-collapse>
-          </b-card>
+            </div>
+          </div>
         </div>
       </div>
 
