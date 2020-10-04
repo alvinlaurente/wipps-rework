@@ -27,22 +27,27 @@ export default {
       goTo(path) {
         localStorage.setItem("prevPath", this.$route.path)
         this.$router.push(path)
+      },
+      async getData() {
+        await fetch( process.env.baseUrl + `/form-types/form`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem("token"),
+          }
+        })
+        .then(response => response.json())
+        .then(result => {
+          console.log(result)
+          this.menus = result.data
+        })
       }
     },
     mounted: function () {
         this.$activateMenuDropdown(this.items[1].text)
-        fetch( process.env.baseUrl + `/form-types/form`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem("token"),
-            }
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-            this.menus = result.data
-        })
+
+        this.getData()
+
     },
     middleware: [
       "authentication"

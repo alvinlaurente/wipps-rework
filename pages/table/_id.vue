@@ -22,37 +22,19 @@ export default {
       ],
       page: 1,
       pageSize: 20,
-      tools: [
-        {
-          id: 1,
-          model: "i4127yf",
-          merk: "Datsun"
-        },
-        {
-          id: 2,
-          model: "a3howr",
-          merk: "Samsung"
-        },
-        {
-          id: 3,
-          model: "zrqrwqo",
-          merk: "Samsung"
-        }
-      ],
-      toolsFiltered: []
+      tableItem: [],
+      tableItemFiltered: []
     };
   },
   methods: {
     applyFilter() {
-      const filter = document.getElementById("filter-daftar-barang").value
-      this.toolsFiltered = this.tools.filter(function(tool) {return tool.merk.toUpperCase().includes(filter.toUpperCase())})
-        .concat(this.tools.filter(function(tool) {return tool.model.toUpperCase().includes(filter.toUpperCase())}))
-        .sort((a, b) => (a.model.toUpperCase() > b.model.toUpperCase()) ? -1 : 1)
-        .sort((a, b) => (a.merk.toUpperCase() > b.merk.toUpperCase()) ? 1 : -1)
-      this.toolsFiltered = [...new Set(this.toolsFiltered)]
-      const total = this.toolsFiltered.length
+      const filter = document.getElementById("filter-text").value
+      this.tableItemFiltered = this.tableItem.filter(function (item) {
+        return item.searchHelper.toLowerCase().includes(filter.toLowerCase())
+      })
+      const total = this.tableItemFiltered.length
       document.getElementById("count-filtered").innerText = "Total "+total
-      this.toolsFiltered = this.toolsFiltered.slice(this.pageSize*(this.page-1), this.pageSize*this.page)
+      this.tableItemFiltered = this.tableItemFiltered.slice(this.pageSize*(this.page-1), this.pageSize*this.page)
       if (this.page === 1) {
         document.getElementById("prev-page").classList.add("disabled")
       } else {
@@ -63,38 +45,12 @@ export default {
       } else {
         document.getElementById("next-page").classList.remove("disabled")
       }
-      let notNeededElement = document.getElementsByClassName("not-"+this.$route.params.id)
-      console.log(notNeededElement)
-      for (let i = 0; i < notNeededElement.length; i++) {
-        notNeededElement[i].style.display = "none"
-        notNeededElement[i].innerHTML = ""
-      }
+      this.removeUneeded()
     },
     switchPage(newPage) {
-      const url = process.env.baseUrl
-      const filter = document.getElementById("filter-daftar-barang").value
-      this.page = newPage
       this.pageSize = document.getElementById("filter-page-size").value
-      fetch( baseUrl + `/item-inspections?` +
-        `from=` + (this.page-1)*this.pageSize +
-        `&to=` + (this.page)*this.pageSize-1 +
-        `&search=` + filter +
-        `&limit=` + this.pageSize +
-        `&page=` + this.page +
-        `&order=0` +
-        `&ordering=asc`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem("token"),
-        }
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log(result)
-        this.tools = result.data
-        this.switchPage(1)
-      })
+      this.page = newPage
+      this.applyFilter()
     },
     prevPage() {
       if (!document.getElementById("prev-page").classList.contains("disabled")){
@@ -124,16 +80,84 @@ export default {
           return ["No", "Nama", "Username", "Email", "Peran", "Aksi"]
       }
     },
-    show(id) {
+    getEndpoint() {
+      switch (this.$route.params.id) {
+        case "daftar-barang":
+          return "item-inspections"
+        case "judul":
+          return "form-types"
+        case "barang":
+          return "items"
+        case "area":
+          return "areas"
+        case "pekerjaan":
+          return "jobs"
+        case "pelaksana-pekerjaan":
+          return "companies"
+        case "pengguna":
+          return "users"
+      }
+    },
+    checkTableContext(context) {
+      return this.$route.params.id === context
+    },
+    removeUneeded() {
+      let notNeededElement = document.getElementsByClassName("not-"+this.$route.params.id)
+      if (notNeededElement) {
+        for (let i = 0; i < notNeededElement.length; i++) {
+          notNeededElement[i].style.display = "none"
+          notNeededElement[i].innerHTML = ""
+        }
+      }
+    },
+    showInspeksi(id) {
       id = id.substring(11)
       localStorage.setItem("selected-id-barang", id)
       this.$router.push('/barang/daftar-barang/daftar-riwayat-inspeksi-barang')
+    },
+    async loadData() {
+      let url = process.env.baseUrl
+      url += `/`+this.getEndpoint()+`?search[value]=&start=0&length=2000&order[0][column]=0&order[0][dir]=asc` +
+        `&to=` + `2020` + `-12-31` +
+        `&from=` + `2020` + `-01-01`
+      await fetch( url , {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        }
+      })
+      .then(response => response.json())
+      .then(result => {
+        this.tableItem = result.data
+        for (let i = 0; i < this.tableItem.length; i++) {
+          switch (this.$route.params.id) {
+            case "daftar-barang":
+              this.tableItem[i]["searchHelper"] = this.tableItem[i].model + ' ' + this.tableItem[i].brand
+              break
+            case "barang":
+            case "area":
+            case "pekerjaan":
+            case "judul":
+              this.tableItem[i]["searchHelper"] = this.tableItem[i].name
+              break
+            case "pelaksana-pekerjaan":
+              this.tableItem[i]["searchHelper"] = this.tableItem[i].name + ' ' + this.tableItem[i].type
+              break
+            case "pengguna":
+              this.tableItem[i]["searchHelper"] = this.tableItem[i].name + ' ' + this.tableItem[i].username + ' ' + this.tableItem[i].email
+              break
+          }
+        }
+        console.log(this.tableItem)
+        this.switchPage(1)
+      })
     }
   },
   mounted: function () {
     this.$activateMenuDropdown(this.items[1].text)
     document.getElementById("btn-tambah").innerText = "Tambah " + this.title
-    this.switchPage(1)
+    this.removeUneeded()
+    this.loadData()
   },
   // middleware: "authentication",
 };
@@ -144,11 +168,11 @@ export default {
     <PageHeader :title="title" :items="items" />
 
     <div class="row mb-3">
-      <div class="col-6 not-daftar-barang">
-        <button class="btn btn-success" id="btn-tambah"></button>
+      <div class="col-6">
+        <button class="btn btn-success not-daftar-barang" id="btn-tambah"></button>
       </div>
       <div class="col-6">
-        <input type="search" class="form-control not-daftar-barang" placeholder="Cari" id="filter-daftar-barang"
+        <input type="search" class="form-control" placeholder="Cari" id="filter-text"
                @keyup.enter="switchPage(1)"/>
       </div>
     </div>
@@ -161,18 +185,54 @@ export default {
               <th scope="col" v-for="column in getColumn()">{{ column }}</th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="table-light" v-for="(tool, index) in toolsFiltered">
+          <tbody v-if="checkTableContext('daftar-barang')">
+            <tr class="table-light" v-for="(item, index) in tableItemFiltered">
               <td>{{ (page-1)*pageSize+index+1 }}</td>
-              <td>{{ tool.model }}</td>
-              <td>{{ tool.merk }}</td>
+              <td>{{ item.model }}</td>
+              <td>{{ item.brand }}</td>
               <td>
-                <button :id="'data-table-'+tool.id" class="btn btn-primary btn-sm" @click="show($event.target.id)">show</button>
+                <button :id="'show-table-'+item.item_id" class="btn btn-primary btn-sm" @click="showInspeksi($event.target.id)">show</button>
                 <button class="btn btn-success btn-sm">asd</button>
-                <button class="btn btn-warning btn-sm not-daftar-barang">edit</button>
-                <button class="btn btn-danger btn-sm not-daftar-barang">delete</button>
               </td>
             </tr>
+          </tbody>
+          <tbody v-if="checkTableContext('judul')||checkTableContext('barang')
+              ||checkTableContext('area')||checkTableContext('pekerjaan')">
+            <tr class="table-light" v-for="(item, index) in tableItemFiltered">
+              <td>{{ (page-1)*pageSize+index+1 }}</td>
+              <td>{{ item.name }}</td>
+              <td>
+                <button :id="'show-table-'+item.item_id" class="btn btn-primary btn-sm">show</button>
+                <button class="btn btn-warning btn-sm">edit</button>
+                <button class="btn btn-danger btn-sm">delete</button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-if="checkTableContext('pelaksana-pekerjaan')">
+            <tr class="table-light" v-for="(item, index) in tableItemFiltered">
+              <td>{{ (page-1)*pageSize+index+1 }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.type }}</td>
+              <td>
+                <button :id="'show-table-'+item.item_id" class="btn btn-primary btn-sm">show</button>
+                <button class="btn btn-warning btn-sm">edit</button>
+                <button class="btn btn-danger btn-sm">delete</button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-if="checkTableContext('pengguna')">
+          <tr class="table-light" v-for="(item, index) in tableItemFiltered">
+            <td>{{ (page-1)*pageSize+index+1 }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.username }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.role }}</td>
+            <td>
+              <button :id="'show-table-'+item.item_id" class="btn btn-primary btn-sm">show</button>
+              <button class="btn btn-warning btn-sm">edit</button>
+              <button class="btn btn-danger btn-sm">delete</button>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -210,10 +270,9 @@ export default {
           required
           @change="switchPage(page)"
         >
-          <option value="2" selected>2/laman</option>
-          <option value="10">10/laman</option>
-          <option value="20">20/laman</option>
-          <option value=""></option>
+          <option value="20" selected>20/laman</option>
+          <option value="50">50/laman</option>
+          <option value="100">100/laman</option>
         </select>
         <div class="d-inline mt-2" id="count-filtered">Total 1</div>
       </div>
