@@ -16,7 +16,7 @@ export default {
           text: "Form",
         },
         {
-          text: this.$route.params.id,
+          text: this.$route.params.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
         },
         {
           text: "Data Awal",

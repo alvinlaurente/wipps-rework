@@ -113,7 +113,7 @@ export default {
     <div class="row mb-3">
       <div class="col-6">
         <nuxt-link class="btn btn-orange" to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang/inspeksi-ulang">Inspeksi Ulang</nuxt-link>
-        <nuxt-link class="btn btn-danger" to="/barang/daftar-barang">Kembali</nuxt-link>
+        <nuxt-link class="btn btn-danger" to="/table/daftar-barang">Kembali</nuxt-link>
       </div>
       <div class="col-6">
           <input type="search" class="form-control" placeholder="Cari" id="filter-inspeksi"

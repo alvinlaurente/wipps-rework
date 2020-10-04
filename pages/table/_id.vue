@@ -5,18 +5,18 @@
 export default {
   head() {
     return {
-      title: "Daftar Barang",
+      title: this.title,
     };
   },
   data() {
     return {
-      title: "Daftar Barang",
+      title: this.$route.params.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
       items: [
         {
-          text: "Barang",
+          text: "Table",
         },
         {
-          text: "Daftar Barang",
+          text: this.$route.params.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
           active: true,
         },
       ],
@@ -45,7 +45,6 @@ export default {
   methods: {
     applyFilter() {
       const filter = document.getElementById("filter-daftar-barang").value
-      this.pageSize = document.getElementById("filter-page-size").value
       this.toolsFiltered = this.tools.filter(function(tool) {return tool.merk.toUpperCase().includes(filter.toUpperCase())})
         .concat(this.tools.filter(function(tool) {return tool.model.toUpperCase().includes(filter.toUpperCase())}))
         .sort((a, b) => (a.model.toUpperCase() > b.model.toUpperCase()) ? -1 : 1)
@@ -64,10 +63,38 @@ export default {
       } else {
         document.getElementById("next-page").classList.remove("disabled")
       }
+      let notNeededElement = document.getElementsByClassName("not-"+this.$route.params.id)
+      console.log(notNeededElement)
+      for (let i = 0; i < notNeededElement.length; i++) {
+        notNeededElement[i].style.display = "none"
+        notNeededElement[i].innerHTML = ""
+      }
     },
     switchPage(newPage) {
+      const url = process.env.baseUrl
+      const filter = document.getElementById("filter-daftar-barang").value
       this.page = newPage
-      this.applyFilter()
+      this.pageSize = document.getElementById("filter-page-size").value
+      fetch( baseUrl + `/item-inspections?` +
+        `from=` + (this.page-1)*this.pageSize +
+        `&to=` + (this.page)*this.pageSize-1 +
+        `&search=` + filter +
+        `&limit=` + this.pageSize +
+        `&page=` + this.page +
+        `&order=0` +
+        `&ordering=asc`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        }
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        this.tools = result.data
+        this.switchPage(1)
+      })
     },
     prevPage() {
       if (!document.getElementById("prev-page").classList.contains("disabled")){
@@ -79,6 +106,24 @@ export default {
         this.switchPage(this.page+1)
       }
     },
+    getColumn() {
+      switch (this.$route.params.id) {
+        case "daftar-barang":
+          return ["No", "Model", "Merk", "Aksi"]
+        case "judul":
+          return ["No", "Nama", "Aksi"]
+        case "barang":
+          return ["No", "Nama", "Aksi"]
+        case "area":
+          return ["No", "Nama", "Aksi"]
+        case "pekerjaan":
+          return ["No", "Nama", "Aksi"]
+        case "pelaksana-pekerjaan":
+          return ["No", "Nama", "Jenis", "Aksi"]
+        case "pengguna":
+          return ["No", "Nama", "Username", "Email", "Peran", "Aksi"]
+      }
+    },
     show(id) {
       id = id.substring(11)
       localStorage.setItem("selected-id-barang", id)
@@ -87,20 +132,8 @@ export default {
   },
   mounted: function () {
     this.$activateMenuDropdown(this.items[1].text)
+    document.getElementById("btn-tambah").innerText = "Tambah " + this.title
     this.switchPage(1)
-    // fetch( process.env.baseUrl + `/items/list`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': 'Bearer ' + localStorage.getItem("token"),
-    //   }
-    // })
-    // .then(response => response.json())
-    // .then(result => {
-    //   console.log(result)
-    //   this.tools = result.data
-    //   this.switchPage(1)
-    // })
   },
   // middleware: "authentication",
 };
@@ -111,9 +144,9 @@ export default {
     <PageHeader :title="title" :items="items" />
 
     <div class="row mb-3">
-      <div class="col-6">
-            <button class="btn btn-success">Tambah Judul</button>
-        </div>
+      <div class="col-6 not-daftar-barang">
+        <button class="btn btn-success" id="btn-tambah"></button>
+      </div>
       <div class="col-6">
         <input type="search" class="form-control not-daftar-barang" placeholder="Cari" id="filter-daftar-barang"
                @keyup.enter="switchPage(1)"/>
@@ -125,15 +158,7 @@ export default {
         <table class="table">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">No</th>
-              <th scope="col not-semuareferensi">Model</th>
-              <th scope="col not-semuareferensi">Mark</th>
-              <th scope="col">Aksi</th>
-              <th scope="col not-daftar-barang">Nama</th>
-              <th scope="col not-daftar-barang not-judul not-barang not-area not-pekerjaan not-pengguna">Jenis</th>
-              <th scope="col not-daftar-barang not-judul not-barang not-area not-pekerjaan not-pelaksanaan-pekerjaan">Username</th>
-              <th scope="col not-daftar-barang not-judul not-barang not-area not-pekerjaan not-pelaksanaan-pekerjaan">Email</th>
-              <th scope="col not-daftar-barang not-judul not-barang not-area not-pekerjaan not-pelaksanaan-pekerjaan">Peran</th>
+              <th scope="col" v-for="column in getColumn()">{{ column }}</th>
             </tr>
           </thead>
           <tbody>
@@ -152,7 +177,7 @@ export default {
         </table>
       </div>
     </div>
-    
+
     <div class="row justify-content-center">
       <div class="col-1 mr-3">
         <nav aria-label="Navigation" class="d-inline">

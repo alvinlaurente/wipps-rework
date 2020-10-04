@@ -80,7 +80,7 @@ export const menuItems = [
       {
         id: 201,
         label: "Daftar Barang",
-        link: "/barang/daftar-barang",
+        link: "/table/daftar-barang",
         parentId: 200
       }
     ]
@@ -93,37 +93,37 @@ export const menuItems = [
       {
         id: 301,
         label: "Judul",
-        link: "/referensi/judul",
+        link: "/table/judul",
         parentId: 300
       },
       {
         id: 301,
         label: "Barang",
-        link: "/referensi/barang",
+        link: "/table/barang",
         parentId: 300
       },
       {
         id: 301,
         label: "Area",
-        link: "/referensi/area",
+        link: "/table/area",
         parentId: 300
       },
       {
         id: 301,
         label: "Pekerjaan",
-        link: "/referensi/pekerjaan",
+        link: "/table/pekerjaan",
         parentId: 300
       },
       {
         id: 301,
-        label: "Pelaksanaan Pekerjaan",
-        link: "/referensi/pelaksanaan-pekerjaan",
+        label: "Pelaksana Pekerjaan",
+        link: "/table/pelaksana-pekerjaan",
         parentId: 300
       },
       {
         id: 301,
         label: "Pengguna",
-        link: "/referensi/pengguna",
+        link: "/table/pengguna",
         parentId: 300
       }
     ]
