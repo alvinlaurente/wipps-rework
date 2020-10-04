@@ -1,8 +1,8 @@
 export default function ({ route, redirect }) {
 
-    const ru = localStorage.getItem('ru');
+    const role = localStorage.getItem('role');
 
-    if (ru !== 'ru5') {
+    if (role === 'administrator') {
         return redirect('/')
     }
 }
