@@ -4,13 +4,13 @@ export default function ({ route, redirect }) {
 
   switch(role) {
     case "safety-man":
-      return redirect('/safety-man/beranda')
+      return redirect('/dashboard/beranda')
       break;
     case "safety-inspector":
       return redirect('/safety-inspector/beranda')
       break;
     case "super-admin":
-      return redirect('/super-admin/beranda')
+      return redirect('/dashboard/beranda')
       break;
     case "supervisor":
       return redirect('/supervisor/beranda')
