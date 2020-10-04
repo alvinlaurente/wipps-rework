@@ -24,12 +24,13 @@ export default {
         }
       ],
       cardBody: "",
+
       status: "Safe",
       options: [
         { text: "Safe", value: "Safe" },
         { text: "Unsafe", value: "Unsafe" },
         { text: "N/A", value: "N/A" }
-      ]
+      ],
     };
   },
   mounted: function() {
@@ -90,8 +91,8 @@ export default {
 
       <div class="col-12 mb-3">
         <div class="accordion" role="tablist">
-          <b-card no-body class="mb-1">
-            <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-card no-body class="mb-0">
+            <b-card-header header-tag="header" class="" role="tab">
               <b-button
                 block
                 v-b-toggle.accordion-1
@@ -123,8 +124,8 @@ export default {
             </b-collapse>
           </b-card>
 
-          <b-card no-body class="mb-1">
-            <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-card no-body class="mb-0">
+            <b-card-header header-tag="header" class="" role="tab">
               <b-button
                 block
                 v-b-toggle.accordion-2
@@ -162,7 +163,7 @@ export default {
             </b-collapse>
           </b-card>
 
-          <b-card no-body class="mb-1">
+          <b-card no-body class="mb-0">
             <b-card-header header-tag="header" class="p-1" role="tab">
               <b-button
                 block
@@ -183,7 +184,7 @@ export default {
             </b-collapse>
           </b-card>
 
-          <b-card no-body class="mb-1">
+          <b-card no-body class="mb-0">
             <b-card-header header-tag="header" class="p-1" role="tab">
               <b-button
                 block
@@ -243,21 +244,6 @@ td {
 
 .accordion .card {
   border-bottom: 1px solid #d5d3d5;
-  border-radius: 10px;
-}
-
-.accordion .card-header button {
-  text-decoration: none;
-  color: #7f8081;
-}
-
-.accordion .card-header button:hover,
-.accordion .card-header button:active {
-  color: black;
-}
-
-.card-header {
-  padding: 0.3vw;
 }
 
 .buttoncustom {
