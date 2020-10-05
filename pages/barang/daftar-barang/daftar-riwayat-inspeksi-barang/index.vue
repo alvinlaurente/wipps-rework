@@ -1,6 +1,6 @@
 <script>
 /**
- * Dashboard component
+ * Customer component
  */
 export default {
   head() {
@@ -19,36 +19,78 @@ export default {
           text: "Daftar Barang"
         },
         {
-            text: "Daftar Riwayat Inspeksi Barang",
-            active:true
+          text: "Daftar Riwayat Inspeksi Barang",
+          active:true
         }
       ],
-      page: 1,
-      pageSize: 20,
-      inspeksi: [],
-      inspeksiFiltered: []
+      tableItem: [],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 10,
+      pageOptions: [10, 25, 50, 100],
+      filter: null,
+      filterOn: [],
+      sortBy: "age",
+      sortDesc: false,
+      fields: [
+        {
+          key: "No",
+          thStyle: { 'width': '60px'}
+        },
+        {
+          key: "area",
+          label: "Area",
+          sortable: true,
+        },
+        {
+          key: "company",
+          label: "Pelaksana Pekerjaan",
+          sortable: true,
+        },
+        {
+          key: "model",
+          label: "Model",
+          sortable: true,
+        },
+        {
+          key: "brand",
+          label: "Merk",
+          sortable: true,
+        },
+        {
+          key: "aksi",
+          label: "Aksi",
+          thStyle: { 'width': '140px'}
+        }
+      ],
     };
   },
+  computed: {
+    /**
+     * Total no. of records
+     */
+    rows() {
+      return this.tableItem.length;
+    },
+  },
+  mounted() {
+    // Set the initial number of items
+    this.$activateMenuDropdown("Daftar Barang")
+    this.loadData()
+    this.totalRows = this.items.length;
+  },
   methods: {
-    applyFilter() {
-      const filter = document.getElementById("filter-inspeksi").value
-      this.pageSize = document.getElementById("filter-page-size-inspeksi").value
-      this.inspeksiFiltered = this.inspeksi.filter(function (item) {
-        return item.searchHelper.toLowerCase().includes(filter.toLowerCase())
-      })
-      const total = this.inspeksiFiltered.length
-      document.getElementById("count-filtered-inspeksi").innerText = "Total "+total
-      this.inspeksiFiltered = this.inspeksiFiltered.slice(this.pageSize*(this.page-1), this.pageSize*this.page)
-      if (this.page === 1) {
-        document.getElementById("prev-page-inspeksi").classList.add("disabled")
-      } else {
-        document.getElementById("prev-page-inspeksi").classList.remove("disabled")
-      }
-      if (this.pageSize*this.page>=total) {
-        document.getElementById("next-page-inspeksi").classList.add("disabled")
-      } else {
-        document.getElementById("next-page-inspeksi").classList.remove("disabled")
-      }
+    /**
+     * Search the table data with search input
+     */
+    onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
+    show(slug) {
+      localStorage.setItem("selected-id-inspeksi", slug)
+      this.$router.push('/barang/daftar-barang/detail')
     },
     async loadData() {
       let url = process.env.baseUrl
@@ -62,142 +104,78 @@ export default {
       })
         .then(response => response.json())
         .then(result => {
-          this.inspeksi = result.data
-          for (let i = 0; i < this.inspeksi.length; i++) {
-            this.inspeksi[i]["searchHelper"] = this.inspeksi[i].area + ' ' +
-              this.inspeksi[i].company + ' ' + this.inspeksi[i].model + ' ' + this.inspeksi[i].brand
-          }
-          console.log(this.inspeksi)
-          this.switchPage(1)
+          this.tableItem = result.data
         })
     },
-    switchPage(newPage) {
-      this.page = newPage
-      this.applyFilter()
-    },
-    prevPage() {
-      if (!document.getElementById("prev-page-inspeksi").classList.contains("disabled")){
-        this.switchPage(this.page-1)
-      }
-    },
-    nextPage() {
-      if (!document.getElementById("next-page-inspeksi").classList.contains("disabled")){
-        this.switchPage(this.page+1)
-      }
-    },
-    show(id) {
-      id = id.substring(14)
-      localStorage.setItem("selected-id-inspeksi", id)
-      this.$router.push('/barang/daftar-barang/detail')
-    }
   },
-  mounted: function () {
-    this.$activateMenuDropdown("Daftar Barang")
-    this.loadData()
-    this.switchPage(1)
-  },
-  // middleware: "authentication",
+  middleware: "authentication",
 };
 </script>
 
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-
-    <div class="row mb-3">
+    <div class="row">
       <div class="col-6">
-        <nuxt-link class="btn btn-orange" to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang/inspeksi-ulang">Inspeksi Ulang</nuxt-link>
+        <nuxt-link class="btn btn-success" to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang/inspeksi-ulang">Inspeksi Ulang</nuxt-link>
         <nuxt-link class="btn btn-danger" to="/table/daftar-barang">Kembali</nuxt-link>
       </div>
-      <div class="col-6">
-          <input type="search" class="form-control" placeholder="Cari" id="filter-inspeksi"
-                 @keyup.enter="switchPage(1)"/>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-lg-12">
-        <table class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">No</th>
-              <th scope="col">Area</th>
-              <th scope="col">Pelaksanaan Pekerjaan</th>
-              <th scope="col">Model</th>
-              <th scope="col">Merk</th>
-              <th scope="col">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="table-light" v-for="(inspeksi, index) in inspeksiFiltered">
-              <td>{{ (page-1)*pageSize+index+1 }}</td>
-              <td>{{ inspeksi.area }}</td>
-              <td>{{ inspeksi.company }}</td>
-              <td>{{ inspeksi.model }}</td>
-              <td>{{ inspeksi.brand }}</td>
-              <td>
-                <button :id="'data-inspeksi-'+inspeksi.slug" class="btn btn-primary btn-sm" @click="show($event.target.id)">show</button>
-                <button class="btn btn-warning btn-sm">asd</button>
-                <button class="btn btn-success btn-sm">asd</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-1 mr-3">
-        <nav aria-label="Navigation" class="d-inline">
-          <ul class="pagination justify-content-center">
-            <li class="page-item disabled" id="prev-page-inspeksi" @click="prevPage">
-              <span class="page-link">&lt;</span>
-            </li>
-            <li class="page-item">
-              <a class="page-link angka">{{ page }}</a>
-            </li>
-            <li class="page-item disabled" id="next-page-inspeksi" @click="nextPage">
-              <span class="page-link">&gt;</span>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div class="mt-2">Pergi ke</div>
-      <div class="form-group col-4 mb-2">
-        <input
-          class="form-control d-inline text-center"
-          style="max-width: 4vw"
-          :value="page"
-          @keyup.enter="switchPage($event.target.value)"
-        />
-        <select
-          name=""
-          class="form-control d-inline mr-3"
-          id="filter-page-size-inspeksi"
-          style="max-width: 10vw"
-          required
-          @change="switchPage(page)"
-        >
-          <option value="2" selected>2/laman</option>
-          <option value="10">10/laman</option>
-          <option value="20">20/laman</option>
-          <option value=""></option>
-        </select>
-        <div class="d-inline mt-2" id="count-filtered-inspeksi">Total 1</div>
+      <div class="col-12">
+        <div class="row mt-4">
+          <div class="col-sm-12 col-md-6">
+            <div id="tickets-table_length" class="dataTables_length">
+              <label class="d-inline-flex align-items-center">
+                Show&nbsp;
+                <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+              </label>
+            </div>
+          </div>
+          <!-- Search -->
+          <div class="col-sm-12 col-md-6">
+            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+              <label class="d-inline-flex align-items-center">
+                Search:
+                <b-form-input v-model="filter" type="search" placeholder="Search..." class="form-control form-control-sm ml-2"></b-form-input>
+              </label>
+            </div>
+          </div>
+          <!-- End search -->
+        </div>
+        <!-- Table -->
+        <div class="table-responsive mb-0">
+          <b-table table-class="table table-centered datatable table-card-list" thead-tr-class="table-head" :items="tableItem" :fields="fields" responsive="sm" :per-page="perPage" :current-page="currentPage" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :filter="filter" :filter-included-fields="filterOn" @filtered="onFiltered">
+            <template v-slot:cell(no)="data">{{ (perPage*(currentPage-1))+(data.index+1) }}</template>
+            <template v-slot:cell(aksi)="data">
+              <a href="javascript:void(0);" class="px-2 text-success" @click="show(data.item.slug)" v-b-tooltip.hover title="Lihat">
+                <i class="uil uil-eye font-size-18"></i>
+              </a>
+              <a href="javascript:void(0);" class="px-2 text-primary" v-b-tooltip.hover title="Ubah">
+                <i class="uil uil-pen font-size-18"></i>
+              </a>
+              <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Hapus">
+                <i class="uil uil-trash-alt font-size-18"></i>
+              </a>
+            </template>
+          </b-table>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="dataTables_paginate paging_simple_numbers float-right">
+              <ul class="pagination pagination-rounded">
+                <!-- pagination -->
+                <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage"></b-pagination>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.angka{
-  color: #007bff;
-}
-
-.btn-orange{
-    background-color: #EE7E1F;
-    color: white;
-}
-
-.btn-orange:hover{
-    background-color: #ce6b1a;
+<style>
+.table-head{
+  background-color: #C83E4D !important;
+  color: white;
 }
 </style>

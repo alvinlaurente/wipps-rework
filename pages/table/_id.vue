@@ -235,18 +235,18 @@ export default {
           <b-table table-class="table table-centered datatable table-card-list" thead-tr-class="table-head" :items="tableItem" :fields="fields" responsive="sm" :per-page="perPage" :current-page="currentPage" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :filter="filter" :filter-included-fields="filterOn" @filtered="onFiltered">
             <template v-slot:cell(no)="data">{{ (perPage*(currentPage-1))+(data.index+1) }}</template>
             <template v-slot:cell(aksi)>
-              <a href="javascript:void(0);" class="px-2 text-primary" v-b-tooltip.hover title="Edit">
+              <a href="javascript:void(0);" class="px-2 text-success" v-b-tooltip.hover title="Lihat">
+                <i class="uil uil-eye font-size-18"></i>
+              </a>
+              <a href="javascript:void(0);" class="px-2 text-primary" v-b-tooltip.hover title="Ubah">
                 <i class="uil uil-pen font-size-18"></i>
               </a>
-              <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Delete">
-                <i class="uil uil-trash-alt font-size-18"></i>
-              </a>
-              <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Delete">
+              <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Hapus">
                 <i class="uil uil-trash-alt font-size-18"></i>
               </a>
             </template>
             <template v-slot:cell(aksi-barang)="data">
-            <a href="javascript:void(0);" @click="showInspeksi(data.item.barcode)" class="px-2 text-primary" v-b-tooltip.hover title="Lihat">
+            <a href="javascript:void(0);" @click="showInspeksi(data.item.barcode)" class="px-2 text-success" v-b-tooltip.hover title="Lihat">
               <i class="uil uil-eye font-size-18"></i>
             </a>
             <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Barcode">
