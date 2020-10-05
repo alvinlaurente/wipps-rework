@@ -1,6 +1,6 @@
 <script>
 /**
- * Dashboard component
+ * Customer component
  */
 export default {
   head() {
@@ -20,65 +20,55 @@ export default {
           active: true,
         },
       ],
-      page: 1,
-      pageSize: 20,
       tableItem: [],
-      tableItemFiltered: []
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 10,
+      pageOptions: [10, 25, 50, 100],
+      filter: null,
+      filterOn: [],
+      sortBy: "age",
+      sortDesc: false,
+      fields: this.getColumn(),
     };
   },
+  computed: {
+    /**
+     * Total no. of records
+     */
+    rows() {
+      return this.tableItem.length;
+    },
+  },
+  mounted() {
+    // Set the initial number of items
+    this.$activateMenuDropdown(this.items[1].text)
+    document.getElementById("btn-tambah").innerText = "Tambah " + this.title
+    this.removeUneeded()
+    this.loadData()
+    this.totalRows = this.items.length;
+  },
   methods: {
-    applyFilter() {
-      const filter = document.getElementById("filter-text").value
-      this.tableItemFiltered = this.tableItem.filter(function (item) {
-        return item.searchHelper.toLowerCase().includes(filter.toLowerCase())
-      })
-      const total = this.tableItemFiltered.length
-      document.getElementById("count-filtered").innerText = "Total "+total
-      this.tableItemFiltered = this.tableItemFiltered.slice(this.pageSize*(this.page-1), this.pageSize*this.page)
-      if (this.page === 1) {
-        document.getElementById("prev-page").classList.add("disabled")
-      } else {
-        document.getElementById("prev-page").classList.remove("disabled")
-      }
-      if (this.pageSize*this.page>=total) {
-        document.getElementById("next-page").classList.add("disabled")
-      } else {
-        document.getElementById("next-page").classList.remove("disabled")
-      }
-      this.removeUneeded()
+    /**
+     * Search the table data with search input
+     */
+    onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
     },
-    switchPage(newPage) {
-      this.pageSize = document.getElementById("filter-page-size").value
-      this.page = newPage
-      this.applyFilter()
-    },
-    prevPage() {
-      if (!document.getElementById("prev-page").classList.contains("disabled")){
-        this.switchPage(this.page-1)
+    removeUneeded() {
+      let notNeededElement = document.getElementsByClassName("not-"+this.$route.params.id)
+      if (notNeededElement) {
+        for (let i = 0; i < notNeededElement.length; i++) {
+          notNeededElement[i].style.display = "none"
+          notNeededElement[i].innerHTML = ""
+        }
       }
     },
-    nextPage() {
-      if (!document.getElementById("next-page").classList.contains("disabled")){
-        this.switchPage(this.page+1)
-      }
-    },
-    getColumn() {
-      switch (this.$route.params.id) {
-        case "daftar-barang":
-          return ["No", "Model", "Merk", "Aksi"]
-        case "judul":
-          return ["No", "Nama", "Aksi"]
-        case "barang":
-          return ["No", "Nama", "Aksi"]
-        case "area":
-          return ["No", "Nama", "Aksi"]
-        case "pekerjaan":
-          return ["No", "Nama", "Aksi"]
-        case "pelaksana-pekerjaan":
-          return ["No", "Nama", "Jenis", "Aksi"]
-        case "pengguna":
-          return ["No", "Nama", "Username", "Email", "Peran", "Aksi"]
-      }
+    showInspeksi(id) {
+      localStorage.setItem("tmp_barcode", id)
+      this.$router.push('/barang/daftar-barang/daftar-riwayat-inspeksi-barang')
     },
     getEndpoint() {
       switch (this.$route.params.id) {
@@ -98,22 +88,97 @@ export default {
           return "users"
       }
     },
-    checkTableContext(context) {
-      return this.$route.params.id === context
-    },
-    removeUneeded() {
-      let notNeededElement = document.getElementsByClassName("not-"+this.$route.params.id)
-      if (notNeededElement) {
-        for (let i = 0; i < notNeededElement.length; i++) {
-          notNeededElement[i].style.display = "none"
-          notNeededElement[i].innerHTML = ""
-        }
+    getColumn() {
+      switch (this.$route.params.id) {
+        case "daftar-barang":
+          return [
+            {
+              key: "No",
+              thStyle: { 'width': '60px'}
+            },
+            {
+              key: "model",
+              label: "Model",
+              sortable: true,
+            },
+            {
+              key: "brand",
+              label: "Merk",
+              sortable: true,
+            },
+            {
+              key: "aksi-barang",
+              label: "Aksi",
+              thStyle: { 'width': '100px'}
+            }
+          ]
+        case "judul":
+        case "barang":
+        case "area":
+        case "pekerjaan":
+          return [
+            {
+              key: "No",
+              thStyle: { 'width': '60px'}
+            },
+            {
+              key: "name",
+              label: "Nama",
+              sortable: true,
+            },
+            {
+              key: "Aksi",
+              thStyle: { 'width': '140px'}
+            }
+          ]
+        case "pelaksana-pekerjaan":
+          return [
+            {
+              key: "No",
+              thStyle: { 'width': '60px'}
+            },
+            {
+              key: "name",
+              label: "Nama",
+              sortable: true,
+            },
+            {
+              key: "type",
+              label: "Jenis",
+              sortable: true,
+            },
+            {
+              key: "Aksi",
+              thStyle: { 'width': '140px'}
+            }
+          ]
+        case "pengguna":
+          return [
+            {
+              key: "No",
+              thStyle: { 'width': '60px'}
+            },
+            {
+              key: "name",
+              label: "Nama",
+              sortable: true,
+            },
+            {
+              key: "username",
+              label: "Username",
+              sortable: true,
+            },
+            {
+              key: "email",
+              label: "Email",
+              sortable: true,
+            },
+            {
+              key: "Aksi",
+              thStyle: { 'width': '140px'}
+            }
+          ]
       }
-    },
-    showInspeksi(id) {
-      id = id.substring(11)
-      localStorage.setItem("tmp_barcode", id)
-      this.$router.push('/barang/daftar-barang/daftar-riwayat-inspeksi-barang')
     },
     async loadData() {
       let url = process.env.baseUrl
@@ -129,159 +194,85 @@ export default {
       .then(response => response.json())
       .then(result => {
         this.tableItem = result.data
-        for (let i = 0; i < this.tableItem.length; i++) {
-          switch (this.$route.params.id) {
-            case "daftar-barang":
-              this.tableItem[i]["searchHelper"] = this.tableItem[i].model + ' ' + this.tableItem[i].brand
-              break
-            case "barang":
-            case "area":
-            case "pekerjaan":
-            case "judul":
-              this.tableItem[i]["searchHelper"] = this.tableItem[i].name
-              break
-            case "pelaksana-pekerjaan":
-              this.tableItem[i]["searchHelper"] = this.tableItem[i].name + ' ' + this.tableItem[i].type
-              break
-            case "pengguna":
-              this.tableItem[i]["searchHelper"] = this.tableItem[i].name + ' ' + this.tableItem[i].username + ' ' + this.tableItem[i].email
-              break
-          }
-        }
         console.log(this.tableItem)
-        this.switchPage(1)
       })
     }
   },
-  mounted: function () {
-    this.$activateMenuDropdown(this.items[1].text)
-    document.getElementById("btn-tambah").innerText = "Tambah " + this.title
-    this.removeUneeded()
-    this.loadData()
-  },
-  // middleware: "authentication",
+  middleware: "authentication",
 };
 </script>
 
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-
-    <div class="row mb-3">
+    <div class="row">
       <div class="col-6">
         <button class="btn btn-success not-daftar-barang" id="btn-tambah"></button>
       </div>
-      <div class="col-6">
-        <input type="search" class="form-control" placeholder="Cari" id="filter-text"
-               @keyup.enter="switchPage(1)"/>
-      </div>
-    </div>
-
-    <div class="row mb-3">
-      <div class="col-lg-12">
-        <table class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col" v-for="column in getColumn()">{{ column }}</th>
-            </tr>
-          </thead>
-          <tbody v-if="checkTableContext('daftar-barang')">
-            <tr class="table-light" v-for="(item, index) in tableItemFiltered">
-              <td>{{ (page-1)*pageSize+index+1 }}</td>
-              <td>{{ item.model }}</td>
-              <td>{{ item.brand }}</td>
-              <td>
-                <button :id="'show-table-'+item.barcode" class="btn btn-primary btn-sm" @click="showInspeksi($event.target.id)">show</button>
-                <button class="btn btn-success btn-sm">asd</button>
-              </td>
-            </tr>
-          </tbody>
-          <tbody v-if="checkTableContext('judul')||checkTableContext('barang')
-              ||checkTableContext('area')||checkTableContext('pekerjaan')">
-            <tr class="table-light" v-for="(item, index) in tableItemFiltered">
-              <td>{{ (page-1)*pageSize+index+1 }}</td>
-              <td>{{ item.name }}</td>
-              <td>
-                <button :id="'show-table-'+item.slug" class="btn btn-primary btn-sm">show</button>
-                <button class="btn btn-warning btn-sm">edit</button>
-                <button class="btn btn-danger btn-sm">delete</button>
-              </td>
-            </tr>
-          </tbody>
-          <tbody v-if="checkTableContext('pelaksana-pekerjaan')">
-            <tr class="table-light" v-for="(item, index) in tableItemFiltered">
-              <td>{{ (page-1)*pageSize+index+1 }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.type }}</td>
-              <td>
-                <button :id="'show-table-'+item.slug" class="btn btn-primary btn-sm">show</button>
-                <button class="btn btn-warning btn-sm">edit</button>
-                <button class="btn btn-danger btn-sm">delete</button>
-              </td>
-            </tr>
-          </tbody>
-          <tbody v-if="checkTableContext('pengguna')">
-          <tr class="table-light" v-for="(item, index) in tableItemFiltered">
-            <td>{{ (page-1)*pageSize+index+1 }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.username }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ item.role }}</td>
-            <td>
-              <button :id="'show-table-'+item.slug" class="btn btn-primary btn-sm">show</button>
-              <button class="btn btn-warning btn-sm">edit</button>
-              <button class="btn btn-danger btn-sm">delete</button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="row justify-content-center">
-      <div class="col-1 mr-3">
-        <nav aria-label="Navigation" class="d-inline">
-          <ul class="pagination justify-content-center">
-            <li class="page-item disabled" id="prev-page" @click="prevPage">
-              <span class="page-link">&lt;</span>
-            </li>
-            <li class="page-item">
-              <a class="page-link angka">{{ page }}</a>
-            </li>
-            <li class="page-item disabled" id="next-page" @click="nextPage">
-              <span class="page-link">&gt;</span>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div class="mt-2">Pergi ke</div>
-      <div class="form-group col-4 mb-2">
-        <input
-          class="form-control d-inline text-center"
-          style="max-width: 4vw"
-          :value="page"
-          @keyup.enter="switchPage($event.target.value)"
-        />
-        <select
-          name=""
-          class="form-control d-inline mr-3"
-          id="filter-page-size"
-          style="max-width: 10vw"
-          required
-          @change="switchPage(page)"
-        >
-          <option value="20" selected>20/laman</option>
-          <option value="50">50/laman</option>
-          <option value="100">100/laman</option>
-        </select>
-        <div class="d-inline mt-2" id="count-filtered">Total 1</div>
+      <div class="col-12">
+        <div class="row mt-4">
+          <div class="col-sm-12 col-md-6">
+            <div id="tickets-table_length" class="dataTables_length">
+              <label class="d-inline-flex align-items-center">
+                Show&nbsp;
+                <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+              </label>
+            </div>
+          </div>
+          <!-- Search -->
+          <div class="col-sm-12 col-md-6">
+            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+              <label class="d-inline-flex align-items-center">
+                Search:
+                <b-form-input v-model="filter" type="search" placeholder="Search..." class="form-control form-control-sm ml-2"></b-form-input>
+              </label>
+            </div>
+          </div>
+          <!-- End search -->
+        </div>
+        <!-- Table -->
+        <div class="table-responsive mb-0">
+          <b-table table-class="table table-centered datatable table-card-list" thead-tr-class="table-head" :items="tableItem" :fields="fields" responsive="sm" :per-page="perPage" :current-page="currentPage" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :filter="filter" :filter-included-fields="filterOn" @filtered="onFiltered">
+            <template v-slot:cell(no)="data">{{ (perPage*(currentPage-1))+(data.index+1) }}</template>
+            <template v-slot:cell(aksi)>
+              <a href="javascript:void(0);" class="px-2 text-primary" v-b-tooltip.hover title="Edit">
+                <i class="uil uil-pen font-size-18"></i>
+              </a>
+              <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Delete">
+                <i class="uil uil-trash-alt font-size-18"></i>
+              </a>
+              <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Delete">
+                <i class="uil uil-trash-alt font-size-18"></i>
+              </a>
+            </template>
+            <template v-slot:cell(aksi-barang)="data">
+            <a href="javascript:void(0);" @click="showInspeksi(data.item.barcode)" class="px-2 text-primary" v-b-tooltip.hover title="Lihat">
+              <i class="uil uil-eye font-size-18"></i>
+            </a>
+            <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Barcode">
+              <i class="uil uil-bars font-size-18"></i>
+            </a>
+          </template>
+          </b-table>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="dataTables_paginate paging_simple_numbers float-right">
+              <ul class="pagination pagination-rounded">
+                <!-- pagination -->
+                <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage"></b-pagination>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.angka{
-  color: #007bff;
+<style>
+.table-head{
+  background-color: #C83E4D !important;
+  color: white;
 }
 </style>
