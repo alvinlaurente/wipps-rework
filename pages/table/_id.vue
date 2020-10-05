@@ -2,6 +2,8 @@
 /**
  * Customer component
  */
+import QRCode from 'qrcode'
+
 export default {
   head() {
     return {
@@ -180,6 +182,15 @@ export default {
           ]
       }
     },
+    showBarcode(barcode) {
+      this.$root.$emit('bv::show::modal', 'modal', '#btnShow')
+      QRCode.toDataURL(process.env.baseUrl+"/barcode/"+barcode,{
+        width:1000
+      }).then(url => {
+        console.log(url)
+        document.getElementById('barcode-image').style.backgroundImage = `url(${url})`
+      })
+    },
     async loadData() {
       let url = process.env.baseUrl
       url += `/`+this.getEndpoint()+`?search[value]=&start=0&length=2000&order[0][column]=0&order[0][dir]=asc` +
@@ -205,6 +216,9 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
+    <b-modal id="modal" centered title="Barcode">
+      <div id="barcode-image"></div>
+    </b-modal>
     <div class="row">
       <div class="col-6">
         <button class="btn btn-success not-daftar-barang" id="btn-tambah"></button>
@@ -249,8 +263,8 @@ export default {
             <a href="javascript:void(0);" @click="showInspeksi(data.item.barcode)" class="px-2 text-success" v-b-tooltip.hover title="Lihat">
               <i class="uil uil-eye font-size-18"></i>
             </a>
-            <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Barcode">
-              <i class="uil uil-bars font-size-18"></i>
+            <a class="px-2 text-danger" v-b-tooltip.hover @click="showBarcode(data.item.barcode)" title="Barcode">
+              <i class="fas fa-qrcode"></i>
             </a>
           </template>
           </b-table>
@@ -274,5 +288,10 @@ export default {
 .table-head{
   background-color: #C83E4D !important;
   color: white;
+}
+#barcode-image{
+  width: 100%;
+  padding-top: 100%;
+  background-size: cover;
 }
 </style>

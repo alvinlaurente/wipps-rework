@@ -1,4 +1,6 @@
 <script>
+import QRCode from "qrcode";
+
 /**
  * Customer component
  */
@@ -88,6 +90,15 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
+    showBarcode(barcode) {
+      this.$root.$emit('bv::show::modal', 'modal', '#btnShow')
+      QRCode.toDataURL(process.env.baseUrl+"/barcode/"+barcode,{
+        width:1000
+      }).then(url => {
+        console.log(url)
+        document.getElementById('barcode-image').style.backgroundImage = `url(${url})`
+      })
+    },
     show(slug) {
       localStorage.setItem("selected-id-inspeksi", slug)
       this.$router.push('/barang/daftar-barang/detail')
@@ -115,6 +126,9 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
+    <b-modal id="modal" centered title="Barcode">
+      <div id="barcode-image"></div>
+    </b-modal>
     <div class="row">
       <div class="col-6">
         <nuxt-link class="btn btn-success" to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang/inspeksi-ulang">Inspeksi Ulang</nuxt-link>
@@ -152,8 +166,8 @@ export default {
               <a href="javascript:void(0);" class="px-2 text-primary" v-b-tooltip.hover title="Ubah">
                 <i class="uil uil-pen font-size-18"></i>
               </a>
-              <a href="javascript:void(0);" class="px-2 text-danger" v-b-tooltip.hover title="Hapus">
-                <i class="uil uil-trash-alt font-size-18"></i>
+              <a class="px-2 text-danger" v-b-tooltip.hover @click="showBarcode(data.item.barcode)" title="Barcode">
+                <i class="fas fa-qrcode"></i>
               </a>
             </template>
           </b-table>
