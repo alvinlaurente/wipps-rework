@@ -176,7 +176,6 @@ export default {
         },
         hideAlert() {
             document.getElementById("alert-div").style.display = "none";
-            document.getElementById("alert-div").style.display = "none";
         }
     },
     mounted: function () {

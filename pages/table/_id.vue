@@ -221,7 +221,7 @@ export default {
     </b-modal>
     <div class="row">
       <div class="col-6">
-        <button class="btn btn-success not-daftar-barang" id="btn-tambah"></button>
+        <nuxt-link class="btn btn-success not-daftar-barang" id="btn-tambah" :to="'/form/referensi/'+this.$route.params.id"></nuxt-link>
       </div>
       <div class="col-12">
         <div class="row mt-4">
