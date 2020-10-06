@@ -104,12 +104,14 @@
 
       <div class="col-6">
         <label>Tanggal awal berlaku</label>
-        <b-form-input value="2019-08-19" type="date" id="input-start-date"></b-form-input>
+        <b-form-input type="date" id="input-start-date"></b-form-input>
+        <div class="invalid-feedback" id="invalid-start-date"><span>Kolom ini tidak boleh kosong.</span></div>
       </div>
 
       <div class="col-6">
         <label>Tanggal akhir berlaku</label>
-        <b-form-input value="2019-08-19" type="date" id="input-due-date"></b-form-input>
+        <b-form-input type="date" id="input-due-date"></b-form-input>
+        <div class="invalid-feedback" id="invalid-due-date"><span>Kolom ini tidak boleh kosong.</span></div>
       </div>
     </div>
 
@@ -117,10 +119,12 @@
       <div class="col-6">
         <label>Safety man</label>
         <b-form-input placeholder="pemeriksa" id="input-safetyman"></b-form-input>
+        <div class="invalid-feedback" id="invalid-safetyman"><span>Kolom ini tidak boleh kosong.</span></div>
       </div>
       <div class="col-6">
         <label>Pemeriksa</label>
         <b-form-input placeholder="Pemeriksa" id="input-inspector"></b-form-input>
+        <div class="invalid-feedback" id="invalid-inspector"><span>Kolom ini tidak boleh kosong.</span></div>
       </div>
     </div>
 
@@ -178,67 +182,99 @@ export default {
         link: JSON.parse(response.xhr.response).data
       })
     },
+    verifyInfoField(context) {
+      var valid = true;
+      if (context === "barang") {
+        if (document.getElementById("input-safetyman").value === "") {
+          document.getElementById("invalid-safetyman").style.display = "block";
+          valid = false;
+        } else {
+          document.getElementById("invalid-safetyman").style.display = "none";
+        }
+        if (document.getElementById("input-inspector").value === "") {
+          document.getElementById("invalid-inspector").style.display = "block";
+          valid = false;
+        } else {
+          document.getElementById("invalid-inspector").style.display = "none";
+        }
+        if (document.getElementById("input-start-date").value === "") {
+          document.getElementById("invalid-start-date").style.display = "block";
+          valid = false;
+        } else {
+          document.getElementById("invalid-start-date").style.display = "none";
+        }
+        if (document.getElementById("input-due-date").value === "") {
+          document.getElementById("invalid-due-date").style.display = "block";
+          valid = false;
+        } else {
+          document.getElementById("invalid-due-date").style.display = "none";
+        }
+      }
+      return valid;
+    },
     submitChecklist() {
-      this.formData.components = []
-      let els = document.getElementsByClassName('checklist-menu')
-      for (let i = 0; i < els.length; i++) {
-        let comp = {
-          id: els[i].id.substring(10),
-          note: els[i].children[1].children[0].children[4].children[1].value,
-          images: []
+      if (this.verifyInfoField(this.prevData.context)) {
+        this.formData.components = []
+        let els = document.getElementsByClassName('checklist-menu')
+        for (let i = 0; i < els.length; i++) {
+          let comp = {
+            id: els[i].id.substring(10),
+            note: els[i].children[1].children[0].children[4].children[1].value,
+            images: []
+          }
+          let radio = document.getElementsByClassName("inlineRadioOptions-" + comp.id)
+          for (let j = 0; j < radio.length; j++) {
+            if (radio[j].checked) {
+              comp.status = radio[j].value
+            }
+          }
+          for (let j = 0; j < this.imageList.length; j++) {
+            if (this.imageList[j].formId.toString() === comp.id.toString()) {
+              comp.images.push({
+                index: comp.images.length,
+                file: this.imageList[j].link
+              })
+            }
+          }
+          if (this.prevData.context === "beranda") {
+            comp.people = document.getElementById("input-people-" + comp.id).value
+            comp.total = document.getElementById("input-total-" + comp.id).value
+          }
+          this.formData.components.push(comp)
         }
-        let radio = document.getElementsByClassName("inlineRadioOptions-" + comp.id)
-        for (let j = 0; j < radio.length; j++) {
-          if (radio[j].checked){
-            comp.status = radio[j].value
+        let endpoint = "/forms"
+        if (!(this.prevData.context === "beranda")) {
+          endpoint = "/item-inspections"
+          this.formData.form = {
+            description: document.getElementById("input-description").value,
+            start_date: document.getElementById("input-start-date").value,
+            due_date: document.getElementById("input-due-date").value,
+            safetyman: document.getElementById("input-safetyman").value,
+            inspector: document.getElementById("input-inspector").value
           }
         }
-        for (let j = 0; j < this.imageList.length; j++) {
-          if (this.imageList[j].formId.toString()===comp.id.toString()){
-            comp.images.push({
-              index: comp.images.length,
-              file: this.imageList[j].link
-            })
+        fetch(process.env.baseUrl + endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem("token"),
+          },
+          body: JSON.stringify(this.formData)
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
           }
-        }
-        if (this.prevData.context === "beranda") {
-          comp.people = document.getElementById("input-people-"+comp.id).value
-          comp.total = document.getElementById("input-total-"+comp.id).value
-        }
-        this.formData.components.push(comp)
+          return response.json()
+        })
+        .then(result => {
+          alert("berhasil menyimpan form")
+          this.$router.push('/')
+        })
+        .catch(error => {
+          alert(error)
+        })
       }
-      let endpoint = "/forms"
-      if (!(this.prevData.context === "beranda")) {
-        endpoint = "/item-inspections"
-        this.formData.form = {
-          description: document.getElementById("input-description").value,
-          start_date: document.getElementById("input-start-date").value,
-          due_date: document.getElementById("input-due-date").value,
-          safetyman: document.getElementById("input-safetyman").value,
-          inspector: document.getElementById("input-inspector").value
-        }
-      }
-      fetch( process.env.baseUrl + endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem("token"),
-        },
-        body: JSON.stringify(this.formData)
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        return response.json()
-      })
-      .then(result => {
-        alert("berhasil menyimpan form")
-        this.$router.push('/')
-      })
-      .catch(error => {
-        alert(error)
-      })
     }
   },
   mounted: function () {

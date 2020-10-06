@@ -68,8 +68,9 @@ export default {
         }
       }
     },
-    showInspeksi(id) {
+    showInspeksi(id, data) {
       localStorage.setItem("tmp_barcode", id)
+      localStorage.setItem("selected-data-barang", JSON.stringify(data))
       this.$router.push('/barang/daftar-barang/daftar-riwayat-inspeksi-barang')
     },
     getEndpoint() {
@@ -265,7 +266,7 @@ export default {
               </a>
             </template>
             <template v-slot:cell(aksi-barang)="data">
-            <a href="javascript:void(0);" @click="showInspeksi(data.item.barcode)" class="px-2 text-success" v-b-tooltip.hover title="Lihat">
+            <a href="javascript:void(0);" @click="showInspeksi(data.item.barcode, data.item)" class="px-2 text-success" v-b-tooltip.hover title="Lihat">
               <i class="uil uil-eye font-size-18"></i>
             </a>
             <a class="px-2 text-danger" v-b-tooltip.hover @click="showBarcode(data.item.barcode)" title="Barcode">

@@ -105,6 +105,11 @@ export default {
       localStorage.setItem("selected-id-inspeksi", slug)
       this.$router.push('/barang/daftar-barang/detail')
     },
+    inspeksiUlang() {
+      localStorage.setItem("id-form", localStorage.getItem("tmp_barcode"))
+      localStorage.setItem("prevPath", this.$route.path)
+      this.$router.push('/form/inspeksi-ulang')
+    },
     async loadData() {
       let url = process.env.baseUrl
       url += `/barcode-item-inspections?search[value]=&start=0&length=2000&order[0][column]=0&order[0][dir]=asc&barcode=` +
@@ -136,7 +141,7 @@ export default {
     </b-modal>
     <div class="row">
       <div class="col-6">
-        <nuxt-link class="btn btn-success" to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang/inspeksi-ulang">Inspeksi Ulang</nuxt-link>
+        <button class="btn btn-success" @click="inspeksiUlang">Inspeksi Ulang</button>
         <nuxt-link class="btn btn-danger" to="/table/daftar-barang">Kembali</nuxt-link>
       </div>
       <div class="col-12">

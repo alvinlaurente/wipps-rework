@@ -157,24 +157,22 @@ export default {
     }
   },
   mounted: function () {
-    this.$activateMenuDropdown("")
-    this.hideAlert();
     if (localStorage.getItem("prevPath").includes("barang")) {
+      this.$activateMenuDropdown("Input Barang")
       this.context = this.contexts.BARANG
     } else {
+      this.$activateMenuDropdown("Beranda")
       this.context = this.contexts.BERANDA
+      this.getJobs()
     }
+    this.hideAlert();
     let notNeededElement = document.getElementsByClassName("not-"+this.context)
     for (let i = 0; i < notNeededElement.length; i++) {
       notNeededElement[i].innerHTML = ""
-    }
 
+    }
     this.getCompanies()
     this.getAreas()
-    if (this.context === this.contexts.BERANDA) {
-      this.getJobs()
-    }
-
   },
   // middleware: "authentication",
 };
@@ -248,20 +246,10 @@ export default {
       <div class="invalid-feedback" id="invalid-equipment"><span>Kolom ini tidak boleh kosong.</span></div>
     </b-form-group>
 
-        <div class="form-group">
-          <div>
-            <button
-              type="submit"
-              class="btn btn-success"
-              v-on:click="submitData"
-            >
-              Simpan
-            </button>
-            <button type="reset" class="btn btn-danger m-l-5 ml-1" @click="back">
-              Batal
-            </button>
-          </div>
-        </div>
+    <div class="form-group">
+      <div>
+        <button type="submit" class="btn btn-success" v-on:click="submitData">Simpan</button>
+        <button type="reset" class="btn btn-danger m-l-5 ml-1" @click="back">Batal</button>
       </div>
     </div>
   </div>
