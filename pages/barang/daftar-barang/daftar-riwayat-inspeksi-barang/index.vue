@@ -105,6 +105,10 @@ export default {
       localStorage.setItem("selected-id-inspeksi", slug)
       this.$router.push('/barang/daftar-barang/detail')
     },
+    edit(slug) {
+      localStorage.setItem("selected-id-inspeksi", slug)
+      this.$router.push('/barang/daftar-barang/edit')
+    },
     inspeksiUlang() {
       localStorage.setItem("id-form", localStorage.getItem("tmp_barcode"))
       localStorage.setItem("prevPath", this.$route.path)
@@ -173,7 +177,7 @@ export default {
               <a href="javascript:void(0);" class="px-2 text-success" @click="show(data.item.slug)" v-b-tooltip.hover title="Lihat">
                 <i class="uil uil-eye font-size-18"></i>
               </a>
-              <a href="javascript:void(0);" class="px-2 text-primary" v-b-tooltip.hover title="Ubah">
+              <a href="javascript:void(0);" class="px-2 text-primary" @click="edit(data.item.slug)" v-b-tooltip.hover title="Ubah">
                 <i class="uil uil-pen font-size-18"></i>
               </a>
               <a class="px-2 text-danger" v-b-tooltip.hover @click="showBarcode(data.item.barcode)" title="Barcode">
