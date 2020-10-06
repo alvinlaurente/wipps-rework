@@ -200,86 +200,53 @@ export default {
       </button>
     </div>
 
-    <div class="row">
-      <div class="col-12">
-        <div class="form-group not-beranda">
-          <label for="input-merk">Merk</label>
-          <input
-            placeholder="Merk"
-            type="text"
-            class="form-control"
-            id="input-merk"
-            @keyup.enter="submitData"
-          />
-          <div class="invalid-feedback" id="invalid-merk">
-            <span>Kolom ini tidak boleh kosong.</span>
-          </div>
-        </div>
+    <b-form-group label-cols-sm="2" label-cols-lg="2" label="Merk" label-for="text" class="not-beranda">
+      <b-form-input type="text" placeholder="Merk" id="input-merk" @keyup.enter="submitData"></b-form-input>
+      <div class="invalid-feedback" id="invalid-merk"><span>Kolom ini tidak boleh kosong.</span></div>
+    </b-form-group>
 
-        <div class="form-group not-beranda">
-          <label for="input-model">Model</label>
-          <input
-            placeholder="Model"
-            type="text"
-            class="form-control"
-            id="input-model"
-            @keyup.enter="submitData"
-          />
-          <div class="invalid-feedback" id="invalid-model">
-            <span>Kolom ini tidak boleh kosong.</span>
-          </div>
-        </div>
+    <b-form-group label-cols-sm="2" label-cols-lg="2" label="Model" label-for="text" class="not-beranda mb-0">
+      <b-form-input type="text" placeholder="Model" id="input-model" @keyup.enter="submitData"></b-form-input>
+      <div class="invalid-feedback" id="invalid-model"><span>Kolom ini tidak boleh kosong.</span></div>
+    </b-form-group>
 
-        <div class="form-group not-barang">
-          <label for="input-pekerjaan">Pekerjaan</label>
-          <select class="form-control" id="input-pekerjaan">
-            <option value="" disabled selected hidden>
-              Pilih Pekerjaan
-            </option>
-            <option v-for="job in jobs" :value="job.id">{{job.text}}</option>
-          </select>
-          <div class="invalid-feedback" id="invalid-pekerjaan">
-            <span>Kolom ini tidak boleh kosong.</span>
-          </div>
-        </div>
+    <div class="form-group row not-barang">
+      <label class="col-md-2 col-form-label">Pekerjaan</label>
+      <div class="col-md-10">
+        <select id="input-pekerjaan" class="form-control">
+          <option value="" disabled selected hidden>Pilih Pekerjaan</option>
+          <option v-for="job in jobs" :value="job.id">{{job.text}}</option>
+        </select>
+        <div class="invalid-feedback" id="invalid-pekerjaan"><span>Kolom ini tidak boleh kosong.</span></div>
+      </div>
+    </div>
 
-        <div class="form-group">
-          <label for="input-pelaksana-pekerjaan">Pelaksanaan Kerja</label>
-          <select class="form-control" id="input-pelaksana-pekerjaan">
-            <option value="" disabled selected hidden>
-              Pilih Pelaksanaan Kerja
-            </option>
-            <option v-for="company in companies" :value="company.id">{{company.text}}</option>
-          </select>
-          <div class="invalid-feedback" id="invalid-pelaksana-pekerjaan">
-            <span>Kolom ini tidak boleh kosong.</span>
-          </div>
-        </div>
+    <div class="form-group row">
+      <label class="col-md-2 col-form-label">Pelaksana Kerja</label>
+      <div class="col-md-10">
+        <select id="input-pelaksana-pekerjaan" class="form-control">
+          <option value="" disabled selected hidden>Pilih Pelaksana Kerja</option>
+          <option v-for="company in companies" :value="company.id">{{company.text}}</option>
+        </select>
+        <div class="invalid-feedback" id="invalid-pelaksana-pekerjaan"><span>Kolom ini tidak boleh kosong.</span></div>
+      </div>
+    </div>
 
-        <div class="form-group">
-          <label for="input-area">Area</label>
-          <select class="form-control" id="input-area">
-            <option value="" disabled selected hidden>Pilih Area</option>
-            <option v-for="area in areas" :value="area.id">{{area.text}}</option>
-          </select>
-          <div class="invalid-feedback" id="invalid-area">
-            <span>Kolom ini tidak boleh kosong.</span>
-          </div>
-        </div>
+    <div class="form-group row">
+      <label class="col-md-2 col-form-label">Area</label>
+      <div class="col-md-10">
+        <select id="input-area" class="form-control">
+          <option value="" disabled selected hidden>Pilih Area</option>
+          <option v-for="area in areas" :value="area.id">{{area.text}}</option>
+        </select>
+        <div class="invalid-feedback" id="invalid-area"><span>Kolom ini tidak boleh kosong.</span></div>
+      </div>
+    </div>
 
-        <div class="form-group not-barang">
-          <label for="input-merk">Equipment</label>
-          <input
-            placeholder="Equipment"
-            type="text"
-            class="form-control"
-            id="input-equipment"
-            @keyup.enter="submitData"
-          />
-          <div class="invalid-feedback" id="invalid-equipment">
-            <span>Kolom ini tidak boleh kosong.</span>
-          </div>
-        </div>
+    <b-form-group label-cols-sm="2" label-cols-lg="2" label="Equipment" label-for="text" class="not-barang">
+      <b-form-input type="text" placeholder="Equipment" id="input-equipment" @keyup.enter="submitData"></b-form-input>
+      <div class="invalid-feedback" id="invalid-equipment"><span>Kolom ini tidak boleh kosong.</span></div>
+    </b-form-group>
 
         <div class="form-group">
           <div>
