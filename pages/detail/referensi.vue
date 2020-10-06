@@ -98,18 +98,8 @@ export default {
                   <tbody>
                     <tr>
                       <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>Larry</td>
-                      <td>the Bird</td>
+                      <td class="not-barang not-area not-pekerjaan not-pelaksanapekerjaan not-pengguna">Mark</td>
+                      <td class="not-judul not-area not-pekerjaan not-pelaksanapekerjaan not-pengguna">Otto</td>
                     </tr>
                   </tbody>
                 </table>
