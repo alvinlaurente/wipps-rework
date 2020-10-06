@@ -96,7 +96,8 @@ export default {
           return [
             {
               key: "No",
-              thStyle: { 'width': '60px'}
+              thStyle: { 'width': '60px'},
+              sortable: true,
             },
             {
               key: "model",
@@ -121,7 +122,8 @@ export default {
           return [
             {
               key: "No",
-              thStyle: { 'width': '60px'}
+              thStyle: { 'width': '60px'},
+              sortable: true,
             },
             {
               key: "name",
@@ -137,7 +139,8 @@ export default {
           return [
             {
               key: "No",
-              thStyle: { 'width': '60px'}
+              thStyle: { 'width': '60px'},
+              sortable: true,
             },
             {
               key: "name",
@@ -158,7 +161,8 @@ export default {
           return [
             {
               key: "No",
-              thStyle: { 'width': '60px'}
+              thStyle: { 'width': '60px'},
+              sortable: true,
             },
             {
               key: "name",
