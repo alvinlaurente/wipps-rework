@@ -2,7 +2,7 @@
 export default {
   head() {
     return {
-      title: "Dashboard"
+      title: "Dashboard - Dashboard"
     };
   },
   data() {
