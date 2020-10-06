@@ -2,7 +2,7 @@
 export default {
   head() {
     return {
-      title: "Dashboard - Export"
+      title: "Export",
     };
   },
   data() {
@@ -10,15 +10,15 @@ export default {
       title: "Export",
       items: [
         {
-          text: "Dashboard"
+          text: "Dashboard",
         },
         {
           text: "Export",
-          active: true
-        }
-      ]
+          active: true,
+        },
+      ],
     };
-  }
+  },
 };
 </script>
 
@@ -31,22 +31,14 @@ export default {
     </div>
     <div class="row">
       <div class="col-4">
-        <b-form-datepicker
-          id="datepickerDari"
-          size="md"
-          v-model="value"
-          class="mb-2"
-        ></b-form-datepicker>
+        <b-form-input type="date" id="input-start-date"></b-form-input>
+        <div class="invalid-feedback" id="invalid-start-date"><span>Kolom ini tidak boleh kosong.</span></div>
       </div>
       <div class="col-4">
-        <b-form-datepicker
-          id="datepickerSampai"
-          size="md"
-          v-model="value"
-          class="mb-2"
-        ></b-form-datepicker>
+        <b-form-input type="date" id="input-start-date"></b-form-input>
+        <div class="invalid-feedback" id="invalid-start-date"><span>Kolom ini tidak boleh kosong.</span></div>
       </div>
-      <div class="col-4">
+      <div class="col-4 text-right">
         <b-button-group size="md">
           <b-button variant="danger">Export</b-button>
           <b-button variant="success">Export</b-button>

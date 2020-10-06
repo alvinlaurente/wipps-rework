@@ -2,7 +2,7 @@
 export default {
   head() {
     return {
-      title: "Dashboard - Overall Percentage"
+      title: "Overall Percentage",
     };
   },
   data() {
@@ -10,17 +10,34 @@ export default {
       title: "Overall Percentage",
       items: [
         {
-          text: "Dashboard"
+          text: "Dashboard",
         },
         {
           text: "Overall Percentage",
-          active: true
-        }
+          active: true,
+        },
       ],
-      animate: true
+      value: {
+        value1: 59.27,
+      },
+      animate: true,
     };
   },
-  methods: {}
+  methods: {
+    bgbar() {
+      var value = this.value.value1;
+      if (value < 33.33) {
+        document.getElementById("prog-bar").classList.add("bg-danger");
+      } else if (value < 66.66) {
+        document.getElementById("prog-bar").classList.add("bg-warning");
+      } else if (value <= 100) {
+        document.getElementById("prog-bar").classList.add("bg-success");
+      }
+    },
+  },
+  mounted: function () {
+    this.bgbar();
+  },
 };
 </script>
 
@@ -28,140 +45,26 @@ export default {
   <div>
     <PageHeader :title="title" :items="items" />
 
-    <div class="row mb-3">
-      <div class="col-md-4">
+    <div class="row">
+      <div class="col-4 mb-3">
         <b-card-group deck>
           <b-card
             title="Personal Protective Equipment"
             header-tag="header"
             footer-tag="footer"
           >
-            <b-card-text class="">89.27%</b-card-text>
-            <b-progress
-              :value="89.27"
-              variant="success"
+            <b-card-text class="">{{ value.value1 }}%</b-card-text>
+            <b-progress-bar
+              id="prog-bar"
+              :value="value.value1"
               striped
               :animated="animate"
               show-value
               :precision="2"
-              height="3vh"
-            ></b-progress>
+              height="3vw"
+            ></b-progress-bar>
             <template v-slot:footer>
               <span>Personal Protective Equipment</span>
-            </template>
-          </b-card>
-        </b-card-group>
-      </div>
-      <div class="col-md-4">
-        <b-card-group deck>
-          <b-card
-            title="Confined Space"
-            header-tag="header"
-            footer-tag="footer"
-          >
-            <b-card-text>58.49%</b-card-text>
-            <b-progress
-              :value="58.49"
-              variant="warning"
-              striped
-              :animated="animate"
-              show-value
-              :precision="2"
-              height="3vh"
-            ></b-progress>
-            <template v-slot:footer>
-              <span>Confined Space</span>
-            </template>
-          </b-card>
-        </b-card-group>
-      </div>
-      <div class="col-md-4">
-        <b-card-group deck>
-          <b-card
-            title="Electrical Safety"
-            header-tag="header"
-            footer-tag="footer"
-          >
-            <b-card-text>48.61%</b-card-text>
-            <b-progress
-              :value="48.61"
-              variant="warning"
-              striped
-              :animated="animate"
-              show-value
-              :precision="2"
-              height="3vh"
-            ></b-progress>
-            <template v-slot:footer>
-              <span>Electrical Safety</span>
-            </template>
-          </b-card>
-        </b-card-group>
-      </div>
-    </div>
-
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <b-card-group deck>
-          <b-card
-            title="Environtment Pollution Prevention"
-            header-tag="header"
-            footer-tag="footer"
-          >
-            <b-card-text>56.37%</b-card-text>
-            <b-progress
-              :value="56.37"
-              variant="warning"
-              striped
-              :animated="animate"
-              show-value
-              :precision="2"
-              height="3vh"
-            ></b-progress>
-            <template v-slot:footer>
-              <span>Environtment Pollution Prevention</span>
-            </template>
-          </b-card>
-        </b-card-group>
-      </div>
-      <div class="col-md-4">
-        <b-card-group deck>
-          <b-card title="Fit to Work" header-tag="header" footer-tag="footer">
-            <b-card-text>80.1%</b-card-text>
-            <b-progress
-              :value="80.1"
-              variant="success"
-              striped
-              :animated="animate"
-              show-value
-              :precision="2"
-              height="3vh"
-            ></b-progress>
-            <template v-slot:footer>
-              <span>Fit to Work</span>
-            </template>
-          </b-card>
-        </b-card-group>
-      </div>
-      <div class="col-md-4">
-        <b-card-group deck>
-          <b-card
-            title="Hot Working In Processing Area"
-            header-tag="header"
-            footer-tag="footer"
-          >
-            <b-card-text>62.42%</b-card-text>
-            <b-progress
-              :value="62.42"
-              variant="warning"
-              striped
-              :animated="animate"
-              show-value
-              :precision="2"
-              height="3vh"
-            ></b-progress>
-            <template v-slot:footer>
-              <span>Hot Working In Processing Area</span>
             </template>
           </b-card>
         </b-card-group>
