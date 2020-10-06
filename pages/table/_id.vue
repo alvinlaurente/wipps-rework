@@ -189,6 +189,8 @@ export default {
       }).then(url => {
         console.log(url)
         document.getElementById('barcode-image').style.backgroundImage = `url(${url})`
+        document.getElementById('downloadBarcode').href = url
+        document.getElementById('downloadBarcode').download = barcode
       })
     },
     async loadData() {
@@ -218,6 +220,9 @@ export default {
     <PageHeader :title="title" :items="items" />
     <b-modal id="modal" centered title="Barcode">
       <div id="barcode-image"></div>
+      <template v-slot:modal-footer>
+        <a class="w-100" id="downloadBarcode" href="#"><b-button variant="primary" class="float-right">Download</b-button></a>
+      </template>
     </b-modal>
     <div class="row">
       <div class="col-6">
@@ -264,7 +269,7 @@ export default {
               <i class="uil uil-eye font-size-18"></i>
             </a>
             <a class="px-2 text-danger" v-b-tooltip.hover @click="showBarcode(data.item.barcode)" title="Barcode">
-              <i class="fas fa-qrcode"></i>
+              <i class="fas fa-qrcode cursor-pointer"></i>
             </a>
           </template>
           </b-table>
