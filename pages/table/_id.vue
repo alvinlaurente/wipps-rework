@@ -291,7 +291,7 @@ export default {
 
 <style>
 .table-head{
-  background-color: #184799 !important;
+  background-color: #C83E4D !important;
   color: white;
 }
 #barcode-image{
