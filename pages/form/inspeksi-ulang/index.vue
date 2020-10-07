@@ -81,7 +81,7 @@ export default {
         console.log(this.companies)
         for (let i = 0; i < this.companies.length; i++) {
           if (this.companies[i].text.includes(this.prevData.company)){
-            setTimeout(() => {document.getElementById("input-pelaksana-pekerjaan").value = this.companies[i].id}, 100);
+            setTimeout(() => {document.getElementById("input-pelaksana-pekerjaan").value = this.companies[i].id}, 1);
           }
         }
       })
@@ -100,7 +100,7 @@ export default {
         this.areas = result.data
         for (let i = 0; i < this.areas.length; i++) {
           if (this.areas[i].text === this.prevData.area){
-            setTimeout(() => {document.getElementById("input-area").value = this.areas[i].id}, 100);
+            setTimeout(() => {document.getElementById("input-area").value = this.areas[i].id}, 1);
           }
         }
       })

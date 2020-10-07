@@ -69,7 +69,7 @@ export default {
             document.getElementById("inlineRadioOptions-"+this.response.components[i].id+"-"+this.response.components[i].status).click()
             document.getElementById("note-"+this.response.components[i].id).value = this.response.components[i].note
           }
-        }, 100);
+        }, 1);
       })
     },
     afterComplete(id, response) {
