@@ -34,18 +34,36 @@ export default {
       dataDetail: {},
       formData: {},
       baseUrl: process.env.baseUrl,
-      fields: [
-        {
-          key: "No",
-          thStyle: { width: "60px" },
-        },
-        {
-          key: "component",
-          label: "Nama",
-          sortable: true,
-        },
-      ]
     };
+  },
+  computed: {
+    fields() {
+      if (this.context === "judul") {
+        return [
+          {
+            key: "No",
+            thStyle: { width: "60px" },
+          },
+          {
+            key: "component",
+            label: "Nama",
+            sortable: true,
+          },
+        ]
+      } else {
+        return [
+          {
+            key: "No",
+            thStyle: { width: "60px" },
+          },
+            {
+              key: "requirement",
+              label: "Nama",
+              sortable: true,
+            },
+          ]
+      }
+    }
   },
   methods: {
     getEndpoint() {
@@ -81,6 +99,19 @@ export default {
       });
       if (this.context === "judul") {
         fetch(this.baseUrl + "/form-components?form=" + this.slug, {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result.data);
+          this.formData = result.data
+        });
+      }
+      if (this.context === "barang") {
+        fetch(this.baseUrl + "/item-requirements?item=" + this.slug, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),

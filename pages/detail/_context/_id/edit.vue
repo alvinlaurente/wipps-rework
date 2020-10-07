@@ -1,42 +1,141 @@
 <script>
-
+import Sortable from 'sortablejs'
 export default {
   head() {
     return {
-      title: "Formulir",
+      title: this.title
     };
   },
   data() {
     return {
-      title: "Formulir",
+      title: this.$route.params.id
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" "),
       items: [
         {
-          text: "Referensi",
+          text: this.$route.params.context
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ")
         },
         {
-          text: "Judul",
+          text: this.$route.params.id
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" "),
         },
         {
-          text: "Detail",
-        },
-        {
-          text: "Formulir",
+          text: "Edit",
           active: true,
-        },
+        }
       ],
-      form: {
-        inputformulir: null,
-        checked: [],
-      },
-      listformulir: [
-        { text: "Isi Formulir", value: null },
-        "Pegangan Alat terbebas dari keretakan",
-      ],
-      show: true,
-      user: JSON.parse(localStorage.getItem("user")),
+      context: this.$route.params.context,
+      slug: this.$route.params.id,
+      baseUrl: process.env.baseUrl,
+      selectors: [],
+      components: []
     };
   },
+  methods: {
+    loadData() {
+      let ep = "form-components?form"
+      let ep2 = "components"
+      if (this.context === "barang"){
+        ep = "item-requirements?item"
+        ep2 = "requirements"
+      }
+      fetch(this.baseUrl + "/" + ep + "=" + this.slug, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result.data);
+        this.components = result.data
+        if (this.context === "barang"){
+          for (let i = 0; i < this.components.length; i++) {
+            this.components[i].component = this.components[i].requirement
+            this.components[i].component_id = this.components[i].requirement_id
+          }
+        }
+      });
+      fetch(this.baseUrl + "/"+ ep2 + "/list", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result.data);
+        this.selectors = result.data
+      });
+    },
+    saveComponent() {
+      let sendData = {
+        _method: "PUT",
+        components: []
+      }
+      let ep = "form-components"
+      let els = document.getElementsByClassName("formulir");
+      if (this.context === "barang"){
+        sendData = {
+          _method: "PUT",
+          requirements: []
+        }
+        for (let i = 0; i < els.length; i++) {
+          sendData.requirements.push({
+            order: els[i].id,
+            requirement: els[i].getAttribute("data-value")
+          })
+        }
+        ep = "item-requirements"
+      } else {
+        for (let i = 0; i < els.length; i++) {
+          sendData.components.push({
+            order: els[i].id,
+            component: els[i].getAttribute("data-value")
+          })
+        }
+      }
+      console.log(sendData)
+      fetch( process.env.baseUrl + `/` + ep + `/` + this.slug, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        },
+        body: JSON.stringify(sendData)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
+      .then(result => {
+        alert("berhasil mengubah data")
+        this.$router.push('/')
+      })
+      .catch(error => {
+        alert(error)
+      })
+    },
+    addComponent() {
+      let sel = document.getElementById("input-formulir")
+      this.components.push({
+        component: sel.options[sel.selectedIndex].text,
+        component_id: parseInt(sel.value),
+        order: this.components[this.components.length-1].order+1
+      })
+      console.log(this.components)
+    }
+  },
   mounted: function () {
+    this.loadData()
     let dragged;
     let id;
     let index;
@@ -86,67 +185,37 @@ export default {
       <div class="col-12">
         <template>
           <div>
-            <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-              <b-form-group
-                id="inputformulir"
-                label="Isi Formulir:"
-                label-for="input-3"
-              >
-                <b-form-select
-                  id="input-3"
-                  v-model="form.inputformulir"
-                  :options="listformulir"
-                  required
-                ></b-form-select>
-              </b-form-group>
-
-              <div class="mb-3" ondragstart="">
-                <b-card
-                  class="mb-2 formulir"
-                  id="1"
-                  draggable="true"
-                  data-value="data1"
-                >
-                  <div class="row">
-                    <div class="col-11 my-auto">
-                      <b-card-text> Kondisi Mesin </b-card-text>
-                    </div>
-                    <div class="col-1 text-right">
-                      <b-button
-                        class="p-1 px-2 delete"
-                        type="cancel"
-                        variant="danger"
-                        ><i class="uil uil-trash-alt"></i
-                      ></b-button>
-                    </div>
-                  </div>
-                </b-card>
-
-                <b-card
-                  class="mb-2 formulir"
-                  id="2"
-                  draggable="true"
-                  data-value="data2"
-                >
-                  <div class="row">
-                    <div class="col-11 my-auto">
-                      <b-card-text> Kondisi Mesin 2</b-card-text>
-                    </div>
-                    <div class="col-1 text-right">
-                      <b-button
-                        class="p-1 px-2 delete"
-                        type="cancel"
-                        variant="danger"
-                        ><i class="uil uil-trash-alt"></i
-                      ></b-button>
-                    </div>
-                  </div>
-                </b-card>
+            <div class="form-group row">
+              <label class="col-md-2 col-form-label">Isi Formulir:</label>
+              <div class="col-md-10">
+                <select id="input-formulir" class="form-control" @change="addComponent">
+                  <option value="" disabled selected hidden>Pilih formulir untuk ditambahkan</option>
+                  <option v-for="p in selectors" :value="p.id">{{p.text}}</option>
+                </select>
               </div>
+            </div>
 
-              <b-button type="simpan" variant="success">Simpan</b-button>
-              <b-button type="cancel" variant="danger">Batal</b-button>
-            </b-form>
+            <div class="mb-3">
+              <b-card v-for="component in components" class="mb-2 formulir" :id="component.order"
+                draggable="true" :data-value="component.component_id"  >
+                <div class="row">
+                  <div class="col-11 my-auto">
+                    <b-card-text> {{ component.component }} </b-card-text>
+                  </div>
+                  <div class="col-1 text-right">
+                    <b-button
+                      class="p-1 px-2 delete"
+                      type="cancel"
+                      variant="danger"
+                      ><i class="uil uil-trash-alt"></i
+                    ></b-button>
+                  </div>
+                </div>
+              </b-card>
+            </div>
+
+            <b-button type="simpan" variant="success" @click="saveComponent">Simpan</b-button>
+            <nuxt-link class="btn btn-danger" type="cancel" variant="danger" :to="'/detail/'+this.context+'/'+this.slug" >Batal</nuxt-link>
           </div>
         </template>
       </div>
