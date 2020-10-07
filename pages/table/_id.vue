@@ -38,6 +38,7 @@ export default {
       sortBy: "age",
       sortDesc: false,
       fields: this.getColumn(),
+      selectedDelete: ""
     };
   },
   methods: {
@@ -216,6 +217,31 @@ export default {
       localStorage.setItem("slug-edit", data.slug);
       this.$router.push("/form/referensi/edit/" + this.$route.params.id);
     },
+    deleteData(slug) {
+      this.selectedDelete = slug
+      this.$refs['modal-delete'].show()
+    },
+    btnDelete() {
+      fetch( process.env.baseUrl + `/` + this.getEndpoint() + `/` + this.selectedDelete, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        }})
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json()
+        })
+        .then(result => {
+          this.$refs['modal-delete'].hide()
+          this.loadData()
+        })
+        .catch(error => {
+          alert(error)
+        })
+    }
   },
   computed: {
     /**
@@ -240,6 +266,9 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
+    <b-modal ref="modal-delete" id="modal-delete" centered title="Yakin ingin menghapus?" hide-footer>
+      <b-button variant="danger" class="float-right" @click="btnDelete">Hapus</b-button>
+    </b-modal>
     <b-modal id="modal" centered title="Barcode">
       <div id="barcode-image"></div>
       <template v-slot:modal-footer>
@@ -333,6 +362,7 @@ export default {
                 href="javascript:void(0);"
                 class="px-2 text-danger"
                 v-b-tooltip.hover
+                @click="deleteData(data.item.slug)"
                 title="Hapus"
               >
                 <i class="uil uil-trash-alt font-size-18"></i>
