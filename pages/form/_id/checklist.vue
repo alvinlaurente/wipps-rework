@@ -43,6 +43,7 @@
                     type="radio"
                     :name="'inlineRadioOptions-'+f.id"
                     value="1"
+                    @click="showSafe(f.id)"
                   />
                   <label class="form-check-label">Safe</label>
                 </div>
@@ -53,6 +54,7 @@
                     type="radio"
                     :name="'inlineRadioOptions-'+f.id"
                     value="2"
+                    @click="hideSafe(f.id)"
                   />
                   <label class="form-check-label">Unsafe</label>
                 </div>
@@ -64,15 +66,16 @@
                     :name="'inlineRadioOptions-'+f.id"
                     value="3"
                     checked
+                    @click="hideSafe(f.id)"
                   />
                   <label class="form-check-label">N/A</label>
                 </div>
 
-                <div class="form-group">
+                <div :class="'form-group safe-total-'+f.id" style="display: none">
                   <p class="mb-2">Jumlah Safe</p>
                   <input :id="'input-people-'+f.id" type="number" class="form-control" placeholder="Jumlah Safe">
                 </div>
-                <div class="form-group">
+                <div :class="'form-group safe-total-'+f.id" style="display: none">
                   <p class="mb-2">Total Diamati</p>
                   <input :id="'input-total-'+f.id" type="number" class="form-control" placeholder="Total Diamati">
                 </div>
@@ -142,45 +145,25 @@ import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 
 export default {
-  components: {
-    vueDropzone: vue2Dropzone,
-  },
-  data() {
-    return {
-      title: "Checklist",
-      items: [
-        {
-          text: "Form",
-        },
-        {
-          text: this.$route.params.id,
-        },
-        {
-          text: "Checklist",
-          active: true,
-        },
-      ],
-      prevData: {},
-      data: [],
-      dropzoneOptions: {
-        url: process.env.baseUrl + "/forms/upload/file",
-        thumbnailWidth: 150,
-        maxFilesize: 0.5,
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem("token"),
-          'id-upload': 'id-upload'
-        },
-      },
-      formData: {},
-      imageList: []
-    };
-  },
   methods: {
     afterComplete(id, response) {
       this.imageList.push({
         formId: id,
         link: JSON.parse(response.xhr.response).data
       })
+    },
+    showSafe(id) {
+      let els = document.getElementsByClassName("form-group safe-total-"+id)
+      for (let i = 0; i < els.length; i++) {
+        els[i].style.display = "block"
+      }
+    },
+    hideSafe(id) {
+      let els = document.getElementsByClassName("form-group safe-total-"+id)
+      for (let i = 0; i < els.length; i++) {
+        els[i].children[1].value = ""
+        els[i].style.display = "none"
+      }
     },
     verifyInfoField(context) {
       var valid = true;
@@ -261,21 +244,54 @@ export default {
           },
           body: JSON.stringify(this.formData)
         })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(response.statusText);
-          }
-          return response.json()
-        })
-        .then(result => {
-          alert("berhasil menyimpan form")
-          this.$router.push('/')
-        })
-        .catch(error => {
-          alert(error)
-        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.statusText);
+            }
+            return response.json()
+          })
+          .then(result => {
+            alert("berhasil menyimpan form")
+            this.$router.push('/')
+          })
+          .catch(error => {
+            alert(error)
+          })
       }
     }
+  },
+  components: {
+    vueDropzone: vue2Dropzone,
+  },
+  data() {
+    return {
+      title: "Checklist",
+      items: [
+        {
+          text: "Form",
+        },
+        {
+          text: this.$route.params.id,
+        },
+        {
+          text: "Checklist",
+          active: true,
+        },
+      ],
+      prevData: {},
+      data: [],
+      dropzoneOptions: {
+        url: process.env.baseUrl + "/forms/upload/file",
+        thumbnailWidth: 150,
+        maxFilesize: 0.5,
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+          'id-upload': 'id-upload'
+        },
+      },
+      formData: {},
+      imageList: []
+    };
   },
   mounted: function () {
     this.$activateMenuDropdown("")
