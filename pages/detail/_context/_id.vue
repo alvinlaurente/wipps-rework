@@ -2,25 +2,33 @@
 export default {
   head() {
     return {
-      title: "Detail",
+      title: this.title,
     };
   },
   data() {
     return {
-      title: "Detail",
+      title: this.$route.params.id
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" "),
       items: [
         {
-          text: "Referensi",
+          text: this.$route.params.context
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ")
         },
         {
-          text: "Judul",
+          text: this.$route.params.id
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" "),
         },
         {
           text: "Detail",
           active: true,
-        },
-      ],
-      user: JSON.parse(localStorage.getItem("user")),
+        }
+      ]
     };
   },
 };
@@ -34,20 +42,20 @@ export default {
       <div class="col-12">
         <b-card no-body class="mx-0">
           <b-tabs pills card class="customCard">
-            <b-tab title="Detail" active>
+            <b-tab title="Detail" title-link-class="left-tab" active>
               <table class="table table-light mb-0">
                 <tr>
                   <td class="table-secondary">Nama</td>
                   <td>Personal Protective Equipment</td>
                 </tr>
                 <tr
-                  class="not-barang not-area not-pekerjaan not-pelaksanapekerjaan not-pengguna"
+                  class="not-barang not-area not-pekerjaan not-pelaksana-pekerjaan not-pengguna"
                 >
                   <td class="table-secondary">File</td>
                   <td><img src="img.jpg" alt="" /></td>
                 </tr>
                 <tr
-                  class="not-judul not-barang not-pekerjaan not-pelaksanapekerjaan"
+                  class="not-judul not-barang not-pekerjaan not-pelaksana-pekerjaan"
                 >
                   <td class="table-secondary">Email</td>
                   <td></td>
@@ -59,13 +67,13 @@ export default {
                   <td>Pihak Ketiga</td>
                 </tr>
                 <tr
-                  class="not-judul not-barang not-area not-pekerjaan not-pelaksanapekerjaan"
+                  class="not-judul not-barang not-area not-pekerjaan not-pelaksana-pekerjaan"
                 >
                   <td class="table-secondary">Username</td>
                   <td>asyahid</td>
                 </tr>
                 <tr
-                  class="not-judul not-barang not-area not-pekerjaan not-pelaksanapekerjaan"
+                  class="not-judul not-barang not-area not-pekerjaan not-pelaksana-pekerjaan"
                 >
                   <td class="table-secondary">Peran</td>
                   <td></td>
@@ -73,8 +81,9 @@ export default {
               </table>
             </b-tab>
             <b-tab
+              title-link-class="right-tab"
               title="Isi Formulir"
-              class="not-area not-pekerjaan not-pelaksanapekerjaan not-pengguna"
+              class="not-area not-pekerjaan not-pelaksana-pekerjaan not-pengguna"
             >
               <button class="btn btn-warning mb-3">Ubah</button>
 
@@ -84,12 +93,12 @@ export default {
                     <tr>
                       <th>No.</th>
                       <th
-                        class="not-barang not-area not-pekerjaan not-pelaksanapekerjaan not-pengguna"
+                        class="not-barang not-area not-pekerjaan not-pelaksana-pekerjaan not-pengguna"
                       >
                         Isi Formulir
                       </th>
                       <th
-                        class="not-judul not-area not-pekerjaan not-pelaksanapekerjaan not-pengguna"
+                        class="not-judul not-area not-pekerjaan not-pelaksana-pekerjaan not-pengguna"
                       >
                         Daftar Periksa
                       </th>
@@ -98,8 +107,8 @@ export default {
                   <tbody>
                     <tr>
                       <th scope="row">1</th>
-                      <td class="not-barang not-area not-pekerjaan not-pelaksanapekerjaan not-pengguna">Mark</td>
-                      <td class="not-judul not-area not-pekerjaan not-pelaksanapekerjaan not-pengguna">Otto</td>
+                      <td class="not-barang not-area not-pekerjaan not-pelaksana-pekerjaan not-pengguna">Mark</td>
+                      <td class="not-judul not-area not-pekerjaan not-pelaksana-pekerjaan not-pengguna">Otto</td>
                     </tr>
                   </tbody>
                 </table>
@@ -143,7 +152,7 @@ tr th:first-child {
 }
 
 .nav-item {
-  margin-right: 2vw;
+  margin-right: 0;
 }
 
 .nav-tabs > li > a,
@@ -172,5 +181,13 @@ tr th:first-child {
   border: 1px solid #184799;
   -webkit-transition: all 0.8s ease 0s;
   transition: all 0.8s ease 0s;
+}
+
+.left-tab {
+  border-radius: 5px 0 0 5px !important;
+}
+
+.right-tab {
+  border-radius: 0 5px 5px 0 !important;
 }
 </style>

@@ -40,22 +40,6 @@ export default {
       fields: this.getColumn(),
     };
   },
-  computed: {
-    /**
-     * Total no. of records
-     */
-    rows() {
-      return this.tableItem.length;
-    },
-  },
-  mounted() {
-    // Set the initial number of items
-    this.$activateMenuDropdown(this.items[1].text);
-    document.getElementById("btn-tambah").innerText = "Tambah " + this.title;
-    this.removeUneeded();
-    this.loadData();
-    this.totalRows = this.items.length;
-  },
   methods: {
     /**
      * Search the table data with search input
@@ -233,6 +217,22 @@ export default {
       this.$router.push("/form/referensi/edit/" + this.$route.params.id);
     },
   },
+  computed: {
+    /**
+     * Total no. of records
+     */
+    rows() {
+      return this.tableItem.length;
+    },
+  },
+  mounted() {
+    // Set the initial number of items
+    this.$activateMenuDropdown(this.items[1].text);
+    document.getElementById("btn-tambah").innerText = "Tambah " + this.title;
+    this.removeUneeded();
+    this.loadData();
+    this.totalRows = this.items.length;
+  },
   middleware: "authentication",
 };
 </script>
@@ -312,14 +312,14 @@ export default {
               perPage * (currentPage - 1) + (data.index + 1)
             }}</template>
             <template v-slot:cell(aksi)="data">
-              <a
-                href="javascript:void(0);"
+              <nuxt-link
+                :to="'/detail/' + $route.params.id + '/' + data.item.slug"
                 class="px-2 text-success"
                 v-b-tooltip.hover
                 title="Lihat"
               >
                 <i class="uil uil-eye font-size-18"></i>
-              </a>
+              </nuxt-link>
               <a
                 href="javascript:void(0);"
                 class="px-2 text-primary"
