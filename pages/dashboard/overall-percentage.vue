@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     bgbar() {
-      var value = this.value.value1;
+      let value = this.value.value1;
       if (value < 33.33) {
         document.getElementById("prog-bar").classList.add("bg-danger");
       } else if (value < 66.66) {

@@ -2,7 +2,7 @@
 export default {
   head() {
     return {
-      title: "Export",
+      title: "Export"
     };
   },
   data() {
@@ -10,33 +10,39 @@ export default {
       title: "Export",
       items: [
         {
-          text: "Dashboard",
+          text: "Dashboard"
         },
         {
           text: "Export",
-          active: true,
-        },
-      ],
+          active: true
+        }
+      ]
     };
-  },
+  }
 };
 </script>
 
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
+
+    <!-- Calendar -->
     <div class="row">
-      <div class="col-4">Dari</div>
-      <div class="col-4">Sampai</div>
+      <div class="col-4"><span>Dari</span></div>
+      <div class="col-4"><span>Sampai</span></div>
     </div>
     <div class="row">
       <div class="col-4">
         <b-form-input type="date" id="input-start-date"></b-form-input>
-        <div class="invalid-feedback" id="invalid-start-date"><span>Kolom ini tidak boleh kosong.</span></div>
+        <div class="invalid-feedback" id="invalid-start-date">
+          <span>Kolom ini tidak boleh kosong.</span>
+        </div>
       </div>
       <div class="col-4">
         <b-form-input type="date" id="input-start-date"></b-form-input>
-        <div class="invalid-feedback" id="invalid-start-date"><span>Kolom ini tidak boleh kosong.</span></div>
+        <div class="invalid-feedback" id="invalid-start-date">
+          <span>Kolom ini tidak boleh kosong.</span>
+        </div>
       </div>
       <div class="col-4 text-right">
         <b-button-group size="md">
