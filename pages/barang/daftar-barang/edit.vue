@@ -66,7 +66,7 @@ export default {
         console.log(result.data)
         setTimeout(() => {
           for (let i = 0; i < this.response.components.length; i++) {
-            document.getElementById("inlineRadioOptions-"+this.response.components[i].id+"-"+this.response.components[i].status).checked = true
+            document.getElementById("inlineRadioOptions-"+this.response.components[i].id+"-"+this.response.components[i].status).click()
             document.getElementById("note-"+this.response.components[i].id).value = this.response.components[i].note
           }
         }, 100);
@@ -77,6 +77,13 @@ export default {
         formId: id,
         link: JSON.parse(response.xhr.response).data
       })
+    },
+    coloring(clicked, id) {
+      document.getElementById("icon-"+id+"-safe").style.display = "none"
+      document.getElementById("icon-"+id+"-unsafe").style.display = "none"
+      if (clicked!=="na"){
+        document.getElementById("icon-"+id+"-"+clicked).style.display = "inline"
+      }
     },
     verifyInfoField() {
       var valid = true;
@@ -168,7 +175,10 @@ export default {
               class="btn btn-link btn-block text-left"
               v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
             >
-              ► &nbsp; {{ f.text }}
+              ► &nbsp;
+              <i :id="'icon-'+f.id+'-safe'" class="fas fa-thumbs-up text-success"></i>
+              <i :id="'icon-'+f.id+'-unsafe'" class="fas fa-exclamation-triangle text-danger"></i>
+              {{ f.text }}
             </button>
           </h5>
         </div>
@@ -199,6 +209,8 @@ export default {
                 :name="'inlineRadioOptions-'+f.id"
                 :id="'inlineRadioOptions-'+f.id+'-'+1"
                 value="1"
+                @click="coloring('safe', f.id)"
+
               />
               <label class="form-check-label">Safe</label>
             </div>
@@ -210,6 +222,7 @@ export default {
                 :name="'inlineRadioOptions-'+f.id"
                 :id="'inlineRadioOptions-'+f.id+'-'+2"
                 value="2"
+                @click="coloring('unsafe', f.id)"
               />
               <label class="form-check-label">Unsafe</label>
             </div>
@@ -221,6 +234,7 @@ export default {
                 :name="'inlineRadioOptions-'+f.id"
                 :id="'inlineRadioOptions-'+f.id+'-'+3"
                 value="3"
+                @click="coloring('na', f.id)"
               />
               <label class="form-check-label">N/A</label>
             </div>

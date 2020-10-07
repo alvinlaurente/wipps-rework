@@ -13,7 +13,10 @@
                   class="btn btn-link btn-block text-left"
                   v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
                 >
-                  ► &nbsp; {{ f.component }}
+                  ► &nbsp;
+                  <i :id="'icon-'+f.id+'-safe'" class="fas fa-thumbs-up text-success" style="display: none"></i>
+                  <i :id="'icon-'+f.id+'-unsafe'" class="fas fa-exclamation-triangle text-danger" style="display: none"></i>
+                  {{ f.component }}
                 </button>
               </h5>
             </div>
@@ -54,7 +57,7 @@
                     type="radio"
                     :name="'inlineRadioOptions-'+f.id"
                     value="2"
-                    @click="hideSafe(f.id)"
+                    @click="hideSafe(f.id, 'unsafe')"
                   />
                   <label class="form-check-label">Unsafe</label>
                 </div>
@@ -66,7 +69,7 @@
                     :name="'inlineRadioOptions-'+f.id"
                     value="3"
                     checked
-                    @click="hideSafe(f.id)"
+                    @click="hideSafe(f.id, 'na')"
                   />
                   <label class="form-check-label">N/A</label>
                 </div>
@@ -153,16 +156,27 @@ export default {
       })
     },
     showSafe(id) {
-      let els = document.getElementsByClassName("form-group safe-total-"+id)
-      for (let i = 0; i < els.length; i++) {
-        els[i].style.display = "block"
+      document.getElementById("icon-"+id+"-safe").style.display = "inline"
+      document.getElementById("icon-"+id+"-unsafe").style.display = "none"
+      if (this.prevData.context === "beranda"){
+        let els = document.getElementsByClassName("form-group safe-total-"+id)
+        for (let i = 0; i < els.length; i++) {
+          els[i].style.display = "block"
+        }
       }
     },
-    hideSafe(id) {
-      let els = document.getElementsByClassName("form-group safe-total-"+id)
-      for (let i = 0; i < els.length; i++) {
-        els[i].children[1].value = ""
-        els[i].style.display = "none"
+    hideSafe(id, clicked) {
+      document.getElementById("icon-"+id+"-safe").style.display = "none"
+      document.getElementById("icon-"+id+"-unsafe").style.display = "none"
+      if (clicked!=="na"){
+        document.getElementById("icon-"+id+"-"+clicked).style.display = "inline"
+      }
+      if (this.prevData.context === "beranda"){
+        let els = document.getElementsByClassName("form-group safe-total-"+id)
+        for (let i = 0; i < els.length; i++) {
+          els[i].children[1].value = ""
+          els[i].style.display = "none"
+        }
       }
     },
     verifyInfoField(context) {
