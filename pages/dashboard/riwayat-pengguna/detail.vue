@@ -69,25 +69,27 @@ export default {
 
       <!-- Accordion -->
       <div class="col-12 mb-3">
-        <div class="accordion" role="tablist">
-          <div class="card z-depth-0 bordered m-0">
-            <div class="card-header">
-              <h5 class="mb-0">
-                <button class="btn btn-link btn-block text-left">
-                  ► &nbsp;
-                  <i class="fas fa-exclamation-triangle text-danger"></i>
-                  <i class="fas fa-exclamation-triangle text-danger"></i>
-                </button>
-              </h5>
-            </div>
-            <div
-              class="collapse"
-              aria-labelledby="headingTwo"
-              data-parent="#accordionExample"
+        <div class="accordion p-0" role="tablist">
+          <b-card no-body class="p-0 m-0">
+            <b-card-header header-tag="header" role="tab" class="p-0 m-0">
+              <b-button
+                block
+                v-b-toggle.accordion-1
+                variant="light"
+                class="text-left"
+                >► &nbsp; Pekerja yang berada di area kerja memahami prosedur
+                kerja yang akan dilakukan dan mengetahui kondisi bahaya yang
+                akan timbul di area kerja</b-button
+              >
+            </b-card-header>
+            <b-collapse
+              id="accordion-1"
+              accordion="my-accordion"
+              role="tabpanel"
             >
               <b-card-body>
                 <b-card-text>
-                  <div class="mb-3"><b>Status</b> : }</div>
+                  <div class="mb-3"><b>Status</b> : Unsafe</div>
                   <div class="form-group">
                     <b>Catatan</b><br />
                     <b-form-textarea
@@ -98,8 +100,50 @@ export default {
                   </div>
                 </b-card-text>
               </b-card-body>
-            </div>
-          </div>
+            </b-collapse>
+          </b-card>
+
+          <b-card no-body class="p-0 m-0">
+            <b-card-header header-tag="header" role="tab" class="p-0 m-0">
+              <b-button
+                block
+                v-b-toggle.accordion-2
+                variant="light"
+                class="text-left"
+                >► &nbsp;</b-button
+              >
+            </b-card-header>
+            <b-collapse
+              id="accordion-2"
+              accordion="my-accordion"
+              role="tabpanel"
+            >
+              <b-card-body>
+                <b-card-text>{{ text }}</b-card-text>
+              </b-card-body>
+            </b-collapse>
+          </b-card>
+
+          <b-card no-body class="p-0 m-0">
+            <b-card-header header-tag="header" role="tab" class="p-0 m-0">
+              <b-button
+                block
+                v-b-toggle.accordion-3
+                variant="light"
+                class="text-left"
+                >► &nbsp;</b-button
+              >
+            </b-card-header>
+            <b-collapse
+              id="accordion-3"
+              accordion="my-accordion"
+              role="tabpanel"
+            >
+              <b-card-body>
+                <b-card-text>{{ text }}</b-card-text>
+              </b-card-body>
+            </b-collapse>
+          </b-card>
         </div>
       </div>
       <!-- End Accordion -->
@@ -268,85 +312,85 @@ export default {
 
     <!-- Table ngambil dari table/_id.vue -->
     <div class="table-responsive mb-0">
-          <b-table
-            table-class="table table-centered datatable table-card-list"
-            thead-tr-class="table-head"
-            :items="tableItem"
-            :fields="fields"
-            responsive="sm"
-            :per-page="perPage"
-            :current-page="currentPage"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-            :filter="filter"
-            :filter-included-fields="filterOn"
-            @filtered="onFiltered"
+      <b-table
+        table-class="table table-centered datatable table-card-list"
+        thead-tr-class="table-head"
+        :items="tableItem"
+        :fields="fields"
+        responsive="sm"
+        :per-page="perPage"
+        :current-page="currentPage"
+        :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc"
+        :filter="filter"
+        :filter-included-fields="filterOn"
+        @filtered="onFiltered"
+      >
+        <template v-slot:cell(no)="data">{{
+          perPage * (currentPage - 1) + (data.index + 1)
+        }}</template>
+        <template v-slot:cell(aksi)="data">
+          <a
+            href="javascript:void(0);"
+            class="px-2 text-success"
+            v-b-tooltip.hover
+            title="Lihat"
           >
-            <template v-slot:cell(no)="data">{{
-              perPage * (currentPage - 1) + (data.index + 1)
-            }}</template>
-            <template v-slot:cell(aksi)="data">
-              <a
-                href="javascript:void(0);"
-                class="px-2 text-success"
-                v-b-tooltip.hover
-                title="Lihat"
-              >
-                <i class="uil uil-eye font-size-18"></i>
-              </a>
-              <a
-                href="javascript:void(0);"
-                class="px-2 text-primary"
-                v-b-tooltip.hover
-                @click="edit(data.item)"
-                title="Ubah"
-              >
-                <i class="uil uil-pen font-size-18"></i>
-              </a>
-              <a
-                href="javascript:void(0);"
-                class="px-2 text-danger"
-                v-b-tooltip.hover
-                title="Hapus"
-              >
-                <i class="uil uil-trash-alt font-size-18"></i>
-              </a>
-            </template>
-            <template v-slot:cell(aksi-barang)="data">
-              <a
-                href="javascript:void(0);"
-                @click="showInspeksi(data.item.barcode, data.item)"
-                class="px-2 text-success"
-                v-b-tooltip.hover
-                title="Lihat"
-              >
-                <i class="uil uil-eye font-size-18"></i>
-              </a>
-              <a
-                class="px-2 text-danger"
-                v-b-tooltip.hover
-                @click="showBarcode(data.item.barcode)"
-                title="Barcode"
-              >
-                <i class="fas fa-qrcode cursor-pointer"></i>
-              </a>
-            </template>
-          </b-table>
+            <i class="uil uil-eye font-size-18"></i>
+          </a>
+          <a
+            href="javascript:void(0);"
+            class="px-2 text-primary"
+            v-b-tooltip.hover
+            @click="edit(data.item)"
+            title="Ubah"
+          >
+            <i class="uil uil-pen font-size-18"></i>
+          </a>
+          <a
+            href="javascript:void(0);"
+            class="px-2 text-danger"
+            v-b-tooltip.hover
+            title="Hapus"
+          >
+            <i class="uil uil-trash-alt font-size-18"></i>
+          </a>
+        </template>
+        <template v-slot:cell(aksi-barang)="data">
+          <a
+            href="javascript:void(0);"
+            @click="showInspeksi(data.item.barcode, data.item)"
+            class="px-2 text-success"
+            v-b-tooltip.hover
+            title="Lihat"
+          >
+            <i class="uil uil-eye font-size-18"></i>
+          </a>
+          <a
+            class="px-2 text-danger"
+            v-b-tooltip.hover
+            @click="showBarcode(data.item.barcode)"
+            title="Barcode"
+          >
+            <i class="fas fa-qrcode cursor-pointer"></i>
+          </a>
+        </template>
+      </b-table>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="dataTables_paginate paging_simple_numbers float-right">
+          <ul class="pagination pagination-rounded">
+            <!-- pagination -->
+            <b-pagination
+              v-model="currentPage"
+              :total-rows="rows"
+              :per-page="perPage"
+            ></b-pagination>
+          </ul>
         </div>
-        <div class="row">
-          <div class="col">
-            <div class="dataTables_paginate paging_simple_numbers float-right">
-              <ul class="pagination pagination-rounded">
-                <!-- pagination -->
-                <b-pagination
-                  v-model="currentPage"
-                  :total-rows="rows"
-                  :per-page="perPage"
-                ></b-pagination>
-              </ul>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
     <!-- End Button -->
 
     <!-- End Dashboard>overall percentage>pengguna>riwayat pengguna -->
@@ -379,10 +423,6 @@ td {
 
 .accordion .card {
   border-bottom: 1px solid #d5d3d5;
-}
-
-.buttoncustom {
-  text-align: left;
 }
 
 .list-group-item span {

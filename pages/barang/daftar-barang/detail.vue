@@ -32,36 +32,40 @@ export default {
         { text: "Safe", value: "Safe" },
         { text: "Unsafe", value: "Unsafe" },
         { text: "N/A", value: "N/A" }
-      ],
+      ]
     };
   },
   methods: {
     convertSafe(code) {
       switch (code) {
         case 1:
-          return "Safe"
+          return "Safe";
         case 2:
-          return "Unsafe"
+          return "Unsafe";
       }
     },
     async getData() {
-      await fetch(process.env.baseUrl + `/item-inspections/` +
-        localStorage.getItem("selected-id-inspeksi") , {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+      await fetch(
+        process.env.baseUrl +
+          `/item-inspections/` +
+          localStorage.getItem("selected-id-inspeksi"),
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
         }
-      })
-      .then(response => response.json())
-      .then(result => {
-        this.response = result.data
-        console.log(result.data)
-      })
+      )
+        .then(response => response.json())
+        .then(result => {
+          this.response = result.data;
+          console.log(result.data);
+        });
     }
   },
   mounted: function() {
     this.$activateMenuDropdown("Daftar Barang");
-    this.getData()
+    this.getData();
   }
 };
 </script>
@@ -74,60 +78,73 @@ export default {
         <table class="table table-light">
           <tr>
             <td class="table-secondary">Area</td>
-            <td>{{this.response.area_id}}</td>
+            <td>{{ this.response.area_id }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Merk</td>
-            <td>{{this.response.brand}}</td>
+            <td>{{ this.response.brand }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Pelaksana Pekerjaan</td>
-            <td>{{this.response.company_id}}</td>
+            <td>{{ this.response.company_id }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Pengguna</td>
-            <td>{{this.response.user.name}}</td>
+            <td>{{ this.response.user.name }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Keterangan</td>
-            <td>{{this.response.description}}</td>
+            <td>{{ this.response.description }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Model</td>
-            <td>{{this.response.model}}</td>
+            <td>{{ this.response.model }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Tanggal awal berlaku</td>
-            <td>{{this.response.start_date}}</td>
+            <td>{{ this.response.start_date }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Tanggal akhir berlaku</td>
-            <td>{{this.response.due_date}}</td>
+            <td>{{ this.response.due_date }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Safetyman</td>
-            <td>{{this.response.safetyman}}</td>
+            <td>{{ this.response.safetyman }}</td>
           </tr>
           <tr>
             <td class="table-secondary">Pemeriksa</td>
-            <td>{{this.response.inspector}}</td>
+            <td>{{ this.response.inspector }}</td>
           </tr>
         </table>
       </div>
 
       <div class="col-12 mb-3">
         <div class="accordion" role="tablist">
-          <div v-for="component in response.components" class="card z-depth-0 bordered m-0">
+          <div
+            v-for="component in response.components"
+            class="card z-depth-0 bordered m-0"
+          >
             <div class="card-header">
               <h5 class="mb-0">
                 <button
                   class="btn btn-link btn-block text-left"
-                  v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
+                  v-on:click="
+                    $event.target.parentElement.parentElement.parentElement.children[1].classList.toggle(
+                      'show'
+                    )
+                  "
                 >
                   ► &nbsp;
-                  <i class="fas fa-exclamation-triangle text-danger" v-if="component.status!==1"></i>
+                  <i
+                    class="fas fa-exclamation-triangle text-danger"
+                    v-if="component.status !== 1"
+                  ></i>
                   {{ component.text }}
-                  <i class="fas fa-exclamation-triangle text-danger" v-if="component.status!==1"></i>
+                  <i
+                    class="fas fa-exclamation-triangle text-danger"
+                    v-if="component.status !== 1"
+                  ></i>
                 </button>
               </h5>
             </div>
@@ -138,13 +155,16 @@ export default {
             >
               <b-card-body>
                 <b-card-text>
-                  <div class="mb-3"><b>Status</b> : {{ convertSafe(component.status) }}</div>
+                  <div class="mb-3">
+                    <b>Status</b> : {{ convertSafe(component.status) }}
+                  </div>
                   <div class="form-group">
                     <b>Catatan</b><br />
-                    <b-form-textarea disabled
-                                     rows="3"
-                                     max-rows="6"
-                                     :value="component.note"
+                    <b-form-textarea
+                      disabled
+                      rows="3"
+                      max-rows="6"
+                      :value="component.note"
                     ></b-form-textarea>
                   </div>
                 </b-card-text>
@@ -191,9 +211,5 @@ td {
 
 .accordion .card {
   border-bottom: 1px solid #d5d3d5;
-}
-
-.buttoncustom {
-  text-align: left;
 }
 </style>
