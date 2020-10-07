@@ -2,7 +2,7 @@
 export default {
   head() {
     return {
-      title: "Dashboard - Riwayat Pengguna"
+      title: "Dashboard - Riwayat Pengguna",
     };
   },
   data() {
@@ -10,15 +10,15 @@ export default {
       title: "Riwayat Pengguna",
       items: [
         {
-          text: "Dashboard"
+          text: "Dashboard",
         },
         {
           text: "Riwayat Pengguna",
-          active: true
-        }
-      ]
+          active: true,
+        },
+      ],
     };
-  }
+  },
 };
 </script>
 
@@ -48,7 +48,7 @@ export default {
     <!-- End of Calendar -->
 
     <!-- Back button & Search -->
-    <div class="row mb-3">
+    <div class="row my-3">
       <div class="col-6">
         <div class="form-group">
           <div>
@@ -60,15 +60,12 @@ export default {
       </div>
       <div class="col-6">
         <div id="tickets-table_filter" class="dataTables_filter text-right">
-          <label class="d-inline-flex align-items-center">
-            Search:
-            <b-form-input
-              v-model="filter"
-              type="search"
-              placeholder="Search..."
-              class="form-control form-control ml-2"
-            ></b-form-input>
-          </label>
+          <b-form-input
+            v-model="filter"
+            type="search"
+            placeholder="Cari"
+            class="form-control form-control"
+          ></b-form-input>
         </div>
       </div>
     </div>
