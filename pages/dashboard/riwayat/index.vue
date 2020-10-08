@@ -1,0 +1,231 @@
+<script>
+/**
+ * Customer component
+ */
+import QRCode from "qrcode";
+
+export default {
+  head() {
+    return {
+      title: this.title,
+    };
+  },
+  data() {
+    return {
+      title: "Riwayat",
+      items: [
+        {
+          text: "Dashboard",
+        },
+        {
+          text: "Riwayat",
+          active: true,
+        },
+      ],
+      tableItem: [],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 10,
+      pageOptions: [10, 25, 50, 100],
+      filter: null,
+      filterOn: [],
+      sortBy: "age",
+      sortDesc: false,
+      fields: [
+        {
+          key: "No",
+          thStyle: { width: "60px" },
+        },
+        {
+          key: "area",
+          label: "Area",
+          sortable: true,
+        },
+        {
+          key: "company",
+          label: "Pelaksana Pekerjaan",
+          sortable: true,
+        },
+        {
+          key: "job",
+          label: "Pekerjaan",
+          sortable: true,
+        },
+        {
+          key: "form",
+          label: "Judul",
+          sortable: true,
+        },
+        {
+          key: "percentage[0].percentage",
+          label: "Persen",
+          sortable: true,
+        },
+        {
+          key: "aksi",
+          label: "Aksi",
+          thStyle: { width: "160px" },
+        },
+      ]
+    };
+  },
+  methods: {
+    /**
+     * Search the table data with search input
+     */
+    onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
+    async loadData() {
+      await fetch(process.env.baseUrl + "/forms?search[value]=&start=0&length=20000&order[0][column]=0&order[0][dir]=asc" +
+        "&to=" + document.getElementById("end-date").value +
+        "&from=" + document.getElementById("start-date").value, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        this.tableItem = result.data;
+        console.log(this.tableItem);
+      });
+    },
+  },
+  computed: {
+    /**
+     * Total no. of records
+     */
+    rows() {
+      return this.tableItem.length;
+    },
+  },
+  mounted() {
+    // Set the initial number of items
+    this.$activateMenuDropdown(this.title);
+    this.loadData();
+    this.totalRows = this.items.length;
+  },
+  middleware: "authentication",
+};
+</script>
+
+<template>
+  <div>
+    <PageHeader :title="title" :items="items" />
+    <b-modal ref="modal-delete" id="modal-delete" centered title="Yakin ingin menghapus?" hide-footer>
+      <b-button variant="danger" class="float-right" @click="btnDelete">Hapus</b-button>
+    </b-modal>
+      <div class="col-12">
+        <div class="row mt-4">
+          <div class="col-6">
+            <label>Dari</label>
+            <b-form-input @change="loadData" value="2020-01-01" type="date" id="start-date"></b-form-input>
+          </div>
+          <div class="col-6">
+            <label>Sampai</label>
+            <b-form-input @change="loadData" value="2020-12-31" type="date" id="end-date"></b-form-input>
+          </div>
+
+          <div class="col-sm-12 col-md-6 mt-3">
+            <div id="tickets-table_length" class="dataTables_length">
+              <label class="d-inline-flex align-items-center">Show&nbsp;
+                <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+              </label>
+            </div>
+          </div>
+          <!-- Search -->
+          <div class="col-sm-12 col-md-6 mt-3">
+            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+              <label class="d-inline-flex align-items-center">Search:
+                <b-form-input v-model="filter" type="search" placeholder="Search..." class="form-control form-control-sm ml-2"></b-form-input>
+              </label>
+            </div>
+          </div>
+          <!-- End search -->
+        </div>
+        <!-- Table -->
+        <div class="table-responsive mb-0">
+          <b-table
+            table-class="table table-centered datatable table-card-list"
+            thead-tr-class="table-head"
+            :items="tableItem"
+            :fields="fields"
+            responsive="sm"
+            :per-page="perPage"
+            :current-page="currentPage"
+            :sort-by.sync="sortBy"
+            :sort-desc.sync="sortDesc"
+            :filter="filter"
+            :filter-included-fields="filterOn"
+            @filtered="onFiltered"
+          >
+            <template v-slot:cell(no)="data">{{
+                perPage * (currentPage - 1) + (data.index + 1)
+              }}</template>
+            <template v-slot:cell(aksi)="data">
+              <nuxt-link
+                :to="'riwayat/detail/'+data.item.slug"
+                class="px-2 text-primary"
+                v-b-tooltip.hover
+                title="Lihat"
+              >
+                <i class="uil uil-eye font-size-18"></i>
+              </nuxt-link>
+              <a
+                href="javascript:void(0);"
+                class="px-2 text-success"
+                v-b-tooltip.hover
+                @click=""
+                title="XLS"
+              >
+                <i class="far fa-file-excel cursor-pointer"></i>
+              </a>
+              <a
+                class="px-2 text-danger"
+                v-b-tooltip.hover
+                @click=""
+                title="PDF"
+              >
+                <i class="far fa-file-pdf cursor-pointer"></i>
+              </a>
+              <a
+                href="javascript:void(0);"
+                class="px-2 text-danger"
+                v-b-tooltip.hover
+                @click="deleteData(data.item.slug)"
+                title="Hapus"
+              >
+                <i class="uil uil-trash-alt font-size-18"></i>
+              </a>
+
+            </template>
+          </b-table>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="dataTables_paginate paging_simple_numbers float-right">
+              <ul class="pagination pagination-rounded">
+                <!-- pagination -->
+                <b-pagination
+                  v-model="currentPage"
+                  :total-rows="rows"
+                  :per-page="perPage"
+                ></b-pagination>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style>
+.table-head {
+  background-color: #b40000 !important;
+  color: white;
+}
+</style>
