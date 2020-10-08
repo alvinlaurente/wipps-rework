@@ -1,41 +1,48 @@
 <script>
-/**
- * Dashboard component
- */
 export default {
   head() {
     return {
-      title: "Detail"
+      title: this.title
     };
   },
   data() {
     return {
-      title: "Daftar Barang",
+      title: this.$route.params.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
       items: [
         {
-          text: "Barang"
+          text: "Dashboard"
         },
         {
-          text: "Daftar Barang"
+          text: "Riwayat Pengguna"
         },
         {
-          text: "Detail",
+          text: "Detail"
+        },
+        {
+          text: this.$route.params.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
           active: true
         }
       ],
-      response: {
-        user: {}
-      },
-      cardBody: "",
-      status: "Safe",
-      options: [
-        { text: "Safe", value: "Safe" },
-        { text: "Unsafe", value: "Unsafe" },
-        { text: "N/A", value: "N/A" }
-      ]
+      dataDetail: {
+        companies: [{}],
+        percentage: [{}]
+      }
     };
   },
   methods: {
+    async loadData() {
+      await fetch(process.env.baseUrl + "/forms/" + this.$route.params.id, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          this.dataDetail = result.data;
+          console.log(this.dataDetail);
+        });
+    },
     convertSafe(code) {
       switch (code) {
         case 1:
@@ -46,28 +53,9 @@ export default {
           return "N/A"
       }
     },
-    async getData() {
-      await fetch(
-        process.env.baseUrl +
-          `/item-inspections/` +
-          localStorage.getItem("selected-id-inspeksi"),
-        {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token")
-          }
-        }
-      )
-        .then(response => response.json())
-        .then(result => {
-          this.response = result.data;
-          console.log(result.data);
-        });
-    }
   },
-  mounted: function() {
-    this.$activateMenuDropdown("Daftar Barang");
-    this.getData();
+  mounted() {
+    this.loadData()
   }
 };
 </script>
@@ -75,56 +63,49 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
+
+    <!-- dashboard>riwayat pengguna>detail -->
     <div class="row">
-      <div class="col-12">
+      <!-- Table -->
+      <div class="col-12 mb-3">
         <table class="table table-light">
           <tr>
             <td class="table-secondary">Area</td>
-            <td>{{ this.response.area_id }}</td>
+            <td>{{dataDetail.area_id}}</td>
           </tr>
           <tr>
-            <td class="table-secondary">Merk</td>
-            <td>{{ this.response.brand }}</td>
+            <td class="table-secondary">Pekerjaan</td>
+            <td>{{dataDetail.job_id}}</td>
           </tr>
           <tr>
-            <td class="table-secondary">Pelaksana Pekerjaan</td>
-            <td>{{ this.response.company_id }}</td>
+            <td class="table-secondary">Judul</td>
+            <td>{{dataDetail.form_type_id}}</td>
           </tr>
           <tr>
             <td class="table-secondary">Pengguna</td>
-            <td>{{ this.response.user.name }}</td>
+            <td>{{dataDetail.creator}}</td>
           </tr>
           <tr>
-            <td class="table-secondary">Keterangan</td>
-            <td>{{ this.response.description }}</td>
+            <td class="table-secondary">Pelaksana Pekerjaan</td>
+            <td>{{dataDetail.companies[0].name}}</td>
           </tr>
-          <tr>
-            <td class="table-secondary">Model</td>
-            <td>{{ this.response.model }}</td>
+          <tr class="not-overall">
+            <td class="table-secondary">Equipment</td>
+            <td>{{dataDetail.equipment}}</td>
           </tr>
-          <tr>
-            <td class="table-secondary">Tanggal awal berlaku</td>
-            <td>{{ this.response.start_date }}</td>
-          </tr>
-          <tr>
-            <td class="table-secondary">Tanggal akhir berlaku</td>
-            <td>{{ this.response.due_date }}</td>
-          </tr>
-          <tr>
-            <td class="table-secondary">Safetyman</td>
-            <td>{{ this.response.safetyman }}</td>
-          </tr>
-          <tr>
-            <td class="table-secondary">Pemeriksa</td>
-            <td>{{ this.response.inspector }}</td>
+          <tr class="not-">
+            <td class="table-secondary">Persen</td>
+            <td>{{dataDetail.percentage[0].percentage}} %</td>
           </tr>
         </table>
       </div>
+      <!-- End Table -->
 
+      <!-- Accordion -->
       <div class="col-12 mb-3">
         <div class="accordion" role="tablist">
           <div
-            v-for="component in response.components"
+            v-for="component in dataDetail.components"
             class="card z-depth-0 bordered m-0"
           >
             <div class="card-header">
@@ -169,15 +150,13 @@ export default {
           </div>
         </div>
       </div>
-
-      <div class="col-12 mb-3">
-        <nuxt-link
-          class="btn btn-danger"
-          to="/barang/daftar-barang/daftar-riwayat-inspeksi-barang"
-          >Kembali</nuxt-link
-        >
+      <div class="col-12">
+        <div class="form-group">
+          <div><nuxt-link type="reset" class="btn btn-danger" to="/dashboard/riwayat">Kembali</nuxt-link></div>
+        </div>
       </div>
     </div>
+    <!-- End dashboard>riwayat pengguna>detail -->
   </div>
 </template>
 
@@ -187,8 +166,7 @@ tr td:first-child {
 }
 
 table {
-  border-top: 3px solid #184799;
-  border-radius: 10px;
+  border-top: 3px solid #2185d0;
 }
 
 .table-secondary {
