@@ -48,25 +48,6 @@ export const menuItems = [
     ]
   },
   {
-    id: 88,
-    label: "Pengguna",
-    icon: "uil-share-alt",
-    subItems: [
-      {
-        id: 89,
-        label: "Profil",
-        link: "/account/profil",
-        parentId: 88
-      },
-      {
-        id: 89,
-        label: "Logout",
-        link: "",
-        parentId: 88
-      }
-    ]
-  },
-  {
     id: 200,
     label: "Barang",
     icon: "uil-share-alt",

@@ -1,5 +1,8 @@
 <script>
 import {
+    layoutComputed
+} from "~/store/helpers";
+import {
     authFackMethods
 } from "~/store/helpers";
 /**
@@ -8,93 +11,27 @@ import {
 export default {
     data() {
         return {
-            languages: [{
-                    flag: require("~/assets/images/flags/us.jpg"),
-                    language: "en",
-                    title: "English",
-                },
-                {
-                    flag: require("~/assets/images/flags/french.jpg"),
-                    language: "fr",
-                    title: "French",
-                },
-                {
-                    flag: require("~/assets/images/flags/spain.jpg"),
-                    language: "es",
-                    title: "spanish",
-                },
-                {
-                    flag: require("~/assets/images/flags/china.png"),
-                    language: "zh",
-                    title: "Chinese",
-                },
-                {
-                    flag: require("~/assets/images/flags/arabic.png"),
-                    language: "ar",
-                    title: "Arabic",
-                },
-            ],
-            current_language: this.$i18n.locale,
-            text: null,
-            flag: null,
-            value: null,
+            
         };
     },
-    mounted() {
-        this.value = this.languages.find((x) => x.language === this.$i18n.locale);
-        this.text = this.value.title;
-        this.flag = this.value.flag;
+    mounted: function(){
+        var logoutUser = null;
+        var menus = document.getElementsByClassName("logout");
+
+        logoutUser = menus;
+
+        logoutUser.onclick = function(){
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          window.location.href = '/account/login';
+        };
     },
     methods: {
         ...authFackMethods,
-        /**
-         * Toggle menu
-         */
-        toggleMenu() {
-            this.$parent.toggleMenu();
-        },
-        initFullScreen() {
-            document.body.classList.toggle("fullscreen-enable");
-            if (
-                !document.fullscreenElement &&
-                /* alternative standard method */
-                !document.mozFullScreenElement &&
-                !document.webkitFullscreenElement
-            ) {
-                // current working methods
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen();
-                } else if (document.documentElement.mozRequestFullScreen) {
-                    document.documentElement.mozRequestFullScreen();
-                } else if (document.documentElement.webkitRequestFullscreen) {
-                    document.documentElement.webkitRequestFullscreen(
-                        Element.ALLOW_KEYBOARD_INPUT
-                    );
-                }
-            } else {
-                if (document.cancelFullScreen) {
-                    document.cancelFullScreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitCancelFullScreen) {
-                    document.webkitCancelFullScreen();
-                }
-            }
-        },
-        /**
-         * Toggle rightsidebar
-         */
-        toggleRightSidebar() {
-            this.$parent.toggleRightSidebar();
-        },
-        /**
-         * Set languages
-         */
-        setLanguage(locale, country, flag) {
-            this.$i18n.locale = locale;
-            this.current_language = locale;
-            this.text = country;
-            this.flag = flag;
+        profilUser() {
+            this.$router.push({
+                path: "/account/profil",
+            });
         },
         logoutUser() {
             this.logout();
@@ -134,6 +71,26 @@ export default {
             <button @click="toggleMenu" type="button" class="btn btn-sm px-3 font-size-16 header-item vertical-menu-btn" id="vertical-menu-btn">
                 <i class="fa fa-fw fa-bars"></i>
             </button>
+        </div>
+
+        <div class="d-flex">
+            <b-dropdown class="d-inline-block" toggle-class="header-item" right variant="white">
+                <template v-slot:button-content>
+                    <img class="rounded-circle header-profile-user" src="~/assets/images/users/avatar-4.jpg" alt="Header Avatar" />
+                    <span id="sidebar-user-name" class="d-none d-xl-inline-block ml-1 font-weight-medium font-size-15">Priawan Admin</span>
+                    <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
+                </template>
+
+                <!-- item-->
+                <button class="dropdown-item" @click="profilUser">
+                    <i class="uil uil-user-circle font-size-18 align-middle text-muted mr-1"></i>
+                    <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.profile') }}</span>
+                </button>
+                <a class="dropdown-item logout" @click="logoutUser" href="javascript: void(0);">
+                    <i class="uil uil-sign-out-alt font-size-18 align-middle mr-1 text-muted"></i>
+                    <span class="align-middle">{{ $t('navbar.dropdown.marcus.list.logout') }}</span>
+                </a>
+            </b-dropdown>
         </div>
     </div>
 </header>
