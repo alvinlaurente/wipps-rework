@@ -31,6 +31,7 @@ export default {
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
+      token: localStorage.getItem('token'),
       fields: [
         {
           key: "No",
@@ -93,6 +94,31 @@ export default {
         console.log(this.tableItem);
       });
     },
+    deleteData(slug) {
+      this.selectedDelete = slug
+      this.$refs['modal-delete'].show()
+    },
+    btnDelete() {
+      fetch( process.env.baseUrl + `/overall-slug-user/` + this.selectedDelete, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        }})
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json()
+        })
+        .then(result => {
+          this.$refs['modal-delete'].hide()
+          this.loadData()
+        })
+        .catch(error => {
+          alert(error)
+        })
+    }
   },
   computed: {
     /**
@@ -175,11 +201,10 @@ export default {
                 <i class="uil uil-eye font-size-18"></i>
               </nuxt-link>
               <a
-                href="javascript:void(0);"
                 class="px-2 text-success"
                 v-b-tooltip.hover
-                @click=""
                 title="XLS"
+                :href="'http://wpds.tukangserver.id:8081/api/export/single/excel?slug='+data.item.slug+'&token='+token"
               >
                 <i class="far fa-file-excel cursor-pointer"></i>
               </a>
@@ -200,7 +225,6 @@ export default {
               >
                 <i class="uil uil-trash-alt font-size-18"></i>
               </a>
-
             </template>
           </b-table>
         </div>
