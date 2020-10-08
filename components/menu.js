@@ -18,31 +18,31 @@ export const menuItems = [
       {
         id: 100,
         label: "Dashboard",
-        link: "/",
+        link: "/dashboard/dashboard",
         parentId: 2
       },
       {
         id: 100,
         label: "Complete Dashboard",
-        link: "/",
+        link: "/dashboard/complete-dashboard",
         parentId: 2
       },
       {
         id: 100,
         label: "Riwayat",
-        link: "/",
+        link: "/dashboard/riwayat",
         parentId: 2
       },
       {
         id: 100,
         label: "Export",
-        link: "/",
+        link: "/dashboard/export",
         parentId: 2
       },
       {
         id: 100,
         label: "Overall Percentage",
-        link: "/",
+        link: "/dashboard/overall-percentage",
         parentId: 2
       },
     ]
