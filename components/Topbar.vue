@@ -76,7 +76,7 @@ export default {
         <div class="d-flex">
             <b-dropdown class="d-inline-block" toggle-class="header-item" right variant="white">
                 <template v-slot:button-content>
-                    <img class="rounded-circle header-profile-user" src="~/assets/images/users/avatar-4.jpg" alt="Header Avatar" />
+                    <img class="rounded-circle header-profile-user" src="~/assets/images/users/avatar.jpg" alt="Header Avatar" />
                     <span id="sidebar-user-name" class="d-none d-xl-inline-block ml-1 font-weight-medium font-size-15">Priawan Admin</span>
                     <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
                 </template>
