@@ -43,7 +43,7 @@ export default {
                 <div>
                   <b-list-group horizontal>
                     <b-list-group-item class="py-2 filterIcon"
-                      >Icon</b-list-group-item
+                      ><i class="bx bxs-filter-alt text-white"></i></b-list-group-item
                     >
                     <b-list-group-item
                       class="py-2 w-100 selectedList"

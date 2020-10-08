@@ -187,7 +187,7 @@ tr td:first-child {
 }
 
 table {
-  border-top: 3px solid #184799;
+  border-top: 3px solid #000082;
   border-radius: 10px;
 }
 
