@@ -7,7 +7,7 @@ export const menuItems = [
   {
     id: 2,
     label: "Dashboard",
-    icon: "uil-home-alt",
+    icon: "uil-dashboard",
     subItems: [
       {
         id: 100,
@@ -50,7 +50,7 @@ export const menuItems = [
   {
     id: 200,
     label: "Barang",
-    icon: "uil-share-alt",
+    icon: "uil-copy-alt",
     subItems: [
       {
         id: 201,
@@ -69,7 +69,7 @@ export const menuItems = [
   {
     id: 300,
     label: "Referensi",
-    icon: "uil-share-alt",
+    icon: "uil-constructor",
     subItems: [
       {
         id: 301,
