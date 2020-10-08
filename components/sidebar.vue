@@ -32,67 +32,6 @@ export default {
     computed: {
         ...layoutComputed,
     },
-    watch: {
-        type: {
-            immediate: true,
-            handler(newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    switch (newVal) {
-                        case "dark":
-                            document.body.setAttribute("data-sidebar", "dark");
-                            document.body.removeAttribute("data-topbar");
-                            document.body.removeAttribute("data-sidebar-size");
-                            break;
-                        case "light":
-                            document.body.removeAttribute("data-sidebar");
-                            document.body.removeAttribute("data-sidebar-size");
-                            document.body.classList.remove("vertical-collpsed");
-                            break;
-                        case "compact":
-                            document.body.setAttribute("data-sidebar-size", "small");
-                            document.body.setAttribute("data-sidebar", "dark");
-                            document.body.classList.remove("vertical-collpsed");
-                            document.body.removeAttribute("data-topbar", "dark");
-                            break;
-                        case "icon":
-                            document.body.setAttribute("data-keep-enlarged", "true");
-                            document.body.classList.add("vertical-collpsed");
-                            document.body.setAttribute("data-sidebar", "dark");
-                            document.body.removeAttribute("data-topbar", "dark");
-                            break;
-                        case "colored":
-                            document.body.setAttribute("data-sidebar", "colored");
-                            document.body.removeAttribute("data-keep-enlarged");
-                            document.body.classList.remove("vertical-collpsed");
-                            document.body.removeAttribute("data-sidebar-size");
-                            break;
-                        default:
-                            document.body.setAttribute("data-sidebar", "dark");
-                            break;
-                    }
-                }
-            },
-        },
-        width: {
-            immediate: true,
-            handler(newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    switch (newVal) {
-                        case "boxed":
-                            document.body.setAttribute("data-layout-size", "boxed");
-                            break;
-                        case "fluid":
-                            document.body.setAttribute("data-layout-mode", "fluid");
-                            document.body.removeAttribute("data-layout-size");
-                            break;
-                        default:
-                            document.body.setAttribute("data-layout-mode", "fluid");
-                            break;
-                    }
-                }
-            },
-        },
-    },
     mounted: function () {
         // eslint-disable-next-line no-unused-vars
         var menuRef = new MetisMenu("#side-menu");
@@ -101,21 +40,6 @@ export default {
         this.$router.afterEach((routeTo, routeFrom) => {
             this._activateMenuDropdown();
         });
-
-        var logoutMenu = null;
-        var menus = document.getElementsByClassName("side-nav-link-ref")
-        for (let i = 0; i < menus.length; i++) {
-          if (menus[i].innerText === "Logout") {
-            logoutMenu = menus[i];
-          }
-        }
-
-        logoutMenu.onclick = function(){
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-          window.location.href = '/account/login';
-        };
-        document.getElementById('sidebar-user-name').innerText = localStorage.getItem("name")
 
       },
     methods: {
@@ -228,13 +152,6 @@ export default {
         <!--- Sidemenu -->
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
-            <div class="text-center nama-role text-white mb-3">
-                <p>Anda login sebagai</p>
-                <span style="border: 1px solid rgb(255, 255, 255); padding: 7px; margin-top: 10px; border-radius: 5px;" id="sidebar-user-name"><i class="user circle outline icon"></i>
-                man
-                </span>
-            </div>
-
             <ul class="metismenu list-unstyled" id="side-menu">
                 <template v-for="item in menuItems">
                     <li class="menu-title" v-if="item.isTitle" :key="item.id">{{ $t(item.label) }}</li>
