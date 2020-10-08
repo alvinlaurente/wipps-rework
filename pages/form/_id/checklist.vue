@@ -14,8 +14,8 @@
                   v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
                 >
                   ► &nbsp;
-                  <i :id="'icon-'+f.id+'-safe'" class="fas fa-thumbs-up text-success" style="display: none"></i>
-                  <i :id="'icon-'+f.id+'-unsafe'" class="fas fa-exclamation-triangle text-danger" style="display: none"></i>
+                  <i :id="'icon-'+f.id+'-safe'" class="mdi mdi-bell text-success" style="display: none"></i>
+                  <i :id="'icon-'+f.id+'-unsafe'" class="mdi mdi-bell text-danger" style="display: none"></i>
                   {{ f.component }}
                 </button>
               </h5>
@@ -97,7 +97,7 @@
         </div>
       </div>
     </div>
-    <div class="row mb-3 for-barang">
+    <div class="row my-3 for-barang">
       <div class="col-12 mb-3">
         <label>Keterangan</label>
         <textarea

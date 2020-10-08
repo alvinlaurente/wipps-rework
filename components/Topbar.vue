@@ -28,6 +28,9 @@ export default {
     },
     methods: {
         ...authFackMethods,
+        toggleMenu() {
+            this.$parent.toggleMenu();
+        },
         profilUser() {
             this.$router.push({
                 path: "/account/profil",

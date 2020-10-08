@@ -138,8 +138,8 @@ export default {
                   "
                 >
                   ► &nbsp;
-                  <i class="fas fa-exclamation-triangle text-danger" v-if="component.status === 2"></i>
-                  <i class="fas fa-thumbs-up text-success" v-if="component.status === 1"></i>
+                  <i class="mdi mdi-bell text-danger" v-if="component.status === 2"></i>
+                  <i class="mdi mdi-bell text-success" v-if="component.status === 1"></i>
                   {{ component.text }}
                 </button>
               </h5>

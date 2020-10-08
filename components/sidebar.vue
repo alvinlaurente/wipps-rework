@@ -3,12 +3,10 @@ import MetisMenu from "metismenujs/dist/metismenujs";
 import {
     layoutComputed
 } from "~/store/helpers";
+
 import {
     menuItems
 } from "./menu";
-import {
-  authFackMethods
-} from "~/store/helpers";
 
 /**
  * Sidebar component
@@ -32,6 +30,67 @@ export default {
     computed: {
         ...layoutComputed,
     },
+    watch: {
+        type: {
+            immediate: true,
+            handler(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    switch (newVal) {
+                        case "dark":
+                            document.body.setAttribute("data-sidebar", "dark");
+                            document.body.removeAttribute("data-topbar");
+                            document.body.removeAttribute("data-sidebar-size");
+                            break;
+                        case "light":
+                            document.body.removeAttribute("data-sidebar");
+                            document.body.removeAttribute("data-sidebar-size");
+                            document.body.classList.remove("vertical-collpsed");
+                            break;
+                        case "compact":
+                            document.body.setAttribute("data-sidebar-size", "small");
+                            document.body.setAttribute("data-sidebar", "dark");
+                            document.body.classList.remove("vertical-collpsed");
+                            document.body.removeAttribute("data-topbar", "dark");
+                            break;
+                        case "icon":
+                            document.body.setAttribute("data-keep-enlarged", "true");
+                            document.body.classList.add("vertical-collpsed");
+                            document.body.setAttribute("data-sidebar", "dark");
+                            document.body.removeAttribute("data-topbar", "dark");
+                            break;
+                        case "colored":
+                            document.body.setAttribute("data-sidebar", "colored");
+                            document.body.removeAttribute("data-keep-enlarged");
+                            document.body.classList.remove("vertical-collpsed");
+                            document.body.removeAttribute("data-sidebar-size");
+                            break;
+                        default:
+                            document.body.setAttribute("data-sidebar", "dark");
+                            break;
+                    }
+                }
+            },
+        },
+        width: {
+            immediate: true,
+            handler(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    switch (newVal) {
+                        case "boxed":
+                            document.body.setAttribute("data-layout-size", "boxed");
+                            break;
+                        case "fluid":
+                            document.body.setAttribute("data-layout-mode", "fluid");
+                            document.body.removeAttribute("data-layout-size");
+                            break;
+                        default:
+                            document.body.setAttribute("data-layout-mode", "fluid");
+                            break;
+                    }
+                }
+            },
+        },
+    },
     mounted: function () {
         // eslint-disable-next-line no-unused-vars
         var menuRef = new MetisMenu("#side-menu");
@@ -40,10 +99,8 @@ export default {
         this.$router.afterEach((routeTo, routeFrom) => {
             this._activateMenuDropdown();
         });
-
-      },
+    },
     methods: {
-        ...authFackMethods,
         /**
          * Toggle menu
          */
@@ -136,10 +193,10 @@ export default {
     <div class="navbar-brand-box">
         <nuxt-link to="/" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="~/assets/images/logo-sidebar-sm.png" alt height="22" />
+                <img src="~/assets/images/logo-sm.png" alt height="22" />
             </span>
             <span class="logo-lg">
-                <img class="d-inline mr-2" src="~/assets/images/logo-sidebar-full.png" alt width="60" /><p class="d-inline" style="font-size:12px;color:white;">WIPPS Safety Report</p>
+                <img src="~/assets/images/logo-sidebar-full.png" alt height="20" />
             </span>
         </nuxt-link>
     </div>
@@ -177,7 +234,7 @@ export default {
 
                         <ul v-if="hasItems(item)" class="sub-menu" aria-expanded="false">
                             <li v-for="(subitem, index) of item.subItems" :key="index">
-                                <nuxt-link :to="subitem.link" v-if="!hasItems(subitem)" class="side-nav-link-ref">{{ $t(subitem.label) }}</nuxt-link>
+                                <nuxt-link :to="subitem.link" v-if="!hasItems(subitem)" class="side-nav-link-ref"><i :class="`${subitem.icon}`" v-if="item.icon"></i>{{ $t(subitem.label) }}</nuxt-link>
                                 <a v-if="hasItems(subitem)" class="side-nav-link-a-ref has-arrow" href="javascript:void(0);">{{ $t(subitem.label) }}</a>
                                 <ul v-if="hasItems(subitem)" class="sub-menu mm-collapse" aria-expanded="false">
                                     <li v-for="(subSubitem, index) of subitem.subItems" :key="index">
@@ -195,6 +252,3 @@ export default {
 </div>
 <!-- Left Sidebar End -->
 </template>
-
-<style scoped>
-</style>

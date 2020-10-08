@@ -176,8 +176,8 @@ export default {
               v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')"
             >
               ► &nbsp;
-              <i :id="'icon-'+f.id+'-safe'" class="fas fa-thumbs-up text-success"></i>
-              <i :id="'icon-'+f.id+'-unsafe'" class="fas fa-exclamation-triangle text-danger"></i>
+              <i :id="'icon-'+f.id+'-safe'" class="mdi mdi-bell text-success"></i>
+              <i :id="'icon-'+f.id+'-unsafe'" class="mdi mdi-bell text-danger"></i>
               {{ f.text }}
             </button>
           </h5>

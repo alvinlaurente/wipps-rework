@@ -246,13 +246,13 @@ export default {
                 <div class="card-body">
                     <div class="form-group">
                         <label for="input-old-password">Password Lama</label>
-                        <input type="text" class="form-control mb-2 input-pass" placeholder="Password Lama" disabled id="input-old-password" @keyup.enter="submitPass"/>
+                        <input type="password" class="form-control mb-2 input-pass" placeholder="Password Lama" disabled id="input-old-password" @keyup.enter="submitPass"/>
                         <div class="invalid-feedback" id="invalid-old-password">
                             <span>Kolom ini tidak boleh kosong.</span>
                         </div>
 
                         <label for="input-new-password">Password Baru</label>
-                        <input type="text" class="form-control mb-2 input-pass" placeholder="Password Baru" disabled id="input-new-password" @keyup.enter="submitPass"/>
+                        <input type="password" class="form-control mb-2 input-pass" placeholder="Password Baru" disabled id="input-new-password" @keyup.enter="submitPass"/>
                         <div class="invalid-feedback" id="invalid-new-password">
                             <span>Kolom ini tidak boleh kosong.</span>
                         </div>
@@ -280,6 +280,11 @@ export default {
 </template>
 
 <style scoped>
+input[type="text"]:disabled,::placeholder  {
+  color: #C2C6C7;
+  opacity: 1;
+}
+
 .btn-orange{
     background-color: #EE7E1F;
     color: white;
