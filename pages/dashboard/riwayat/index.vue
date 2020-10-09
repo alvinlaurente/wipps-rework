@@ -32,6 +32,7 @@ export default {
       sortBy: "age",
       sortDesc: false,
       token: localStorage.getItem('token'),
+      baseUrl: process.env.baseUrl,
       fields: [
         {
           key: "No",
@@ -204,7 +205,7 @@ export default {
                 class="px-2 text-success"
                 v-b-tooltip.hover
                 title="XLS"
-                :href="'http://wpds.tukangserver.id:8081/api/export/single/excel?slug='+data.item.slug+'&token='+token"
+                :href="baseUrl+'/export/single/excel?slug='+data.item.slug+'&token='+token"
               >
                 <i class="far fa-file-excel cursor-pointer"></i>
               </a>
