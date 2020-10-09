@@ -17,6 +17,10 @@ export default {
           active: true,
         },
       ],
+      token: localStorage.getItem('token'),
+      baseUrl: process.env.baseUrl,
+      from: "2020-01-01",
+      to: "2020-12-31",
     };
   },
   methods: {
@@ -38,23 +42,18 @@ export default {
     <div class="row mb-4">
       <div class="col-md-3">
         <span>Dari</span>
-        <b-form-input type="date" id="input-start-date"></b-form-input>
-        <div class="invalid-feedback" id="invalid-start-date">
-          <span>Kolom ini tidak boleh kosong.</span>
-        </div>
+        <b-form-input type="date" v-model="from"></b-form-input>
       </div>
       <div class="col-md-3">
         <span>Sampai</span>
-        <b-form-input type="date" id="input-start-date"></b-form-input>
-        <div class="invalid-feedback" id="invalid-start-date">
-          <span>Kolom ini tidak boleh kosong.</span>
-        </div>
+        <b-form-input type="date" v-model="to"></b-form-input>
       </div>
       <div class="col-md-6 mt-auto text-right">
         <b-button-group size="md">
-          <b-button variant="danger" v-on:click="showIframe">Export</b-button>
-          <b-button variant="success">Export</b-button>
-          <b-button variant="success">Export Form Data</b-button>
+          <b-button variant="danger" v-on:click="showIframe"><i class="far far fa-file-pdf">&nbsp;</i>Export</b-button>
+          <a class="btn btn-success" :href="this.baseUrl+'/export/all/excel?from='+this.from+'&to='+this.to+'&token='+this.token">
+            <i class="far fa-file-excel">&nbsp;</i>Export</a>
+          <b-button variant="success"><i class="far fa-file-excel">&nbsp;</i>Export Form Data</b-button>
         </b-button-group>
       </div>
     </div>
