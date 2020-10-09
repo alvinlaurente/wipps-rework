@@ -58,13 +58,13 @@ export default {
 
     <div class="row mb-2">
       <div class="col-12">
-        <button class="btn btn-danger">Kembali</button>
+        <nuxt-link to="detail" class="btn btn-danger">Kembali</nuxt-link>
       </div>
     </div>
 
     <div class="row">
       <div class="col-4" v-for="user in dataUser">
-        <nuxt-link class="card" to="pengguna/riwayat-pengguna">
+        <nuxt-link class="card" :to="user.slug">
           <div class="card-body">
             <h4 class="mb-0">{{ user.name }}</h4>
             <p class="text-muted mb-0">{{ user.created }}</p>
