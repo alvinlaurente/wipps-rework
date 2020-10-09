@@ -21,22 +21,39 @@ export default {
         value1: 59.27,
       },
       animate: true,
+      dataChart: []
     };
   },
   methods: {
     bgbar() {
-      let value = this.value.value1;
-      if (value < 33.33) {
-        document.getElementById("prog-bar").classList.add("bg-danger");
-      } else if (value < 66.66) {
-        document.getElementById("prog-bar").classList.add("bg-warning");
-      } else if (value <= 100) {
-        document.getElementById("prog-bar").classList.add("bg-success");
+      let els = document.getElementsByClassName('progress-bar');
+      for (let i = 0; i < els.length; i++) {
+        if (parseInt(els[i].innerHTML) < 33.33) {
+          els[i].classList.add("bg-danger");
+        } else if (parseInt(els[i].innerHTML) < 66.66) {
+          els[i].classList.add("bg-warning");
+        } else if (parseInt(els[i].innerHTML) <= 100) {
+          els[i].classList.add("bg-success");
+        }
       }
+    },
+    async loadData() {
+      await fetch(process.env.baseUrl + "/charts/types", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        this.dataChart = result.data;
+        console.log(this.dataChart);
+        setTimeout(() => {this.bgbar()}, 1);
+      });
     },
   },
   mounted: function () {
-    this.bgbar();
+    this.loadData()
   },
 };
 </script>
@@ -46,28 +63,17 @@ export default {
     <PageHeader :title="title" :items="items" />
 
     <div class="row">
-      <div class="col-4 mb-3">
-        <b-card-group deck>
-          <b-card
-            title="Personal Protective Equipment"
-            header-tag="header"
-            footer-tag="footer"
-          >
-            <b-card-text class="">{{ value.value1 }}%</b-card-text>
-            <b-progress-bar
-              id="prog-bar"
-              :value="value.value1"
-              striped
-              :animated="animate"
-              show-value
-              :precision="2"
-              height="3vw"
-            ></b-progress-bar>
-            <template v-slot:footer>
-              <span>Personal Protective Equipment</span>
-            </template>
+      <div class="col-4 mb-3" v-for="data in dataChart">
+        <nuxt-link :to="'/dashboard/overall-percentage/'+data.slug+'/detail'" deck>
+          <b-card :title="data.name" header-tag="header" footer-tag="footer">
+<!--            <b-card-text class="">{{ data.percent }}%</b-card-text>-->
+            <b-progress-bar class="mt-1" :value="data.percent"
+                            striped :animated="animate" show-value :precision="2" height="3vw"></b-progress-bar>
+<!--            <template v-slot:footer>-->
+<!--              <span>Personal Protective Equipment</span>-->
+<!--            </template>-->
           </b-card>
-        </b-card-group>
+        </nuxt-link>
       </div>
     </div>
   </div>
