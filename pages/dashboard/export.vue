@@ -66,7 +66,7 @@ export default {
             setTimeout(function(){
                 var dataPDF = pdf.output('datauri')
                 document.getElementById("isiIframe").src = dataPDF
-            }, 10)
+            }, 500)
 
         }
   },
