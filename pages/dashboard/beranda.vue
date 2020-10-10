@@ -46,12 +46,10 @@ export default {
     },
     mounted: function () {
         this.$activateMenuDropdown(this.items[1].text)
-
         this.getData()
-
     },
     middleware: [
-      "authentication"
+      "authentication",'block-supervisor'
     ],
 };
 </script>

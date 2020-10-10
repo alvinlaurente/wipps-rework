@@ -55,8 +55,12 @@ export default {
     },
   },
   mounted() {
+    this.$activateMenuDropdown("Riwayat");
     this.loadData()
-  }
+  },
+  middleware: [
+    "authentication"
+  ],
 };
 </script>
 

@@ -214,7 +214,10 @@ export default {
         console.log(this.peran)
       })
     }
-  }
+  },
+  middleware: [
+    "authentication",'block-safety-man',"block-safety-inspector","block-supervisor"
+  ],
 };
 </script>
 

@@ -115,7 +115,10 @@ export default {
     document.getElementById("input-merk").value = this.prevData.brand
     document.getElementById("input-model").value = this.prevData.model
   },
-  // middleware: "authentication",
+  middleware: [
+    "authentication",
+    'block-ru2','block-ru4','block-ru5'
+  ]
 };
 </script>
 

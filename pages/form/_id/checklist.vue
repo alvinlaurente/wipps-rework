@@ -308,10 +308,10 @@ export default {
     };
   },
   mounted: function () {
-    this.$activateMenuDropdown("")
     this.prevData = JSON.parse(localStorage.getItem("temp_form"))
     let endPoint = "form-components?form="
     if (this.prevData.context === "beranda") {
+      this.$activateMenuDropdown("Beranda")
       let notNeededElement = document.getElementsByClassName("for-barang")
       for (let i = 0; i < notNeededElement.length; i++) {
         notNeededElement[i].innerHTML = ""
@@ -325,6 +325,12 @@ export default {
         name: this.prevData.name
       }
     } else {
+      if (['ru2','ru4','ru5'].includes(localStorage.getItem("ru"))){
+        this.$router.push({
+          path: "/",
+        });
+      }
+      this.$activateMenuDropdown("Input Barang")
       endPoint = "item-requirements?item="
       this.formData.item = {
         area_id: this.prevData.area_id,
@@ -367,8 +373,10 @@ export default {
         }
       }
     })
-
-  }
+  },
+  middleware: [
+    "authentication",
+  ]
 }
 </script>
 

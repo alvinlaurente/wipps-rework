@@ -1,5 +1,8 @@
 <script>
+import NoData from "@/components/NoData";
+
 export default {
+  components: {NoData},
   head() {
     return {
       title: this.title,
@@ -106,6 +109,7 @@ export default {
         })
         .then((response) => response.json())
         .then((result) => {
+          document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
           console.log(result.data);
           this.formData = result.data
         });
@@ -119,6 +123,7 @@ export default {
         })
           .then((response) => response.json())
           .then((result) => {
+            document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
             console.log(result.data);
             this.formData = result.data
           });
@@ -149,7 +154,10 @@ export default {
   mounted: function () {
     this.removeUneeded()
     this.loadData()
-  }
+  },
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
 };
 </script>
 
@@ -211,6 +219,7 @@ export default {
                 >
                   <template v-slot:cell(no)="data">{{(data.index + 1) }}</template>
                 </b-table>
+                <NoData v-if="formData.length===0"/>
               </div>
             </b-tab>
           </b-tabs>

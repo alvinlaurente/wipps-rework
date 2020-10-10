@@ -245,7 +245,10 @@ export default {
     } else {
       this.getData()
     }
-  }
+  },
+  middleware: [
+    "authentication",'block-safety-man',"block-safety-inspector","block-supervisor"
+  ],
 };
 </script>
 

@@ -15,6 +15,8 @@ export default {
     data() {
         return {
             menuItems: menuItems,
+            role: localStorage.getItem("role"),
+            ru: localStorage.getItem("ru")
         };
     },
     props: {
@@ -210,7 +212,7 @@ export default {
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
-                <template v-for="item in menuItems">
+                <template v-for="item in menuItems" v-if="item.roles.includes(role)&&item.rus.includes(ru)">
                     <li class="menu-title" v-if="item.isTitle" :key="item.id">{{ $t(item.label) }}</li>
                     <li v-if="!item.isTitle && !item.isLayout" :key="item.id">
                         <a v-if="hasItems(item)" href="javascript:void(0);" class="is-parent" :class="{
@@ -233,7 +235,7 @@ export default {
                         </nuxt-link>
 
                         <ul v-if="hasItems(item)" class="sub-menu" aria-expanded="false">
-                            <li v-for="(subitem, index) of item.subItems" :key="index">
+                            <li v-for="(subitem, index) of item.subItems" :key="index" v-if="subitem.roles.includes(role)&&subitem.rus.includes(ru)">
                                 <nuxt-link :to="subitem.link" v-if="!hasItems(subitem)" class="side-nav-link-ref"><i :class="`${subitem.icon}`" v-if="item.icon"></i>{{ $t(subitem.label) }}</nuxt-link>
                                 <a v-if="hasItems(subitem)" class="side-nav-link-a-ref has-arrow" href="javascript:void(0);">{{ $t(subitem.label) }}</a>
                                 <ul v-if="hasItems(subitem)" class="sub-menu mm-collapse" aria-expanded="false">

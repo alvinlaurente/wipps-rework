@@ -7,16 +7,16 @@ export default function ({ route, redirect }) {
       return redirect('/dashboard/beranda')
       break;
     case "safety-inspector":
-      return redirect('/safety-inspector/beranda')
+      return redirect('/dashboard/beranda')
       break;
     case "super-admin":
       return redirect('/dashboard/beranda')
       break;
     case "supervisor":
-      return redirect('/supervisor/beranda')
+      return redirect('/dashboard/dashboard')
       break;
     case "administrator":
-      return redirect('/administrator/beranda')
+      return redirect('/dashboard/beranda')
       break;
     default:
       return redirect('/account/login')

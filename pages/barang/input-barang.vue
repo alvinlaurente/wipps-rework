@@ -46,7 +46,11 @@ export default {
             this.tools = result.data.sort((a, b) => (a.name > b.name) ? 1 : -1)
             this.applyFilter()
         })
-    }
+    },
+    middleware: [
+      "authentication",
+      'block-ru2','block-ru4','block-ru5'
+    ]
 };
 </script>
 

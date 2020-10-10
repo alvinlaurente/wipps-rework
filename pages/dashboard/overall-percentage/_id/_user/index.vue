@@ -1,10 +1,8 @@
 <script>
-/**
- * Customer component
- */
-import QRCode from "qrcode";
+import NoData from "@/components/NoData";
 
 export default {
+  components: {NoData},
   head() {
     return {
       title: this.title,
@@ -99,6 +97,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
         this.tableItem = result.data;
         console.log(this.tableItem);
       });
@@ -139,7 +138,9 @@ export default {
     this.loadData();
     this.totalRows = this.items.length;
   },
-  middleware: "authentication",
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
 };
 </script>
 
@@ -200,6 +201,7 @@ export default {
             </nuxt-link>
           </template>
         </b-table>
+        <NoData v-if="tableItem.length===0"/>
       </div>
       <div class="row">
         <div class="col">

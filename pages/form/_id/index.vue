@@ -158,6 +158,11 @@ export default {
   },
   mounted: function () {
     if (localStorage.getItem("prevPath").includes("barang")) {
+      if (['ru2','ru4','ru5'].includes(localStorage.getItem("ru"))){
+        this.$router.push({
+          path: "/",
+        });
+      }
       this.$activateMenuDropdown("Input Barang")
       this.context = this.contexts.BARANG
     } else {
@@ -174,7 +179,9 @@ export default {
     this.getCompanies()
     this.getAreas()
   },
-  // middleware: "authentication",
+  middleware: [
+    "authentication",
+  ]
 };
 </script>
 

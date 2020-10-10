@@ -174,6 +174,9 @@ export default {
       }
     });
   },
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
 };
 </script>
 
