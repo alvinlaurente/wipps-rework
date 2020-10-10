@@ -3,8 +3,10 @@
  * Customer component
  */
 import QRCode from "qrcode";
+import NoData from "@/components/NoData";
 
 export default {
+  components: {NoData},
   head() {
     return {
       title: this.title,
@@ -207,11 +209,12 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-        .then((response) => response.json())
-        .then((result) => {
-          this.tableItem = result.data;
-          console.log(this.tableItem);
-        });
+      .then((response) => response.json())
+      .then((result) => {
+        document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
+        this.tableItem = result.data;
+        console.log(this.tableItem);
+      });
     },
     edit(data) {
       localStorage.setItem("slug-edit", data.slug);
@@ -393,6 +396,7 @@ export default {
               </a>
             </template>
           </b-table>
+          <NoData v-if="tableItem.length===0"/>
         </div>
         <div class="row">
           <div class="col">

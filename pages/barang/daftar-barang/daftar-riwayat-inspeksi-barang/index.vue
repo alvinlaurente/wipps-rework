@@ -1,10 +1,9 @@
 <script>
 import QRCode from "qrcode";
+import NoData from "@/components/NoData";
 
-/**
- * Customer component
- */
 export default {
+  components: {NoData},
   head() {
     return {
       title: "Daftar Riwayat Inspeksi Barang",
@@ -124,10 +123,11 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-        .then(response => response.json())
-        .then(result => {
-          this.tableItem = result.data
-        })
+      .then(response => response.json())
+      .then(result => {
+        document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
+        this.tableItem = result.data
+      })
     },
   },
   middleware: [
@@ -188,6 +188,7 @@ export default {
               </a>
             </template>
           </b-table>
+          <NoData v-if="tableItem.length===0"/>
         </div>
         <div class="row">
           <div class="col">
