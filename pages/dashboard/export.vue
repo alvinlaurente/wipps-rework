@@ -95,10 +95,15 @@ export default {
       </div>
       <div class="col-md-6 mt-auto text-right">
         <b-button-group size="md">
-          <b-button variant="danger" v-on:click="exportPDF"><i class="far far fa-file-pdf">&nbsp;</i>Export</b-button>
-          <a class="btn btn-success" :href="this.baseUrl+'/export/all/excel?from='+this.from+'&to='+this.to+'&token='+this.token">
-            <i class="far fa-file-excel">&nbsp;</i>Export</a>
-          <b-button variant="success"><i class="far fa-file-excel">&nbsp;</i>Export Form Data</b-button>
+          <b-button class="px-4" variant="danger" v-on:click="exportPDF"><i class="mdi mdi-file-pdf">&nbsp;</i>Export</b-button>
+
+          <a class="btn btn-success px-4" :href="this.baseUrl+'/export/all/excel?from='+this.from+'&to='+this.to+'&token='+this.token">
+            <i class="mdi mdi-file-excel">&nbsp;</i>Export
+          </a>
+
+          <b-button class="px-4" variant="success">
+            <i class="mdi mdi-file-excel">&nbsp;</i>Export Form Data
+          </b-button>
         </b-button-group>
       </div>
     </div>
