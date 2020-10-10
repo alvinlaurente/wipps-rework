@@ -139,7 +139,9 @@ export default {
     this.loadData();
     this.totalRows = this.items.length;
   },
-  middleware: "authentication",
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
 };
 </script>
 

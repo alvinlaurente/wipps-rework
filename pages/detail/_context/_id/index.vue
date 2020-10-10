@@ -149,7 +149,10 @@ export default {
   mounted: function () {
     this.removeUneeded()
     this.loadData()
-  }
+  },
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
 };
 </script>
 

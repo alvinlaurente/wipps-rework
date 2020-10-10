@@ -56,7 +56,10 @@ export default {
   },
   mounted() {
     this.loadData()
-  }
+  },
+  middleware: [
+    "authentication"
+  ],
 };
 </script>
 

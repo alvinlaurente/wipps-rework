@@ -252,7 +252,12 @@ export default {
     },
   },
   mounted() {
-    // Set the initial number of items
+    if ((this.$route.params.id==="daftar-barang"&&['ru2','ru4','ru5'].includes(localStorage.getItem("ru")))
+      ||this.$route.params.id!=="daftar-barang"&&['safety-man','safety-inspector','supervisor'].includes(localStorage.getItem("role"))){
+      this.$router.push({
+        path: "/",
+      });
+    }
     this.$activateMenuDropdown(this.items[1].text);
     document.getElementById("btn-tambah").innerText = "Tambah " + this.title;
     this.removeUneeded();

@@ -2,22 +2,32 @@
 export default {
   head() {
     return {
-      title: "Dashboard - Dashboard"
+      title: this.title
     };
   },
   data() {
     return {
-      title: "Dashboard",
+      title: this.$route.params.id.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" "),
       items: [
         {
           text: "Dashboard"
         },
         {
-          text: "Dashboard",
+          text: this.$route.params.id.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" "),
           active: true
         }
       ]
     };
+  },
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
+  beforeCreate() {
+    if (this.$route.params.id==="complete-dashboard"&&['ru2','ru4','ru5'].includes(localStorage.getItem('ru'))) {
+      this.$router.push({
+        path: "/",
+      });
+    }
   }
 };
 </script>

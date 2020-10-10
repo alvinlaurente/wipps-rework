@@ -49,7 +49,10 @@ export default {
   mounted: function () {
     this.$activateMenuDropdown("Overall Percentage");
     this.loadData()
-  }
+  },
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
 };
 </script>
 

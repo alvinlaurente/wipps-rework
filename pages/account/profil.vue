@@ -186,7 +186,14 @@ export default {
       this.hideSavePass();
       this.hideAlert();
     },
-  middleware: "authentication",
+  middleware: [
+    "authentication"
+  ],
+  // middleware: [
+  //   "authentication",
+  //   'block-super-admin','block-administrator','block-safety-inspector','block-safety-man','block-supervisor',
+  //   'block-ru2','block-ru3','block-ru4','block-ru5','block-ru6'
+  // ],
 };
 </script>
 

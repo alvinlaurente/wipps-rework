@@ -135,7 +135,9 @@ export default {
     this.loadData();
     this.totalRows = this.items.length;
   },
-  middleware: "authentication",
+  middleware: [
+    "authentication"
+  ],
 };
 </script>
 

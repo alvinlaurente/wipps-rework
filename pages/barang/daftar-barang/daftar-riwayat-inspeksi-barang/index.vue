@@ -130,7 +130,10 @@ export default {
         })
     },
   },
-  middleware: "authentication",
+  middleware: [
+    "authentication",
+    'block-ru2','block-ru4','block-ru5'
+  ],
 };
 </script>
 

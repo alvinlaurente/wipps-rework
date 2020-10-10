@@ -31,6 +31,9 @@ export default {
   mounted: function () {
     document.getElementById("Iframe").style.display = "none";
   },
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
 };
 </script>
 

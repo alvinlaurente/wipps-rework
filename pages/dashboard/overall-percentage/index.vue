@@ -56,6 +56,9 @@ export default {
     this.$activateMenuDropdown("Overall Percentage");
     this.loadData()
   },
+  middleware: [
+    "authentication",'block-safety-man'
+  ],
 };
 </script>
 
