@@ -27,48 +27,65 @@ export default {
     };
   },
   methods: {
-    exportPDF(){
-            const pdf = new jsPDF()
-            pdf.setProperties({
-                title: 'Export Data',
-                subject: 'local or shared file',
-                creator: 'WIPPS'
-            });
-
-            pdf.setFontSize(12);
-
-            var a = new Image()
-            a.src = "../../_nuxt/assets/images/users/avatar-3.jpg"
-            pdf.addImage(a, 'JPG', 16, 22, 65, 26)
-
-            var b = new Image()
-            b.src = "../../_nuxt/assets/images/users/avatar-4.jpg"
-            pdf.addImage(b, 'JPG', 145.5, 33.5, 47.5, 11.5)
-
-            pdf.text("Date range : 2020-01-01 - 2020-12-31", 14, 60.5)
-
-            pdf.autoTable({
-                startY: 70,
-                styles:{textColor:'#000',fillColor:[255, 255, 255]},
-                headStyles:{fontStyle:'bold',fontSize:'12'},
-                bodyStyles:{lineColor:[255, 255, 255],fontSize:'12'},
-                head: [['Permit to Work', 'Pos', 'Neg', 'Total', '%',]],
-                body: [
-                    ['Apakah kolom permohonan . . .', '160', '6', '166', '96.38%'],
-                    ['Apakah kolom permohonan . . .', '160', '6', '166', '96.38%'],
-                    ['Apakah kolom permohonan . . .', '160', '6', '166', '96.38%'],
-                    ['Apakah kolom permohonan . . .', '160', '6', '166', '96.38%'],
-                    // ...
-                ],
-            })
-            document.getElementById("Iframe").style.display = "block"
-
-            setTimeout(function(){
-                var dataPDF = pdf.output('datauri')
-                document.getElementById("isiIframe").src = dataPDF
-            }, 500)
-
+    loadPdfData(){
+      fetch(process.env.baseUrl + "/export/all?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: "Bearer " + localStorage.getItem("token"),
         }
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        let dataPdf = []
+        for (let i = 0; i < result.length; i++) {
+          let tmpArr = []
+          tmpArr.push(result[i].name)
+          tmpArr.push(result[i].safe)
+          tmpArr.push(result[i].unsafe)
+          tmpArr.push(result[i].sum)
+          tmpArr.push(result[i].percent)
+          dataPdf.push(tmpArr)
+        }
+        console.log(dataPdf);
+        this.exportPDF(dataPdf)
+      });
+    },
+    exportPDF(data){
+      const pdf = new jsPDF()
+      pdf.setProperties({
+          title: 'Export Data',
+          subject: 'local or shared file',
+          creator: 'WIPPS'
+      });
+
+      pdf.setFontSize(12);
+
+      var a = new Image()
+      a.src = "../../_nuxt/assets/images/users/avatar-3.jpg"
+      pdf.addImage(a, 'JPG', 16, 22, 65, 26)
+
+      var b = new Image()
+      b.src = "../../_nuxt/assets/images/users/avatar-4.jpg"
+      pdf.addImage(b, 'JPG', 145.5, 33.5, 47.5, 11.5)
+
+      pdf.text("Date range : 2020-01-01 - 2020-12-31", 14, 60.5)
+
+      pdf.autoTable({
+          startY: 70,
+          styles:{textColor:'#000',fillColor:[255, 255, 255]},
+          headStyles:{fontStyle:'bold',fontSize:'12'},
+          bodyStyles:{lineColor:[255, 255, 255],fontSize:'12'},
+          head: [['Permit to Work', 'Pos', 'Neg', 'Total', '%',]],
+          body: data,
+      })
+      document.getElementById("Iframe").style.display = "block"
+
+      setTimeout(function(){
+          var dataPDF = pdf.output('datauri')
+          document.getElementById("isiIframe").src = dataPDF
+      }, 500)
+    }
   },
   mounted: function () {
     document.getElementById("Iframe").style.display = "none";
@@ -95,7 +112,7 @@ export default {
       </div>
       <div class="col-md-6 mt-auto text-right">
         <b-button-group size="md">
-          <b-button class="px-4" variant="danger" v-on:click="exportPDF"><i class="mdi mdi-file-pdf">&nbsp;</i>Export</b-button>
+          <b-button class="px-4" variant="danger" v-on:click="loadPdfData"><i class="mdi mdi-file-pdf">&nbsp;</i>Export</b-button>
 
           <a class="btn btn-success px-4" :href="this.baseUrl+'/export/all/excel?from='+this.from+'&to='+this.to+'&token='+this.token">
             <i class="mdi mdi-file-excel">&nbsp;</i>Export
