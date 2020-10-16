@@ -127,6 +127,7 @@ export default {
         break
       default:
         document.getElementById("ru-location").innerText = "RU VI Balongan"
+        localStorage.setItem("ru","ru6")
         break
     }
   },
