@@ -113,14 +113,12 @@ export default {
       <div class="col-md-6 mt-auto text-right">
         <b-button-group size="md">
           <b-button class="px-4" variant="danger" v-on:click="loadPdfData"><i class="mdi mdi-file-pdf">&nbsp;</i>Export</b-button>
-
           <a class="btn btn-success px-4" :href="this.baseUrl+'/export/all/excel?from='+this.from+'&to='+this.to+'&token='+this.token">
             <i class="mdi mdi-file-excel">&nbsp;</i>Export
           </a>
-
-          <b-button class="px-4" variant="success">
+          <a class="btn btn-success px-4" :href="this.baseUrl+'/export/all/excel-form?from='+this.from+'&to='+this.to+'&token='+this.token">
             <i class="mdi mdi-file-excel">&nbsp;</i>Export Form Data
-          </b-button>
+          </a>
         </b-button-group>
       </div>
     </div>
