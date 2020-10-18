@@ -55,31 +55,30 @@ export default {
 </script>
 
 <template>
-<div>
+  <div>
     <PageHeader :title="title" :items="items" />
-
-    <div class="row" id="menu-list">
-        <div v-for="menu in menus" class="col-lg-4">
-            <div class="card cursor-pointer" @click="goTo('/form/'+menu.slug, menu.id)">
-                <div class="card-body">
-                    <h4 class="mb-0">{{ menu.name }}</h4>
-                    <p class="text-muted mb-0">{{ menu.created }}</p>
-                    <div class="menu-image" :style="{ backgroundImage: `url(`+menu.file+`)` }"></div>
-<!--                    <img :src="menu.file" :alt="menu.name">-->
-                </div>
-            </div>
+    <div class="row">
+      <div class="col-md-3" v-for="menu in menus">
+        <div class="product-box card" @click="goTo('/form/'+menu.slug, menu.id)">
+          <div class="product-img pt-4 px-4">
+            <img :src="menu.file" alt class="img-fluid mx-auto d-block"  v-b-tooltip.hover :title="menu.name"/>
+          </div>
+          <div class="text-center p-4">
+            <h5 class="mb-1 text-dark menu-name">{{ menu.name }}</h5>
+            <p class="text-muted font-size-13">{{ menu.created }}</p>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
 <style scoped>
-.menu-image{
-  width: 100%;
-  padding-bottom: 100%;
-  background-size: cover;
+.menu-name{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 .btn-orange{
     background-color: #E55A02;
     color: white;
