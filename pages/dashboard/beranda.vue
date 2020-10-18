@@ -64,7 +64,8 @@ export default {
                 <div class="card-body">
                     <h4 class="mb-0">{{ menu.name }}</h4>
                     <p class="text-muted mb-0">{{ menu.created }}</p>
-                    <img :src="menu.file" :alt="menu.name">
+                    <div class="menu-image" :style="{ backgroundImage: `url(`+menu.file+`)` }"></div>
+<!--                    <img :src="menu.file" :alt="menu.name">-->
                 </div>
             </div>
         </div>
@@ -73,6 +74,12 @@ export default {
 </template>
 
 <style scoped>
+.menu-image{
+  width: 100%;
+  padding-bottom: 100%;
+  background-size: cover;
+}
+
 .btn-orange{
     background-color: #E55A02;
     color: white;
