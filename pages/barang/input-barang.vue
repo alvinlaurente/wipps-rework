@@ -58,13 +58,13 @@ export default {
 <div>
     <PageHeader :title="title" :items="items" />
 
-    <input class="form-control mb-3" placeholder="Search" id="input-filter-tools" @keyup.enter="applyFilter">
+    <input class="form-control mb-3" placeholder="Search" id="input-filter-tools" @keyup="applyFilter">
 
     <div class="row">
         <div v-for="tool in toolsFiltered" class="col-4">
             <div class="card cursor-pointer" @click="goTo('/form/'+tool.slug, tool.id)">
                 <div class="card-body">
-                    <h4 class="mb-0">{{ tool.name }}</h4>
+                    <h4 class="mb-0 menu-name" v-b-tooltip.hover :title="tool.name">{{ tool.name }}</h4>
                     <p class="text-muted mb-0">{{ tool.created }}</p>
                 </div>
             </div>

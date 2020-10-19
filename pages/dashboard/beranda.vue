@@ -74,11 +74,6 @@ export default {
 </template>
 
 <style scoped>
-.menu-name{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .btn-orange{
     background-color: #E55A02;
     color: white;

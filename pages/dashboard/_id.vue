@@ -70,7 +70,6 @@ export default {
             </b-card-header>
             <b-collapse
               id="accordion-1"
-              visible
               accordion="my-accordion"
               role="tabpanel"
             >

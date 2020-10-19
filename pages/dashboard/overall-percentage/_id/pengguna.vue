@@ -67,12 +67,14 @@ export default {
     </div>
 
     <div class="row">
-      <div class="col-4" v-for="user in dataUser">
-        <nuxt-link class="card" :to="user.slug">
-          <div class="card-body">
-            <h4 class="mb-0">{{ user.name }}</h4>
-            <p class="text-muted mb-0">{{ user.created }}</p>
-            <img :src="user.photo"/>
+      <div class="col-md-3" v-for="user in dataUser">
+        <nuxt-link class="product-box card" :to="user.slug">
+          <div class="product-img pt-4 px-4">
+            <img :src="user.photo" alt class="img-fluid mx-auto d-block"  v-b-tooltip.hover :title="user.name"/>
+          </div>
+          <div class="text-center p-4">
+            <h5 class="mb-1 text-dark menu-name">{{ user.name }}</h5>
+            <p class="text-muted font-size-13">{{ user.created }}</p>
           </div>
         </nuxt-link>
       </div>

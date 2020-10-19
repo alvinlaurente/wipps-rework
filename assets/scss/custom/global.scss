@@ -23,3 +23,9 @@
 .card-header {
   padding: 0.3vw;
 }
+
+.menu-name{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
