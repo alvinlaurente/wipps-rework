@@ -1,9 +1,28 @@
 <script>
+import ECharts from "vue-echarts";
+import "echarts/lib/chart/line";
+import "echarts/lib/chart/bar";
+import "echarts/lib/chart/pie";
+import "echarts/lib/chart/scatter";
+import "echarts/lib/chart/candlestick";
+import "echarts/lib/chart/gauge";
+
+import "echarts/lib/component/legend";
+import "echarts/lib/component/title";
+import "echarts/lib/component/tooltip";
+import "echarts/lib/component/polar";
+import "echarts/lib/component/toolbox";
+import "echarts/lib/component/grid";
+import "echarts/lib/component/axis";
+
 export default {
   head() {
     return {
       title: this.title
     };
+  },
+  components: {
+    "v-chart": ECharts,
   },
   data() {
     return {
@@ -16,7 +35,44 @@ export default {
           text: this.$route.params.id.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" "),
           active: true
         }
-      ]
+      ],
+      dataObservation: {
+        visualMap: {
+          show: false,
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          orient: 'horizontal',
+          left: 'center',
+          data: ['Safe', 'Unsafe'],
+          textStyle: {
+            color: '#999'
+          }
+        },
+        color: ['#f46a6a','#34c38f'],
+        series: [
+          {
+            name: 'Observations',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '50%'],
+            data: [
+              { value: 310, name: 'Unsafe' },
+              { value: 335, name: 'Safe' }
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      }
     };
   },
   middleware: [
@@ -132,7 +188,10 @@ export default {
     </div>
 
     <div class="row dataContent">
-      <div class="col-6 title">Observations</div>
+      <div class="col-6">
+        <div class="title">Observations</div>
+        <v-chart :options="dataObservation" autoresize />
+      </div>
       <div class="col-6 title"># Inspections vs Report Score</div>
     </div>
     <div class="row dataContent">
@@ -207,10 +266,6 @@ export default {
 }
 .step .title {
   font-weight: bold;
-}
-
-.dataContent {
-  height: 40vh;
 }
 
 .top5 .title,
