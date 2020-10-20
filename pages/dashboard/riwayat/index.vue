@@ -98,6 +98,22 @@ export default {
       this.selectedDelete = slug
       this.$refs['modal-delete'].show()
     },
+    loadPdf(slug) {
+      fetch(process.env.baseUrl + "/export/single", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          slug: slug
+        })
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        window.open(result)
+      });
+    },
     btnDelete() {
       fetch( process.env.baseUrl + `/overall-slug-user/` + this.selectedDelete, {
         method: 'DELETE',
@@ -213,7 +229,7 @@ export default {
               <a
                 class="px-2 text-danger"
                 v-b-tooltip.hover
-                @click=""
+                @click="loadPdf(data.item.slug)"
                 title="PDF"
               >
                 <i class="far fa-file-pdf cursor-pointer"></i>
