@@ -36,6 +36,10 @@ export default {
           active: true
         }
       ],
+      from: '2020-01-01',
+      to: '2020-12-31',
+      selectedTitle: 'This Year',
+      selectedVariant: 'danger',
       dataObservation: {
         visualMap: {
           show: false,
@@ -52,17 +56,14 @@ export default {
             color: '#999'
           }
         },
-        color: ['#f46a6a','#34c38f'],
+        color: ['#34c38f','#f46a6a'],
         series: [
           {
             name: 'Observations',
             type: 'pie',
             radius: '55%',
             center: ['50%', '50%'],
-            data: [
-              { value: 310, name: 'Unsafe' },
-              { value: 335, name: 'Safe' }
-            ],
+            data: [],
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
@@ -74,6 +75,72 @@ export default {
         ]
       }
     };
+  },
+  methods: {formatDate(date) {
+      var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+      if (month.length < 2)
+        month = '0' + month;
+      if (day.length < 2)
+        day = '0' + day;
+
+      return [year, month, day].join('-');
+    },
+    changeDate(select){
+      document.getElementById("btn-accordion").click()
+      this.selectedTitle = select
+      switch (select) {
+        case "This Year":
+          this.from = "2020-01-01"
+          this.to = "2020-12-31"
+          this.selectedVariant = "danger"
+          document.getElementById("calendar-container").style.display = "none"
+          this.loadData()
+          break
+        case "Last 7 Days":
+          this.from = this.formatDate(new Date().getTime()-1000*60*60*24*7)
+          this.to = this.formatDate(new Date())
+          this.selectedVariant = "success"
+          document.getElementById("calendar-container").style.display = "none"
+          this.loadData()
+          break
+        case "Last 30 Days":
+          this.from = this.formatDate(new Date().getTime()-1000*60*60*24*30)
+          this.to = this.formatDate(new Date())
+          this.selectedVariant = "warning"
+          document.getElementById("calendar-container").style.display = "none"
+          this.loadData()
+          break
+        case "By Date":
+          this.selectedVariant = "primary"
+          document.getElementById("calendar-container").style.display = "flex"
+          break
+      }
+    },
+    loadData() {
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/svsu?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.dataObservation.series[0].data = []
+        for (let i = 0; i < result.length; i++) {
+          this.dataObservation.series[0].data.push({
+            value: result[i].total, name: result[i].category
+          })
+        }
+      });
+    }
+  },
+  mounted: function () {
+    this.loadData()
   },
   middleware: [
     "authentication",'block-safety-man'
@@ -100,53 +167,35 @@ export default {
         <div class="accordion" role="tablist">
           <b-card no-body class="mb-1">
             <b-card-header header-tag="header" class="p-0" role="tab">
-              <b-button
-                block
-                v-b-toggle.accordion-1
-                variant="light"
-                class="m-0 p-0 buttonHeader"
-              >
+              <b-button id="btn-accordion" block v-b-toggle.accordion-1 variant="light" class="m-0 p-0 buttonHeader">
                 <div>
                   <b-list-group horizontal>
-                    <b-list-group-item class="py-2 filterIcon"
-                      ><i class="bx bxs-filter-alt text-white"></i></b-list-group-item
-                    >
-                    <b-list-group-item
-                      class="py-2 w-100 selectedList"
-                      align="left"
-                    >
-                      <b-badge variant="danger" pill>
-                        &nbsp;&nbsp;&nbsp;
-                      </b-badge>
-                      <span class="ml-3">This Year</span>
+                    <b-list-group-item class="py-2 filterIcon">
+                      <i class="bx bxs-filter-alt text-white"></i></b-list-group-item>
+                    <b-list-group-item class="py-2 w-100 selectedList" align="left">
+                      <b-badge :variant="selectedVariant" pill>&nbsp;&nbsp;&nbsp;</b-badge>
+                      <span class="ml-3">{{selectedTitle}}</span>
                     </b-list-group-item>
                   </b-list-group>
-                </div></b-button
-              >
+                </div>
+              </b-button>
             </b-card-header>
-            <b-collapse
-              id="accordion-1"
-              accordion="my-accordion"
-              role="tabpanel"
-            >
+            <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
               <b-card-body class="p-0">
                 <b-card-text>
-                  <b-button block variant="light" class="m-0 py-2 px-3">
+                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="success" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">Last 7 Days</span>
                   </b-button>
-
-                  <b-button block variant="light" class="m-0 py-2 px-3">
+                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="warning" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">Last 30 Days</span>
                   </b-button>
-
-                  <b-button block variant="light" class="m-0 py-2 px-3">
+                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="danger" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">This Year</span>
                   </b-button>
-
-                  <b-button block variant="light" class="m-0 py-2 px-3">
+                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="primary" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">By Date</span>
                   </b-button>
@@ -155,6 +204,17 @@ export default {
             </b-collapse>
           </b-card>
         </div>
+      </div>
+    </div>
+
+    <div id="calendar-container" class="row mb-4">
+      <div class="col-md-6">
+        <span>Dari</span>
+        <b-form-input type="date" v-model="from" @change="loadData"></b-form-input>
+      </div>
+      <div class="col-md-6">
+        <span>Sampai</span>
+        <b-form-input type="date" v-model="to" @change="loadData"></b-form-input>
       </div>
     </div>
 
@@ -273,6 +333,8 @@ export default {
   font-weight: bold;
   font-size: 24px;
 }
-</style>
 
-<style></style>
+#calendar-container {
+  display: flex;
+}
+</style>
