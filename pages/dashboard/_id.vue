@@ -180,9 +180,7 @@ export default {
           y2: 30,
           borderWidth: 0,
           backgroundColor: 'rgba(0,0,0,0)',
-          borderColor: 'rgba(0,0,0,0)',
-          bottom: '12%',
-          containLabel: true
+          borderColor: 'rgba(0,0,0,0)'
         },
         tooltip: {
           trigger: 'axis',
@@ -269,6 +267,109 @@ export default {
             show: false
           }
         ],
+        series: [
+          {
+            name: 'Safe Percentage',
+            type: 'bar',
+            data: []
+          }
+        ]
+      },
+      dataInspectionByCompany: {
+        grid: {
+          zlevel: 0,
+          x: 200,
+          x2: 50,
+          y: 30,
+          y2: 30,
+          borderWidth: 0,
+          backgroundColor: 'rgba(0,0,0,0)',
+          borderColor: 'rgba(0,0,0,0)',
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        color: ['#556ee6'],
+        legend: {
+          data: []
+        },
+        xAxis: {
+          type: 'value',
+          boundaryGap: [0, 0.01],
+          axisLine: {
+            lineStyle: {
+              color: '#8791af'
+            },
+          },
+          interval: 20,
+        },
+        yAxis: {
+          type: 'category',
+          data: [],
+          axisLine: {
+            lineStyle: {
+              color: '#8791af'
+            },
+          },
+        },
+        series: [
+          {
+            name: 'Safe Percentage',
+            type: 'bar',
+            data: []
+          }
+        ]
+      },
+      dataScoreByCompany: {
+        grid: {
+          zlevel: 0,
+          x: 200,
+          x2: 50,
+          y: 30,
+          y2: 30,
+          borderWidth: 0,
+          backgroundColor: 'rgba(0,0,0,0)',
+          borderColor: 'rgba(0,0,0,0)',
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        color: ['#556ee6'],
+        legend: {
+          data: []
+        },
+        xAxis: {
+          type: 'value',
+          max: 100,
+          boundaryGap: [0, 0.01],
+          axisLine: {
+            lineStyle: {
+              color: '#8791af'
+            },
+          },
+          interval: 20,
+        },
+        yAxis: {
+          type: 'category',
+          data: [],
+          axisLine: {
+            lineStyle: {
+              color: '#8791af'
+            },
+          },
+        },
         series: [
           {
             name: 'Safe Percentage',
@@ -375,6 +476,48 @@ export default {
         }
         this.dataSafeInspectionByRule.yAxis[0].min = result[result.length-1].percentage-result[result.length-1].percentage%25
         this.dataSafeInspectionByRule.yAxis[1].min = result[result.length-1].percentage-result[result.length-1].percentage%25
+      });
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/company_inspection?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.dataInspectionByCompany.yAxis.data = []
+        this.dataInspectionByCompany.series[0].data = []
+        for (let i = 0; i < result.length; i++) {
+          if (this.$route.params.id==="dashboard"&&i===10){
+            break
+          }
+          this.dataInspectionByCompany.yAxis.data.push(result[i].name)
+          this.dataInspectionByCompany.series[0].data.push(result[i].total)
+        }
+        this.dataInspectionByCompany.yAxis.data.reverse()
+        this.dataInspectionByCompany.series[0].data.reverse()
+      });
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/company?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.dataScoreByCompany.yAxis.data = []
+        this.dataScoreByCompany.series[0].data = []
+        for (let i = 0; i < result.length; i++) {
+          if (this.$route.params.id==="dashboard"&&i===10){
+            break
+          }
+          this.dataScoreByCompany.yAxis.data.push(result[i].companies)
+          this.dataScoreByCompany.series[0].data.push(result[i].total)
+        }
+        this.dataScoreByCompany.yAxis.data.reverse()
+        this.dataScoreByCompany.series[0].data.reverse()
       });
     }
   },
@@ -503,8 +646,14 @@ export default {
       </div>
     </div>
     <div class="row dataContent">
-      <div class="col-6 title">Inspections by Company</div>
-      <div class="col-6 title">Average Score by Company</div>
+      <div class="col-6">
+        <div class="title">Inspections by Company</div>
+        <v-chart :options="dataInspectionByCompany" autoresize />
+      </div>
+      <div class="col-6">
+        <div class="title">Average Score by Company</div>
+        <v-chart :options="dataScoreByCompany" autoresize />
+      </div>
     </div>
     <div class="row dataContent">
       <div class="col-6 title">Inspections by Inspector</div>
