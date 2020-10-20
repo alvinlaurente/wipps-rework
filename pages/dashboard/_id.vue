@@ -14,6 +14,7 @@ import "echarts/lib/component/polar";
 import "echarts/lib/component/toolbox";
 import "echarts/lib/component/grid";
 import "echarts/lib/component/axis";
+import "echarts/lib/component/dataZoom";
 
 export default {
   head() {
@@ -169,6 +170,112 @@ export default {
             data: []
           }
         ]
+      },
+      dataSafeInspectionByRule: {
+        grid: {
+          zlevel: 0,
+          x: 80,
+          x2: 50,
+          y: 30,
+          y2: 30,
+          borderWidth: 0,
+          backgroundColor: 'rgba(0,0,0,0)',
+          borderColor: 'rgba(0,0,0,0)',
+          bottom: '12%',
+          containLabel: true
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        color: ['#34c38f'],
+        legend: {
+          data: [],
+          textStyle: { color: '#8791af' }
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: [],
+            axisPointer: {
+              type: 'shadow'
+            },
+            axisLine: {
+              lineStyle: {
+                color: '#8791af'
+              },
+            },
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            name: '',
+            min: 0,
+            max: 100,
+            interval: 5,
+            axisLine: {
+              lineStyle: {
+                color: '#8791af'
+              },
+            },
+            splitLine: {
+              lineStyle: {
+                color: "rgba(166, 176, 207, 0.1)"
+              }
+            },
+            axisLabel: {
+              formatter: '{value} %'
+            }
+          },
+          {
+            type: 'value',
+            name: 'Percentage',
+            min: 0,
+            max: 100,
+            interval: 5,
+            axisLine: {
+              lineStyle: {
+                color: '#8791af'
+              },
+            },
+            splitLine: {
+              lineStyle: {
+                color: "rgba(166, 176, 207, 0.1)"
+              }
+            },
+            axisLabel: {
+              formatter: '{value} %'
+            }
+          }
+        ],
+        dataZoom: [
+          {
+            show: true,
+            start: 0,
+            end: 100
+          },
+          {
+            type: 'inside',
+            start: 94,
+            end: 100
+          },
+          {
+            show: false
+          }
+        ],
+        series: [
+          {
+            name: 'Safe Percentage',
+            type: 'bar',
+            data: []
+          }
+        ]
       }
     };
   },
@@ -250,6 +357,24 @@ export default {
           this.dataInspectionBar.series[0].data.push(result[i].inspection)
           this.dataInspectionBar.series[1].data.push(result[i].percentage)
         }
+      });
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/types?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.dataSafeInspectionByRule.xAxis[0].data = []
+        this.dataSafeInspectionByRule.series[0].data = []
+        for (let i = 0; i < result.length; i++) {
+          this.dataSafeInspectionByRule.xAxis[0].data.push(result[i].name)
+          this.dataSafeInspectionByRule.series[0].data.push(result[i].percentage)
+        }
+        this.dataSafeInspectionByRule.yAxis[0].min = result[result.length-1].percentage-result[result.length-1].percentage%25
+        this.dataSafeInspectionByRule.yAxis[1].min = result[result.length-1].percentage-result[result.length-1].percentage%25
       });
     }
   },
@@ -372,7 +497,10 @@ export default {
       </div>
     </div>
     <div class="row dataContent">
-      <div class="col-12 title">Safe Inspection By Rules</div>
+      <div class="col-12">
+        <div class="title">Safe Inspection By Rules</div>
+        <v-chart :options="dataSafeInspectionByRule" autoresize />
+      </div>
     </div>
     <div class="row dataContent">
       <div class="col-6 title">Inspections by Company</div>
