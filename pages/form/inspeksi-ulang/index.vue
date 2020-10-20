@@ -55,8 +55,8 @@ export default {
       if (this.verifyInfoField()) {
         let data = {
           name: new Date(),
-          context: "barang",
-          slug: "windshock-2",
+          context: "inspeksi-ulang",
+          slug: localStorage.getItem("slug-inspeksi-ulang"),
           form_type_id: localStorage.getItem("id-form"),
           brand: document.getElementById("input-merk").value,
           model: document.getElementById("input-model").value,
@@ -64,7 +64,7 @@ export default {
           area_id: document.getElementById("input-area").value
         }
         localStorage.setItem('temp_form', JSON.stringify(data))
-        this.$router.push("/form/windshock-2/checklist")
+        this.$router.push("/form/"+localStorage.getItem("slug-inspeksi-ulang")+"/checklist")
       }
     },
     getCompanies() {

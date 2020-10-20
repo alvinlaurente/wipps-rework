@@ -181,7 +181,7 @@ export default {
     },
     verifyInfoField(context) {
       var valid = true;
-      if (context === "barang") {
+      if (context !== "beranda") {
         if (document.getElementById("input-safetyman").value === "") {
           document.getElementById("invalid-safetyman").style.display = "block";
           valid = false;
@@ -250,14 +250,37 @@ export default {
             inspector: document.getElementById("input-inspector").value
           }
         }
-        fetch(process.env.baseUrl + endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem("token"),
-          },
-          body: JSON.stringify(this.formData)
-        })
+        if (this.prevData.context === "inspeksi-ulang") {
+          fetch(process.env.baseUrl + "/item-inspections/" + localStorage.getItem("tmp_barcode"), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            body: JSON.stringify(this.formData)
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(response.statusText);
+              }
+              return response.json()
+            })
+            .then(result => {
+              alert("berhasil inspeksi ulang")
+              this.$router.push('/')
+            })
+            .catch(error => {
+              alert(error)
+            })
+        } else {
+          fetch(process.env.baseUrl + endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            body: JSON.stringify(this.formData)
+          })
           .then(response => {
             if (!response.ok) {
               throw new Error(response.statusText);
@@ -271,6 +294,7 @@ export default {
           .catch(error => {
             alert(error)
           })
+        }
       }
     }
   },

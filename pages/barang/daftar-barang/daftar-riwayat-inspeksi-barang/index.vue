@@ -110,6 +110,7 @@ export default {
     },
     inspeksiUlang() {
       localStorage.setItem("id-form", localStorage.getItem("tmp_barcode"))
+      localStorage.setItem("slug-inspeksi-ulang", this.tableItem[0].slug_item)
       localStorage.setItem("prevPath", this.$route.path)
       this.$router.push('/form/inspeksi-ulang')
     },
@@ -127,6 +128,7 @@ export default {
       .then(result => {
         document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
         this.tableItem = result.data
+        console.log(result.data)
       })
     },
   },
