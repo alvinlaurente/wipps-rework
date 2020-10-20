@@ -78,8 +78,8 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    async loadData() {
-      await fetch(process.env.baseUrl + "/forms?search[value]=&start=0&length=20000&order[0][column]=0&order[0][dir]=asc" +
+    loadData() {
+      fetch(process.env.baseUrl + "/forms?search[value]=&start=0&length=20000&order[0][column]=0&order[0][dir]=asc" +
         "&to=" + document.getElementById("end-date").value +
         "&from=" + document.getElementById("start-date").value, {
         method: "GET",
@@ -115,6 +115,7 @@ export default {
       });
     },
     btnDelete() {
+      this.tableItem = []
       fetch( process.env.baseUrl + `/overall-slug-user/` + this.selectedDelete, {
         method: 'DELETE',
         headers: {

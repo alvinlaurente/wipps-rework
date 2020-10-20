@@ -225,6 +225,7 @@ export default {
       this.$refs['modal-delete'].show()
     },
     btnDelete() {
+      this.tableItem = []
       fetch( process.env.baseUrl + `/` + this.getEndpoint() + `/` + this.selectedDelete, {
         method: 'DELETE',
         headers: {

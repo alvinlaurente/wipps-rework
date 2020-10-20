@@ -103,6 +103,7 @@ export default {
       });
     },
     btnDelete() {
+      this.tableItem = []
       fetch( process.env.baseUrl + `/overall-slug-user/` + this.selectedDelete, {
         method: 'DELETE',
         headers: {
