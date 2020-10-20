@@ -73,6 +73,102 @@ export default {
             }
           }
         ]
+      },
+      dataInspectionBar: {
+        // Setup grid
+        grid: {
+          zlevel: 0,
+          x: 80,
+          x2: 50,
+          y: 30,
+          y2: 30,
+          borderWidth: 0,
+          backgroundColor: 'rgba(0,0,0,0)',
+          borderColor: 'rgba(0,0,0,0)',
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        color: ['#556ee6', '#34c38f'],
+        legend: {
+          data: ['Jumlah', 'Safe Percentage'],
+          textStyle: { color: '#8791af' }
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: [],
+            axisPointer: {
+              type: 'shadow'
+            },
+            axisLine: {
+              lineStyle: {
+                color: '#8791af'
+              },
+            },
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            name: 'Jumlah',
+            min: 0,
+            max: 150,
+            interval: 30,
+            axisLine: {
+              lineStyle: {
+                color: '#8791af'
+              },
+            },
+            splitLine: {
+              lineStyle: {
+                color: "rgba(166, 176, 207, 0.1)"
+              }
+            },
+            axisLabel: {
+              formatter: '{value}'
+            }
+          },
+          {
+            type: 'value',
+            name: 'Percentage',
+            min: 0,
+            max: 100,
+            interval: 20,
+            axisLine: {
+              lineStyle: {
+                color: '#8791af'
+              },
+            },
+            splitLine: {
+              lineStyle: {
+                color: "rgba(166, 176, 207, 0.1)"
+              }
+            },
+            axisLabel: {
+              formatter: '{value} %'
+            }
+          }
+        ],
+        series: [
+          {
+            name: 'Jumlah',
+            type: 'bar',
+            data: []
+          },
+          {
+            name: 'Safe Percentage',
+            type: 'line',
+            yAxisIndex: 1,
+            data: []
+          }
+        ]
       }
     };
   },
@@ -135,6 +231,24 @@ export default {
           this.dataObservation.series[0].data.push({
             value: result[i].total, name: result[i].category
           })
+        }
+      });
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/inspection?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.dataInspectionBar.xAxis[0].data = []
+        this.dataInspectionBar.series[0].data = []
+        this.dataInspectionBar.series[1].data = []
+        for (let i = 0; i < result.length; i++) {
+          this.dataInspectionBar.xAxis[0].data.push(result[i].month)
+          this.dataInspectionBar.series[0].data.push(result[i].inspection)
+          this.dataInspectionBar.series[1].data.push(result[i].percentage)
         }
       });
     }
@@ -252,7 +366,10 @@ export default {
         <div class="title">Observations</div>
         <v-chart :options="dataObservation" autoresize />
       </div>
-      <div class="col-6 title"># Inspections vs Report Score</div>
+      <div class="col-6">
+        <div class="title"># Inspections vs Report Score</div>
+        <v-chart :options="dataInspectionBar" autoresize />
+      </div>
     </div>
     <div class="row dataContent">
       <div class="col-12 title">Safe Inspection By Rules</div>
@@ -336,5 +453,9 @@ export default {
 
 #calendar-container {
   display: flex;
+}
+
+.echarts, .echarts:first-child, canvas {
+  width: auto !important;
 }
 </style>
