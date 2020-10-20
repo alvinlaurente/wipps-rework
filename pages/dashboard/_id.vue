@@ -398,7 +398,7 @@ export default {
             }
           }
         },
-        color: ['#556ee6'],
+        color: ['#34c38f'],
         legend: {
           data: []
         },
@@ -449,7 +449,7 @@ export default {
             }
           }
         },
-        color: ['#556ee6'],
+        color: ['#34c38f'],
         legend: {
           data: []
         },
@@ -480,7 +480,60 @@ export default {
             data: []
           }
         ]
-      }
+      },
+      dataInspectionLocation: {
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        legend: {
+          data: [],
+          orient: 'horizontal',
+          left: 'center',
+          textStyle: {
+            color: '#999'
+          }
+        },
+        color: ['#556ee6', '#f1b44c', '#f46a6a', '#50a5f1', '#34c38f'],
+        series: [
+          {
+            name: 'Total',
+            type: 'pie',
+            radius: ['40%', '80%'],
+            avoidLabelOverlap: false,
+            label: {
+              normal: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                show: true,
+                textStyle: {
+                  fontSize: '30',
+                  fontWeight: 'bold'
+                }
+              }
+            },
+            labelLine: {
+              normal: {
+                show: false
+              }
+            },
+            data: [
+              { value: 335, name: 'Laptop' },
+              { value: 310, name: 'Tablet' },
+              { value: 234, name: 'Mobile' },
+              { value: 135, name: 'Others' },
+              { value: 1548, name: 'Desktop' }
+            ]
+          }
+        ]
+      },
+      dataTopInspectionLocation: [],
+      dataWorstInspectionCategory: [],
+      totInspection: 0,
+      posObservation: 0,
+      negObservation: 0,
     };
   },
   methods: {formatDate(date) {
@@ -556,10 +609,16 @@ export default {
         this.dataInspectionBar.xAxis[0].data = []
         this.dataInspectionBar.series[0].data = []
         this.dataInspectionBar.series[1].data = []
+        this.totInspection = 0
+        this.posObservation = 0
+        this.negObservation= 0
         for (let i = 0; i < result.length; i++) {
           this.dataInspectionBar.xAxis[0].data.push(result[i].month)
           this.dataInspectionBar.series[0].data.push(result[i].inspection)
           this.dataInspectionBar.series[1].data.push(result[i].percentage)
+          this.totInspection += result[i].inspection
+          this.posObservation += result[i].pos
+          this.negObservation += result[i].neg
         }
       });
       fetch(process.env.baseUrl + "/dashboard-v2/chart/types?from="+this.from+"&to="+this.to, {
@@ -579,6 +638,7 @@ export default {
         }
         this.dataSafeInspectionByRule.yAxis[0].min = result[result.length-1].percentage-result[result.length-1].percentage%25
         this.dataSafeInspectionByRule.yAxis[1].min = result[result.length-1].percentage-result[result.length-1].percentage%25
+        this.dataWorstInspectionCategory = result.reverse().slice(0,5)
       });
       fetch(process.env.baseUrl + "/dashboard-v2/chart/company_inspection?from="+this.from+"&to="+this.to, {
         method: "GET",
@@ -664,7 +724,37 @@ export default {
         this.dataScoreByInspector.yAxis.data.reverse()
         this.dataScoreByInspector.series[0].data.reverse()
       });
-    }
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/areaus?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          this.dataInspectionLocation.legend.data = []
+          this.dataInspectionLocation.series[0].data = []
+          for (let i = 0; i < result.length; i++) {
+            this.dataInspectionLocation.legend.data.push(result[i].name)
+            this.dataInspectionLocation.series[0].data.push({
+              name: result[i].name,
+              value: result[i].total
+            })
+          }
+        });
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/areas?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.dataTopInspectionLocation = result.slice(0,5)
+      });
+    },
   },
   mounted: function () {
     this.loadData()
@@ -700,8 +790,8 @@ export default {
                     <b-list-group-item class="py-2 filterIcon">
                       <i class="bx bxs-filter-alt text-white"></i></b-list-group-item>
                     <b-list-group-item class="py-2 w-100 selectedList" align="left">
-                      <b-badge :variant="selectedVariant" pill>&nbsp;&nbsp;&nbsp;</b-badge>
-                      <span class="ml-3">{{selectedTitle}}</span>
+                      <b-badge :variant="selectedVariant" pill style="float:none">&nbsp;&nbsp;&nbsp;</b-badge>
+                      <span class="ml-3" style="float:none;">{{selectedTitle}}</span>
                     </b-list-group-item>
                   </b-list-group>
                 </div>
@@ -750,25 +840,25 @@ export default {
         <div class="col-3 p-0">
           <b-button variant="light" class="w-100">
             <div class="title">Total Inspection</div>
-            <div>0</div>
+            <div>{{totInspection}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
           <b-button variant="light" class="w-100">
             <div class="title">Positive Observation</div>
-            <div>0</div>
+            <div>{{posObservation}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
           <b-button variant="light" class="w-100">
             <div class="title">Negative Observation</div>
-            <div>0</div>
+            <div>{{negObservation}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
           <b-button variant="light" class="w-100">
             <div class="title">Total Observation</div>
-            <div>0</div>
+            <div>{{posObservation+negObservation}}</div>
           </b-button>
         </div>
       </b-button-group>
@@ -811,33 +901,30 @@ export default {
       </div>
     </div>
     <div class="row top5">
-      <div class="col-6 title">
-        Top 5 Inspections Location
-      </div>
+      <div class="col-6 title">Top 5 Inspections Location</div>
       <div class="col-6 title">Top 5 Categories (Of Issues)</div>
     </div>
     <div class="row dataContent">
       <div class="col-6">
         <b-list-group>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
+          <b-list-group-item v-for="c in dataTopInspectionLocation">
+            {{c.name}}<span class="p-1"><b-badge variant="success">{{c.total}}</b-badge></span>
+          </b-list-group-item>
         </b-list-group>
       </div>
       <div class="col-6">
         <b-list-group>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
-          <b-list-group-item group-item>Cras justo odio</b-list-group-item>
+          <b-list-group-item v-for="c in dataWorstInspectionCategory">
+            {{c.name}}<span class="p-1"><b-badge variant="danger">{{c.total}}</b-badge></span>
+          </b-list-group-item>
         </b-list-group>
       </div>
     </div>
     <div class="row dataContent">
-      <div class="col-12 title">Inspections Location</div>
+      <div class="col-12">
+        <div class="title">Inspections Location</div>
+        <v-chart :options="dataInspectionLocation" autoresize />
+      </div>
     </div>
   </div>
 </template>
@@ -885,5 +972,9 @@ export default {
 
 .echarts, .echarts:first-child, canvas {
   width: auto !important;
+}
+
+.list-group-item span {
+  float: right;
 }
 </style>
