@@ -320,7 +320,7 @@ export default {
         },
         series: [
           {
-            name: 'Safe Percentage',
+            name: 'Total',
             type: 'bar',
             data: []
           }
@@ -372,7 +372,110 @@ export default {
         },
         series: [
           {
-            name: 'Safe Percentage',
+            name: 'Score',
+            type: 'bar',
+            data: []
+          }
+        ]
+      },
+      dataInspectionByInspector: {
+        grid: {
+          zlevel: 0,
+          x: 160,
+          x2: 50,
+          y: 30,
+          y2: 30,
+          borderWidth: 0,
+          backgroundColor: 'rgba(0,0,0,0)',
+          borderColor: 'rgba(0,0,0,0)',
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        color: ['#556ee6'],
+        legend: {
+          data: []
+        },
+        xAxis: {
+          type: 'value',
+          boundaryGap: [0, 0.01],
+          axisLine: {
+            lineStyle: {
+              color: '#8791af'
+            },
+          },
+          interval: 20,
+        },
+        yAxis: {
+          type: 'category',
+          data: [],
+          axisLine: {
+            lineStyle: {
+              color: '#8791af'
+            },
+          },
+        },
+        series: [
+          {
+            name: 'Total',
+            type: 'bar',
+            data: []
+          }
+        ]
+      },
+      dataScoreByInspector: {
+        grid: {
+          zlevel: 0,
+          x: 160,
+          x2: 50,
+          y: 30,
+          y2: 30,
+          borderWidth: 0,
+          backgroundColor: 'rgba(0,0,0,0)',
+          borderColor: 'rgba(0,0,0,0)',
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        color: ['#556ee6'],
+        legend: {
+          data: []
+        },
+        xAxis: {
+          type: 'value',
+          max: 100,
+          boundaryGap: [0, 0.01],
+          axisLine: {
+            lineStyle: {
+              color: '#8791af'
+            },
+          },
+          interval: 20,
+        },
+        yAxis: {
+          type: 'category',
+          data: [],
+          axisLine: {
+            lineStyle: {
+              color: '#8791af'
+            },
+          },
+        },
+        series: [
+          {
+            name: 'Score',
             type: 'bar',
             data: []
           }
@@ -519,6 +622,48 @@ export default {
         this.dataScoreByCompany.yAxis.data.reverse()
         this.dataScoreByCompany.series[0].data.reverse()
       });
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/inspector?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.dataInspectionByInspector.yAxis.data = []
+        this.dataInspectionByInspector.series[0].data = []
+        for (let i = 0; i < result.length; i++) {
+          if (this.$route.params.id==="dashboard"&&i===10){
+            break
+          }
+          this.dataInspectionByInspector.yAxis.data.push(result[i].user)
+          this.dataInspectionByInspector.series[0].data.push(result[i].total)
+        }
+        this.dataInspectionByInspector.yAxis.data.reverse()
+        this.dataInspectionByInspector.series[0].data.reverse()
+      });
+      fetch(process.env.baseUrl + "/dashboard-v2/chart/inspector_score?from="+this.from+"&to="+this.to, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.dataScoreByInspector.yAxis.data = []
+        this.dataScoreByInspector.series[0].data = []
+        for (let i = 0; i < result.length; i++) {
+          if (this.$route.params.id==="dashboard"&&i===10){
+            break
+          }
+          this.dataScoreByInspector.yAxis.data.push(result[i].name)
+          this.dataScoreByInspector.series[0].data.push(result[i].total)
+        }
+        this.dataScoreByInspector.yAxis.data.reverse()
+        this.dataScoreByInspector.series[0].data.reverse()
+      });
     }
   },
   mounted: function () {
@@ -656,8 +801,14 @@ export default {
       </div>
     </div>
     <div class="row dataContent">
-      <div class="col-6 title">Inspections by Inspector</div>
-      <div class="col-6 title">Average Score by Inspector</div>
+      <div class="col-6">
+        <div class="title">Inspections by Inspector</div>
+        <v-chart :options="dataInspectionByInspector" autoresize />
+      </div>
+      <div class="col-6">
+        <div class="title">Average Score by Inspector</div>
+        <v-chart :options="dataScoreByInspector" autoresize />
+      </div>
     </div>
     <div class="row top5">
       <div class="col-6 title">
