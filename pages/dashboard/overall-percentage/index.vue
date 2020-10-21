@@ -67,16 +67,23 @@ export default {
     <PageHeader :title="title" :items="items" />
 
     <div class="row">
-      <div class="col-4 mb-3" v-for="data in dataChart">
-        <nuxt-link :to="'/dashboard/overall-percentage/'+data.slug+'/detail'" deck>
-          <b-card :title="data.name" header-tag="header" footer-tag="footer">
-<!--            <b-card-text class="">{{ data.percent }}%</b-card-text>-->
-            <b-progress-bar class="mt-1" :value="data.percent"
-                            striped :animated="animate" show-value :precision="2" height="3vw"></b-progress-bar>
-<!--            <template v-slot:footer>-->
-<!--              <span>Personal Protective Equipment</span>-->
-<!--            </template>-->
-          </b-card>
+      <div class="col-xl-4 col-md-6 col-sm-12" v-for="(item, index) in dataChart" :key="index">
+        <nuxt-link class="card" :to="'/dashboard/overall-percentage/'+item.slug+'/detail'" >
+          <div class="card-body">
+            <div class="media">
+              <div class="avatar-lg mr-4">
+                  <img :src="item.file" alt class="mx-auto d-block" style="width: 80px" v-b-tooltip.hover :title="item.name"/>
+              </div>
+              <div class="media-body align-self-center">
+                <div class="border-bottom pb-1">
+                  <h5 class="text-truncate font-size-16 mb-1">{{ item.name }}</h5>
+                  <p class="text-muted">{{ item.percent }}%</p>
+                </div>
+              </div>
+            </div>
+            <b-progress-bar class="mt-1" :value="(item.percent)"
+                            :animated="animate" show-value :precision="2" height="3vw"></b-progress-bar>
+          </div>
         </nuxt-link>
       </div>
     </div>
