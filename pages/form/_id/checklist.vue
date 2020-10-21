@@ -150,10 +150,12 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 export default {
   methods: {
     afterComplete(id, response) {
-      this.imageList.push({
-        formId: id,
-        link: JSON.parse(response.xhr.response).data
-      })
+      if (response.accepted) {
+        this.imageList.push({
+          formId: id,
+          link: JSON.parse(response.xhr.response).data
+        })
+      }
     },
     showSafe(id) {
       document.getElementById("icon-"+id+"-safe").style.display = "inline"

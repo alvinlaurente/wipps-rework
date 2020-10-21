@@ -1,9 +1,10 @@
 <script>
 import QRCode from "qrcode";
 import NoData from "@/components/NoData";
+import LoadingTable from "@/components/LoadingTable";
 
 export default {
-  components: {NoData},
+  components: {NoData, LoadingTable},
   head() {
     return {
       title: "Daftar Riwayat Inspeksi Barang",
@@ -64,6 +65,7 @@ export default {
           thStyle: { 'width': '140px'}
         }
       ],
+      loadTableFlag: true
     };
   },
   computed: {
@@ -115,6 +117,8 @@ export default {
       this.$router.push('/form/inspeksi-ulang')
     },
     async loadData() {
+      this.tableItem = []
+      this.loadTableFlag = true
       let url = process.env.baseUrl
       url += `/barcode-item-inspections?search[value]=&start=0&length=2000&order[0][column]=0&order[0][dir]=asc&barcode=` +
         localStorage.getItem("tmp_barcode")
@@ -126,7 +130,7 @@ export default {
       })
       .then(response => response.json())
       .then(result => {
-        document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
+        this.loadTableFlag = false;
         this.tableItem = result.data
         console.log(result.data)
       })
@@ -190,7 +194,8 @@ export default {
               </a>
             </template>
           </b-table>
-          <NoData v-if="tableItem.length===0"/>
+          <NoData v-if="tableItem.length===0&&!loadTableFlag"/>
+          <LoadingTable v-if="loadTableFlag"/>
         </div>
         <div class="row">
           <div class="col">

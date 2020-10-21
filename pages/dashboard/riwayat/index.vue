@@ -1,8 +1,9 @@
 <script>
 import NoData from "@/components/NoData";
+import LoadingTable from "@/components/LoadingTable";
 
 export default {
-  components: {NoData},
+  components: {NoData, LoadingTable},
   head() {
     return {
       title: this.title,
@@ -66,7 +67,8 @@ export default {
           label: "Aksi",
           thStyle: { width: "160px" },
         },
-      ]
+      ],
+      loadTableFlag: true
     };
   },
   methods: {
@@ -79,6 +81,8 @@ export default {
       this.currentPage = 1;
     },
     loadData() {
+      this.tableItem = []
+      this.loadTableFlag = true
       fetch(process.env.baseUrl + "/forms?search[value]=&start=0&length=20000&order[0][column]=0&order[0][dir]=asc" +
         "&to=" + document.getElementById("end-date").value +
         "&from=" + document.getElementById("start-date").value, {
@@ -89,7 +93,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
-        document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
+        this.loadTableFlag = false;
         this.tableItem = result.data;
         console.log(this.tableItem);
       });
@@ -163,108 +167,108 @@ export default {
     <b-modal ref="modal-delete" id="modal-delete" centered title="Yakin ingin menghapus?" hide-footer>
       <b-button variant="danger" class="float-right" @click="btnDelete">Hapus</b-button>
     </b-modal>
-      <div class="col-12">
-        <div class="row mt-4">
-          <div class="col-6">
-            <label>Dari</label>
-            <b-form-input @change="loadData" value="2020-01-01" type="date" id="start-date"></b-form-input>
-          </div>
-          <div class="col-6">
-            <label>Sampai</label>
-            <b-form-input @change="loadData" value="2020-12-31" type="date" id="end-date"></b-form-input>
-          </div>
+    <div class="col-12">
+      <div class="row mt-4">
+        <div class="col-6">
+          <label>Dari</label>
+          <b-form-input @change="loadData" value="2020-01-01" type="date" id="start-date"></b-form-input>
+        </div>
+        <div class="col-6">
+          <label>Sampai</label>
+          <b-form-input @change="loadData" value="2020-12-31" type="date" id="end-date"></b-form-input>
+        </div>
 
-          <div class="col-sm-12 col-md-6 mt-3">
-            <div id="tickets-table_length" class="dataTables_length">
-              <label class="d-inline-flex align-items-center">Show&nbsp;
-                <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
-              </label>
-            </div>
+        <div class="col-sm-12 col-md-6 mt-3">
+          <div id="tickets-table_length" class="dataTables_length">
+            <label class="d-inline-flex align-items-center">Show&nbsp;
+              <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+            </label>
           </div>
-          <!-- Search -->
-          <div class="col-sm-12 col-md-6 mt-3">
-            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-              <label class="d-inline-flex align-items-center">Search:
-                <b-form-input v-model="filter" type="search" placeholder="Search..." class="form-control form-control-sm ml-2"></b-form-input>
-              </label>
-            </div>
+        </div>
+        <!-- Search -->
+        <div class="col-sm-12 col-md-6 mt-3">
+          <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+            <label class="d-inline-flex align-items-center">Search:
+              <b-form-input v-model="filter" type="search" placeholder="Search..." class="form-control form-control-sm ml-2"></b-form-input>
+            </label>
           </div>
-          <!-- End search -->
         </div>
-        <!-- Table -->
-        <div class="table-responsive mb-0">
-          <b-table
-            table-class="table table-centered datatable table-card-list"
-            thead-tr-class="table-head"
-            :items="tableItem"
-            :fields="fields"
-            responsive="sm"
-            :per-page="perPage"
-            :current-page="currentPage"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-            :filter="filter"
-            :filter-included-fields="filterOn"
-            @filtered="onFiltered"
-          >
-            <template v-slot:cell(no)="data">{{
-                perPage * (currentPage - 1) + (data.index + 1)
-              }}</template>
-            <template v-slot:cell(aksi)="data">
-              <nuxt-link
-                :to="'riwayat/detail/'+data.item.slug"
-                class="px-2 text-primary"
-                v-b-tooltip.hover
-                title="Lihat"
-              >
-                <i class="uil uil-eye font-size-18"></i>
-              </nuxt-link>
-              <a
-                class="px-2 text-success"
-                v-b-tooltip.hover
-                title="XLS"
-                :href="baseUrl+'/export/single/excel?slug='+data.item.slug+'&token='+token"
-              >
-                <i class="far fa-file-excel cursor-pointer"></i>
-              </a>
-              <a
-                class="px-2 text-danger"
-                v-b-tooltip.hover
-                @click="loadPdf(data.item.slug)"
-                title="PDF"
-              >
-                <i class="far fa-file-pdf cursor-pointer"></i>
-              </a>
-              <a
-                href="javascript:void(0);"
-                class="px-2 text-danger"
-                v-b-tooltip.hover
-                @click="deleteData(data.item.slug)"
-                title="Hapus"
-              >
-                <i class="uil uil-trash-alt font-size-18"></i>
-              </a>
-            </template>
-          </b-table>
-          <NoData v-if="tableItem.length===0"/>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="dataTables_paginate paging_simple_numbers float-right">
-              <ul class="pagination pagination-rounded">
-                <!-- pagination -->
-                <b-pagination
-                  v-model="currentPage"
-                  :total-rows="rows"
-                  :per-page="perPage"
-                ></b-pagination>
-              </ul>
-            </div>
+        <!-- End search -->
+      </div>
+      <!-- Table -->
+      <div class="table-responsive mb-0">
+        <b-table
+          table-class="table table-centered datatable table-card-list"
+          thead-tr-class="table-head"
+          :items="tableItem"
+          :fields="fields"
+          responsive="sm"
+          :per-page="perPage"
+          :current-page="currentPage"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          :filter="filter"
+          :filter-included-fields="filterOn"
+          @filtered="onFiltered"
+        >
+          <template v-slot:cell(no)="data">{{
+              perPage * (currentPage - 1) + (data.index + 1)
+            }}</template>
+          <template v-slot:cell(aksi)="data">
+            <nuxt-link
+              :to="'riwayat/detail/'+data.item.slug"
+              class="px-2 text-primary"
+              v-b-tooltip.hover
+              title="Lihat"
+            >
+              <i class="uil uil-eye font-size-18"></i>
+            </nuxt-link>
+            <a
+              class="px-2 text-success"
+              v-b-tooltip.hover
+              title="XLS"
+              :href="baseUrl+'/export/single/excel?slug='+data.item.slug+'&token='+token"
+            >
+              <i class="far fa-file-excel cursor-pointer"></i>
+            </a>
+            <a
+              class="px-2 text-danger"
+              v-b-tooltip.hover
+              @click="loadPdf(data.item.slug)"
+              title="PDF"
+            >
+              <i class="far fa-file-pdf cursor-pointer"></i>
+            </a>
+            <a
+              href="javascript:void(0);"
+              class="px-2 text-danger"
+              v-b-tooltip.hover
+              @click="deleteData(data.item.slug)"
+              title="Hapus"
+            >
+              <i class="uil uil-trash-alt font-size-18"></i>
+            </a>
+          </template>
+        </b-table>
+        <NoData v-if="tableItem.length===0&&!loadTableFlag"/>
+        <LoadingTable v-if="loadTableFlag"/>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="dataTables_paginate paging_simple_numbers float-right">
+            <ul class="pagination pagination-rounded">
+              <!-- pagination -->
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+              ></b-pagination>
+            </ul>
           </div>
         </div>
       </div>
     </div>
-  </div>
+</div>
 </template>
 
 <style>

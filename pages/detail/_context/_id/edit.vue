@@ -132,6 +132,11 @@ export default {
         order: this.components[this.components.length-1].order+1
       })
       console.log(this.components)
+    },
+    removeComponent(index) {
+      if (index > -1) {
+        this.components.splice(index, 1);
+      }
     }
   },
   mounted: function () {
@@ -199,19 +204,16 @@ export default {
             </div>
 
             <div class="mb-3">
-              <b-card v-for="component in components" class="mb-2 formulir" :id="component.order"
+              <b-card v-for="(component, index) in components" class="mb-2 formulir" :id="component.order"
                 draggable="true" :data-value="component.component_id"  >
                 <div class="row">
                   <div class="col-11 my-auto">
                     <b-card-text> {{ component.component }} </b-card-text>
                   </div>
                   <div class="col-1 text-right">
-                    <b-button
-                      class="p-1 px-2 delete"
-                      type="cancel"
-                      variant="danger"
-                      ><i class="uil uil-trash-alt"></i
-                    ></b-button>
+                    <b-button class="p-1 px-2 delete" type="cancel" variant="danger" @click="removeComponent(index)">
+                      <i class="uil uil-trash-alt"></i>
+                    </b-button>
                   </div>
                 </div>
               </b-card>

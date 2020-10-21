@@ -1,8 +1,9 @@
 <script>
 import NoData from "@/components/NoData";
+import LoadingTable from "@/components/LoadingTable";
 
 export default {
-  components: {NoData},
+  components: {NoData, LoadingTable},
   head() {
     return {
       title: this.title,
@@ -74,7 +75,8 @@ export default {
           label: "Aksi",
           thStyle: { width: "40px" },
         },
-      ]
+      ],
+      loadTableFlag: true
     };
   },
   methods: {
@@ -87,7 +89,8 @@ export default {
       this.currentPage = 1;
     },
     async loadData() {
-      ///forms-users?search[value]=&start=0&length=20&order[0][column]=0&order[0][dir]=asc&user=a-syahid&form=lifting-operation-balongan-1
+      this.tableItem = []
+      this.loadTableFlag = true
       await fetch(process.env.baseUrl + "/forms-users?search[value]=&start=0&length=20000&order[0][column]=0&order[0][dir]=asc&user="
         +this.$route.params.user+"&form="+this.$route.params.id, {
         method: "GET",
@@ -97,7 +100,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
-        document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
+        this.loadTableFlag = false;
         this.tableItem = result.data;
         console.log(this.tableItem);
       });
@@ -202,7 +205,8 @@ export default {
             </nuxt-link>
           </template>
         </b-table>
-        <NoData v-if="tableItem.length===0"/>
+        <NoData v-if="tableItem.length===0&&!loadTableFlag"/>
+        <LoadingTable v-if="loadTableFlag"/>
       </div>
       <div class="row">
         <div class="col">

@@ -1,8 +1,9 @@
 <script>
 import NoData from "@/components/NoData";
+import LoadingTable from "@/components/LoadingTable";
 
 export default {
-  components: {NoData},
+  components: {NoData, LoadingTable},
   head() {
     return {
       title: this.title,
@@ -37,6 +38,7 @@ export default {
       dataDetail: {},
       formData: {},
       baseUrl: process.env.baseUrl,
+      loadTableFlag: true
     };
   },
   computed: {
@@ -101,6 +103,8 @@ export default {
         }
       });
       if (this.context === "judul") {
+        this.formData = []
+        this.loadTableFlag = true
         fetch(this.baseUrl + "/form-components?form=" + this.slug, {
           method: "GET",
           headers: {
@@ -109,24 +113,26 @@ export default {
         })
         .then((response) => response.json())
         .then((result) => {
-          document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
+          this.loadTableFlag = false;
           console.log(result.data);
           this.formData = result.data
         });
       }
       if (this.context === "barang") {
+        this.formData = []
+        this.loadTableFlag = true
         fetch(this.baseUrl + "/item-requirements?item=" + this.slug, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         })
-          .then((response) => response.json())
-          .then((result) => {
-            document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
-            console.log(result.data);
-            this.formData = result.data
-          });
+        .then((response) => response.json())
+        .then((result) => {
+          this.loadTableFlag = false;
+          console.log(result.data);
+          this.formData = result.data
+        });
       }
     },
     removeUneeded() {
@@ -219,7 +225,8 @@ export default {
                 >
                   <template v-slot:cell(no)="data">{{(data.index + 1) }}</template>
                 </b-table>
-                <NoData v-if="formData.length===0"/>
+                <NoData v-if="formData.length===0&&!loadTableFlag"/>
+                <LoadingTable v-if="loadTableFlag"/>
               </div>
             </b-tab>
           </b-tabs>

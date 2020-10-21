@@ -8,7 +8,7 @@ export default {
   <!-- start page title -->
   <div class="row">
     <div class="col-12 text-center">
-      <h4>Tidak Ada Data</h4>
+      <h4>Loading...</h4>
     </div>
   </div>
   <!-- end page title -->

@@ -967,7 +967,7 @@ export default {
 }
 
 #calendar-container {
-  display: flex;
+  display: none;
 }
 
 .echarts, .echarts:first-child, canvas {

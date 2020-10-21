@@ -4,9 +4,10 @@
  */
 import QRCode from "qrcode";
 import NoData from "@/components/NoData";
+import LoadingTable from "@/components/LoadingTable";
 
 export default {
-  components: {NoData},
+  components: {NoData, LoadingTable},
   head() {
     return {
       title: this.title,
@@ -40,7 +41,8 @@ export default {
       sortBy: "age",
       sortDesc: false,
       fields: this.getColumn(),
-      selectedDelete: ""
+      selectedDelete: "",
+      loadTableFlag: true
     };
   },
   methods: {
@@ -203,6 +205,8 @@ export default {
         `&from=` +
         `2020` +
         `-01-01`;
+      this.tableItem = []
+      this.loadTableFlag = true
       await fetch(url, {
         method: "GET",
         headers: {
@@ -211,7 +215,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
-        document.getElementById("noTableDataText").innerText = "Tidak Ada Data"
+        this.loadTableFlag = false;
         this.tableItem = result.data;
         console.log(this.tableItem);
       });
@@ -397,7 +401,8 @@ export default {
               </a>
             </template>
           </b-table>
-          <NoData v-if="tableItem.length===0"/>
+          <NoData v-if="tableItem.length===0&&!loadTableFlag"/>
+          <LoadingTable v-if="loadTableFlag"/>
         </div>
         <div class="row">
           <div class="col">
