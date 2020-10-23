@@ -108,20 +108,11 @@ export default {
       <!-- Accordion -->
       <div class="col-12 mb-3">
         <div class="accordion" role="tablist">
-          <div
-            v-for="component in dataDetail.components"
-            class="card z-depth-0 bordered m-0"
-          >
+          <div v-for="component in dataDetail.components" class="card z-depth-0 bordered m-0">
             <div class="card-header">
               <h5 class="mb-0">
-                <button
-                  class="btn btn-link btn-block text-left"
-                  v-on:click="
-                    $event.target.parentElement.parentElement.parentElement.children[1].classList.toggle(
-                      'show'
-                    )
-                  "
-                >
+                <button class="btn btn-link btn-block text-left"
+                    v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')">
                   ► &nbsp;
                   <i class="mdi mdi-bell text-danger" v-if="component.status === 2"></i>
                   <i class="mdi mdi-bell text-success" v-if="component.status === 1"></i>
@@ -129,15 +120,14 @@ export default {
                 </button>
               </h5>
             </div>
-            <div
-              class="collapse"
-              aria-labelledby="headingTwo"
-              data-parent="#accordionExample"
-            >
+            <div class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
               <b-card-body>
                 <b-card-text>
                   <div class="mb-3">
                     <b>Status</b> : {{ convertSafe(component.status) }}
+                  </div>
+                  <div class="row">
+                    <img v-for="pic in component.images" :src="pic.file" :alt="pic.file" class="mx-auto d-block col-sm-6 mb-3"/>
                   </div>
                   <div class="form-group">
                     <b>Catatan</b><br />
