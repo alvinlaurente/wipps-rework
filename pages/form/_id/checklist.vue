@@ -31,8 +31,9 @@
                     ref="myVueDropzone"
                     :use-custom-slot="true"
                     :options="dropzoneOptions"
-                    @vdropzone-complete="afterComplete(f.id, ...arguments)"
-                  >
+                    @vdropzone-file-added="fileAdded(f.id, ...arguments)">
+
+                    >
                     <div class="dropzone-custom-content">
                       <i class="display-4 text-muted bx bxs-cloud-upload"></i>
                       <p>Seret gambar kesini atau klik untuk upload gambar.</p>
@@ -156,6 +157,37 @@ export default {
           link: JSON.parse(response.xhr.response).data
         })
       }
+    },
+    fileAdded(id, file) {
+      let reader = new FileReader();
+      reader.onload  = () => {
+        let imageData = event.target.result;
+        console.log(file)
+        console.log(imageData);
+        fetch(process.env.baseUrl + "/forms/upload/file", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            name: file.name.replace(/\.[^/.]+$/, ""),
+            file: imageData.substring(23)
+          })
+        })
+        .then(response => response.json())
+        .then(result => {
+          console.log(result)
+          if (result.success) {
+            this.imageList.push({
+              formId: id,
+              link: result.data
+            })
+            console.log(this.imageList)
+          }
+        })
+      }
+      reader.readAsDataURL(file);
     },
     showSafe(id) {
       document.getElementById("icon-"+id+"-safe").style.display = "inline"
@@ -321,13 +353,9 @@ export default {
       prevData: {},
       data: [],
       dropzoneOptions: {
-        url: process.env.baseUrl + "/forms/upload/file",
+        url: "/",
         thumbnailWidth: 150,
         maxFilesize: 0.5,
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem("token"),
-          'id-upload': 'id-upload'
-        },
       },
       formData: {},
       imageList: []
