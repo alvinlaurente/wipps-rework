@@ -77,6 +77,13 @@ export default {
       }
       return valid;
     },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
     hideAlert() {
       document.getElementById("alert-div").style.display = "none";
     },
@@ -121,10 +128,18 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then(result => {
         console.log(result)
         this.companies = result.data
+      })
+      .catch(error => {
+        this.showAlert(error, "danger")
       })
     },
     getAreas() {
@@ -135,10 +150,18 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then(result => {
         console.log(result)
         this.areas = result.data
+      })
+      .catch(error => {
+        this.showAlert(error, "danger")
       })
     },
     getJobs() {
@@ -149,10 +172,18 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then(result => {
         console.log(result)
         this.jobs = result.data
+      })
+      .catch(error => {
+        this.showAlert(error, "danger")
       })
     }
   },
@@ -170,7 +201,6 @@ export default {
       this.context = this.contexts.BERANDA
       this.getJobs()
     }
-    this.hideAlert();
     let notNeededElement = document.getElementsByClassName("not-"+this.context)
     for (let i = 0; i < notNeededElement.length; i++) {
       notNeededElement[i].innerHTML = ""
@@ -188,19 +218,9 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-    <div
-      class="alert alert-warning alert-dismissible fade show"
-      role="alert"
-      id="alert-div"
-    >
-      <h6 style="margin: 0" id="alert-message">berhasil disimpan</h6>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-        v-on:click="hideAlert"
-      >
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>

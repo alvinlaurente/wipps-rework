@@ -164,6 +164,7 @@ export default {
         let imageData = event.target.result;
         console.log(file)
         console.log(imageData);
+        this.isLoading = true
         fetch(process.env.baseUrl + "/forms/upload/file", {
           method: 'POST',
           headers: {
@@ -175,8 +176,14 @@ export default {
             file: imageData.substring(23)
           })
         })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json()
+        })
         .then(result => {
+          this.isLoading = false
           console.log(result)
           if (result.success) {
             this.imageList.push({
@@ -185,6 +192,10 @@ export default {
             })
             console.log(this.imageList)
           }
+        })
+        .catch(error => {
+          this.isLoading = false
+          this.showAlert(error, "danger")
         })
       }
       reader.readAsDataURL(file);
@@ -243,6 +254,16 @@ export default {
       }
       return valid;
     },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
+    },
     submitChecklist() {
       if (this.verifyInfoField(this.prevData.context)) {
         this.formData.components = []
@@ -294,20 +315,21 @@ export default {
             },
             body: JSON.stringify(this.formData)
           })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error(response.statusText);
-              }
-              return response.json()
-            })
-            .then(result => {
-              this.isLoading = false
-              alert("berhasil inspeksi ulang")
-              this.$router.push('/')
-            })
-            .catch(error => {
-              alert(error)
-            })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.statusText);
+            }
+            return response.json()
+          })
+          .then(result => {
+            this.isLoading = false
+            alert("berhasil inspeksi ulang")
+            this.$router.push('/')
+          })
+          .catch(error => {
+            this.isLoading = false
+            this.showAlert(error, "danger")
+          })
         } else {
           this.isLoading = true
           fetch(process.env.baseUrl + endpoint, {
@@ -330,7 +352,8 @@ export default {
             this.$router.push('/')
           })
           .catch(error => {
-            alert(error)
+            this.isLoading = false
+            this.showAlert(error, "danger")
           })
         }
       }

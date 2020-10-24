@@ -45,6 +45,13 @@ export default {
       }
       return valid;
     },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
     hideAlert() {
       document.getElementById("alert-div").style.display = "none";
     },
@@ -75,7 +82,12 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then(result => {
         this.companies = result.data
         console.log(this.companies)
@@ -84,6 +96,9 @@ export default {
             setTimeout(() => {document.getElementById("input-pelaksana-pekerjaan").value = this.companies[i].id}, 1);
           }
         }
+      })
+      .catch(error => {
+        this.showAlert(error, "danger")
       })
     },
     getAreas() {
@@ -94,7 +109,12 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then(result => {
         console.log(this.prevData)
         this.areas = result.data
@@ -103,6 +123,9 @@ export default {
             setTimeout(() => {document.getElementById("input-area").value = this.areas[i].id}, 1);
           }
         }
+      })
+      .catch(error => {
+        this.showAlert(error, "danger")
       })
     },
   },
@@ -125,19 +148,9 @@ export default {
 <template>
   <div>
     <PageHeader :title="title" :items="items" />
-    <div
-      class="alert alert-warning alert-dismissible fade show"
-      role="alert"
-      id="alert-div"
-    >
-      <h6 style="margin: 0" id="alert-message">berhasil disimpan</h6>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-        v-on:click="hideAlert"
-      >
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>

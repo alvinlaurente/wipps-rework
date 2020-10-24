@@ -57,7 +57,12 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
         this.isLoading1 = false
         console.log(result.data);
@@ -68,19 +73,32 @@ export default {
             this.components[i].component_id = this.components[i].requirement_id
           }
         }
-      });
+      })
+      .catch(error => {
+        this.isLoading1 = false
+        this.showAlert(error, "danger")
+      })
       fetch(this.baseUrl + "/"+ ep2 + "/list", {
         method: "POST",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
         this.isLoading2 = false
         console.log(result.data);
         this.selectors = result.data
-      });
+      })
+      .catch(error => {
+        this.isLoading2 = false
+        this.showAlert(error, "danger")
+      })
     },
     saveComponent() {
       let sendData = {
@@ -133,8 +151,20 @@ export default {
         this.$router.push('/detail/'+this.$route.params.context+'/'+this.$route.params.id)
       })
       .catch(error => {
-        alert(error)
+        this.isLoading1 = false
+        this.isLoading2 = false
+        this.showAlert(error, "danger")
       })
+    },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
     },
     addComponent() {
       let sel = document.getElementById("input-formulir")
@@ -201,6 +231,12 @@ export default {
   <div>
     <InsideLoading v-show="isLoading1&&isLoading2"/>
     <PageHeader :title="title" :items="items" />
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div class="row">
       <div class="col-12">
         <template>

@@ -54,19 +54,38 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-        .then((response) => response.json())
-        .then((result) => {
-          this.isLoading = false
-          for (let i = 0; i < result.data.length; i++) {
-            this.subs.push(result.data[i].sub)
-          }
-          this.subs = [...new Set(this.subs)]
-          this.dataComponent = result.data
-          console.log(this.subs)
-          console.log(this.dataComponent)
-          setTimeout(() => {this.bgpill()}, 1);
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
+      .then((result) => {
+        this.isLoading = false
+        for (let i = 0; i < result.data.length; i++) {
+          this.subs.push(result.data[i].sub)
+        }
+        this.subs = [...new Set(this.subs)]
+        this.dataComponent = result.data
+        console.log(this.subs)
+        console.log(this.dataComponent)
+        setTimeout(() => {this.bgpill()}, 1);
+      })
+      .catch(error => {
+        this.isLoading = false
+        this.showAlert(error, "danger")
+      })
     },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
+    }
   },
   mounted: function () {
     this.$activateMenuDropdown("Overall Percentage");
@@ -82,6 +101,12 @@ export default {
   <div>
     <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <!-- Calendar -->
     <div class="row mb-3">
       <div class="col-12">

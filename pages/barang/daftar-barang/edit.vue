@@ -56,7 +56,12 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then(result => {
         this.isLoading = false
         this.response = result.data
@@ -71,6 +76,20 @@ export default {
           }
         }, 1);
       })
+      .catch(error => {
+        this.isLoading = false
+        this.showAlert(error, "danger")
+      })
+    },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
     },
     afterComplete(id, response) {
       this.imageList.push({
@@ -103,7 +122,6 @@ export default {
     },
     submitChecklist() {
       if (this.verifyInfoField()) {
-        this.isLoading = true
         this.formData = {
           description: document.getElementById("input-description").value,
           start_date: document.getElementById("input-start-date").value,
@@ -133,6 +151,7 @@ export default {
           }
           this.formData.components.push(comp)
         }
+        this.isLoading = true
         fetch(process.env.baseUrl + "/update_old_inspection/"+this.response.id, {
           method: 'POST',
           headers: {
@@ -153,7 +172,8 @@ export default {
           this.$router.push('/barang/daftar-barang/daftar-riwayat-inspeksi-barang')
         })
         .catch(error => {
-          alert(error)
+          this.isLoading = false
+          this.showAlert(error, "danger")
         })
       }
     }
@@ -173,6 +193,12 @@ export default {
   <div>
     <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div class="accordion">
       <div :id="'form-menu-'+f.id" v-for="f in this.response.components" class="card z-depth-0 bordered m-0 checklist-menu">
         <div class="card-header">
