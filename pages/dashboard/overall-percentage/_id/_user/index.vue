@@ -1,9 +1,9 @@
 <script>
 import NoData from "@/components/NoData";
 import LoadingTable from "@/components/LoadingTable";
-
+import InsideLoading from "@/components/InsideLoading";
 export default {
-  components: {NoData, LoadingTable},
+  components: {NoData, LoadingTable, InsideLoading},
   head() {
     return {
       title: this.title,
@@ -76,15 +76,22 @@ export default {
           thStyle: { width: "40px" },
         },
       ],
-      loadTableFlag: true
+      loadTableFlag: true,
+      isLoading: false
     };
   },
   methods: {
-    /**
-     * Search the table data with search input
-     */
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
+    },
     onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
@@ -98,15 +105,25 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
         this.loadTableFlag = false;
         this.tableItem = result.data;
         console.log(this.tableItem);
-      });
+      })
+      .catch(error => {
+        this.loadTableFlag = false
+        this.showAlert(error, "danger")
+      })
     },
     btnDelete() {
       this.tableItem = []
+      this.isLoading = true
       fetch( process.env.baseUrl + `/overall-slug-user/` + this.selectedDelete, {
         method: 'DELETE',
         headers: {
@@ -120,11 +137,13 @@ export default {
           return response.json()
         })
         .then(result => {
+          this.isLoading = false
           this.$refs['modal-delete'].hide()
           this.loadData()
         })
         .catch(error => {
-          alert(error)
+          this.isLoading = false
+          this.showAlert(error, "danger")
         })
     }
   },
@@ -150,7 +169,14 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div class="col-12">
       <div class="row mb-2">
         <div class="col-12">

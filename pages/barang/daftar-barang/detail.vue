@@ -1,8 +1,7 @@
 <script>
-/**
- * Dashboard component
- */
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: "Detail"
@@ -32,7 +31,8 @@ export default {
         { text: "Safe", value: "Safe" },
         { text: "Unsafe", value: "Unsafe" },
         { text: "N/A", value: "N/A" }
-      ]
+      ],
+      isLoading: false
     };
   },
   methods: {
@@ -47,6 +47,7 @@ export default {
       }
     },
     async getData() {
+      this.isLoading = true
       await fetch(
         process.env.baseUrl +
           `/item-inspections/` +
@@ -58,11 +59,31 @@ export default {
           }
         }
       )
-        .then(response => response.json())
-        .then(result => {
-          this.response = result.data;
-          console.log(result.data);
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
+      .then(result => {
+        this.isLoading = false
+        this.response = result.data;
+        console.log(result.data);
+      })
+      .catch(error => {
+        this.isLoading = false
+        this.showAlert(error, "danger")
+      })
+    },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
     }
   },
   mounted: function() {
@@ -78,7 +99,14 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div class="row">
       <div class="col-12">
         <table class="table table-light">

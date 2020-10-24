@@ -6,6 +6,7 @@ import "echarts/lib/chart/pie";
 import "echarts/lib/chart/scatter";
 import "echarts/lib/chart/candlestick";
 import "echarts/lib/chart/gauge";
+import InsideLoading from "@/components/InsideLoading";
 
 import "echarts/lib/component/legend";
 import "echarts/lib/component/title";
@@ -15,7 +16,6 @@ import "echarts/lib/component/toolbox";
 import "echarts/lib/component/grid";
 import "echarts/lib/component/axis";
 import "echarts/lib/component/dataZoom";
-
 export default {
   head() {
     return {
@@ -24,6 +24,7 @@ export default {
   },
   components: {
     "v-chart": ECharts,
+    InsideLoading
   },
   data() {
     return {
@@ -41,6 +42,15 @@ export default {
       to: '2020-12-31',
       selectedTitle: 'This Year',
       selectedVariant: 'danger',
+      isLoading1: false,
+      isLoading2: false,
+      isLoading3: false,
+      isLoading4: false,
+      isLoading5: false,
+      isLoading6: false,
+      isLoading7: false,
+      isLoading8: false,
+      isLoading9: false,
       dataObservation: {
         visualMap: {
           show: false,
@@ -536,7 +546,8 @@ export default {
       negObservation: 0,
     };
   },
-  methods: {formatDate(date) {
+  methods: {
+    formatDate(date) {
       var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
@@ -580,15 +591,32 @@ export default {
           break
       }
     },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
+    },
     loadData() {
+      this.isLoading1 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/svsu?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.isLoading1 = false
         console.log(result);
         this.dataObservation.series[0].data = []
         for (let i = 0; i < result.length; i++) {
@@ -596,15 +624,26 @@ export default {
             value: result[i].total, name: result[i].category
           })
         }
-      });
+      })
+      .catch(error => {
+        this.isLoading1 = false
+        this.showAlert(error, "danger")
+      })
+      this.isLoading2 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/inspection?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.isLoading2 = false
         console.log(result);
         this.dataInspectionBar.xAxis[0].data = []
         this.dataInspectionBar.series[0].data = []
@@ -620,15 +659,26 @@ export default {
           this.posObservation += result[i].pos
           this.negObservation += result[i].neg
         }
-      });
+      })
+      .catch(error => {
+        this.isLoading2 = false
+        this.showAlert(error, "danger")
+      })
+      this.isLoading3 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/types?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.isLoading3 = false
         console.log(result);
         this.dataSafeInspectionByRule.xAxis[0].data = []
         this.dataSafeInspectionByRule.series[0].data = []
@@ -639,15 +689,26 @@ export default {
         this.dataSafeInspectionByRule.yAxis[0].min = result[result.length-1].percentage-result[result.length-1].percentage%25
         this.dataSafeInspectionByRule.yAxis[1].min = result[result.length-1].percentage-result[result.length-1].percentage%25
         this.dataWorstInspectionCategory = result.reverse().slice(0,5)
-      });
+      })
+      .catch(error => {
+        this.isLoading3 = false
+        this.showAlert(error, "danger")
+      })
+      this.isLoading4 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/company_inspection?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.isLoading4 = false
         console.log(result);
         this.dataInspectionByCompany.yAxis.data = []
         this.dataInspectionByCompany.series[0].data = []
@@ -660,15 +721,26 @@ export default {
         }
         this.dataInspectionByCompany.yAxis.data.reverse()
         this.dataInspectionByCompany.series[0].data.reverse()
-      });
+      })
+      .catch(error => {
+        this.isLoading4 = false
+        this.showAlert(error, "danger")
+      })
+      this.isLoading5 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/company?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.isLoading5 = false
         console.log(result);
         this.dataScoreByCompany.yAxis.data = []
         this.dataScoreByCompany.series[0].data = []
@@ -681,15 +753,26 @@ export default {
         }
         this.dataScoreByCompany.yAxis.data.reverse()
         this.dataScoreByCompany.series[0].data.reverse()
-      });
+      })
+      .catch(error => {
+        this.isLoading5 = false
+        this.showAlert(error, "danger")
+      })
+      this.isLoading6 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/inspector?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.isLoading6 = false
         console.log(result);
         this.dataInspectionByInspector.yAxis.data = []
         this.dataInspectionByInspector.series[0].data = []
@@ -702,15 +785,26 @@ export default {
         }
         this.dataInspectionByInspector.yAxis.data.reverse()
         this.dataInspectionByInspector.series[0].data.reverse()
-      });
+      })
+      .catch(error => {
+        this.isLoading6 = false
+        this.showAlert(error, "danger")
+      })
+      this.isLoading7 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/inspector_score?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.isLoading7 = false
         console.log(result);
         this.dataScoreByInspector.yAxis.data = []
         this.dataScoreByInspector.series[0].data = []
@@ -723,37 +817,63 @@ export default {
         }
         this.dataScoreByInspector.yAxis.data.reverse()
         this.dataScoreByInspector.series[0].data.reverse()
-      });
+      })
+      .catch(error => {
+        this.isLoading7 = false
+        this.showAlert(error, "danger")
+      })
+      this.isLoading8 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/areaus?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          this.dataInspectionLocation.legend.data = []
-          this.dataInspectionLocation.series[0].data = []
-          for (let i = 0; i < result.length; i++) {
-            this.dataInspectionLocation.legend.data.push(result[i].name)
-            this.dataInspectionLocation.series[0].data.push({
-              name: result[i].name,
-              value: result[i].total
-            })
-          }
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
+      .then((result) => {
+        this.isLoading8 = false
+        console.log(result);
+        this.dataInspectionLocation.legend.data = []
+        this.dataInspectionLocation.series[0].data = []
+        for (let i = 0; i < result.length; i++) {
+          this.dataInspectionLocation.legend.data.push(result[i].name)
+          this.dataInspectionLocation.series[0].data.push({
+            name: result[i].name,
+            value: result[i].total
+          })
+        }
+      })
+      .catch(error => {
+        this.isLoading8 = false
+        this.showAlert(error, "danger")
+      })
+      this.isLoading9 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/areas?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.isLoading9 = false
         console.log(result);
         this.dataTopInspectionLocation = result.slice(0,5)
-      });
+      })
+      .catch(error => {
+        this.isLoading9 = false
+        this.showAlert(error, "danger")
+      })
     },
   },
   mounted: function () {
@@ -774,8 +894,14 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading1&isLoading2&isLoading3&isLoading4&isLoading5&isLoading6&isLoading7&isLoading8&isLoading9"/>
     <PageHeader :title="title" :items="items" />
-
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div class="row">
       <div class="col-12 mb-3">
         <div class="title">
@@ -800,19 +926,19 @@ export default {
             <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
               <b-card-body class="p-0">
                 <b-card-text>
-                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
+                  <b-button block variant="light" class="m-0 py-2 px-3 bg-white" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="success" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">Last 7 Days</span>
                   </b-button>
-                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
+                  <b-button block variant="light" class="m-0 py-2 px-3 bg-white" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="warning" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">Last 30 Days</span>
                   </b-button>
-                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
+                  <b-button block variant="light" class="m-0 py-2 px-3 bg-white" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="danger" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">This Year</span>
                   </b-button>
-                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
+                  <b-button block variant="light" class="m-0 py-2 px-3 bg-white" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="primary" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">By Date</span>
                   </b-button>
@@ -838,25 +964,25 @@ export default {
     <div class="row step mb-3 px-2">
       <b-button-group class="w-100">
         <div class="col-3 p-0">
-          <b-button variant="light" class="w-100">
+          <b-button variant="light" class="w-100 bg-white">
             <div class="title">Total Inspection</div>
             <div>{{totInspection}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
-          <b-button variant="light" class="w-100">
+          <b-button variant="light" class="w-100 bg-white">
             <div class="title">Positive Observation</div>
             <div>{{posObservation}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
-          <b-button variant="light" class="w-100">
+          <b-button variant="light" class="w-100 bg-white">
             <div class="title">Negative Observation</div>
             <div>{{negObservation}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
-          <b-button variant="light" class="w-100">
+          <b-button variant="light" class="w-100 bg-white">
             <div class="title">Total Observation</div>
             <div>{{posObservation+negObservation}}</div>
           </b-button>

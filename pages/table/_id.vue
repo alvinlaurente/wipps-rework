@@ -5,9 +5,9 @@
 import QRCode from "qrcode";
 import NoData from "@/components/NoData";
 import LoadingTable from "@/components/LoadingTable";
-
+import InsideLoading from "@/components/InsideLoading";
 export default {
-  components: {NoData, LoadingTable},
+  components: {NoData, LoadingTable}, InsideLoading,
   head() {
     return {
       title: this.title,
@@ -42,7 +42,8 @@ export default {
       sortDesc: false,
       fields: this.getColumn(),
       selectedDelete: "",
-      loadTableFlag: true
+      loadTableFlag: true,
+      isLoading: false
     };
   },
   methods: {
@@ -193,6 +194,16 @@ export default {
         document.getElementById("downloadBarcode").download = barcode;
       });
     },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
+    },
     async loadData() {
       let url = process.env.baseUrl;
       url +=
@@ -213,12 +224,21 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-      .then((response) => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then((result) => {
         this.loadTableFlag = false;
         this.tableItem = result.data;
         console.log(this.tableItem);
-      });
+      })
+      .catch(error => {
+        this.loadTableFlag = false
+        this.showAlert(error, "danger")
+      })
     },
     edit(data) {
       localStorage.setItem("slug-edit", data.slug);
@@ -230,6 +250,7 @@ export default {
     },
     btnDelete() {
       this.tableItem = []
+      this.isLoading = true
       fetch( process.env.baseUrl + `/` + this.getEndpoint() + `/` + this.selectedDelete, {
         method: 'DELETE',
         headers: {
@@ -243,11 +264,13 @@ export default {
           return response.json()
         })
         .then(result => {
+          this.isLoading = false
           this.$refs['modal-delete'].hide()
           this.loadData()
         })
         .catch(error => {
-          alert(error)
+          this.isLoading = false
+          this.showAlert(error, "danger")
         })
     }
   },
@@ -278,7 +301,14 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <b-modal ref="modal-delete" id="modal-delete" centered title="Yakin ingin menghapus?" hide-footer>
       <b-button variant="danger" class="float-right" @click="btnDelete">Hapus</b-button>
     </b-modal>

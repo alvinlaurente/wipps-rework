@@ -1,5 +1,7 @@
 <script>
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: this.title
@@ -26,22 +28,44 @@ export default {
       dataDetail: {
         companies: [{}],
         percentage: [{}]
-      }
+      },
+      isLoading: false
     };
   },
   methods: {
     async loadData() {
+      this.isLoading = true
       await fetch(process.env.baseUrl + "/forms/" + this.$route.params.id, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
-        .then((response) => response.json())
-        .then((result) => {
-          this.dataDetail = result.data;
-          console.log(this.dataDetail);
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
+      .then((result) => {
+        this.isLoading = false
+        this.dataDetail = result.data;
+        console.log(this.dataDetail);
+      })
+      .catch(error => {
+        this.isLoading = false
+        this.showAlert(error, "danger")
+      })
+    },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
     },
     convertSafe(code) {
       switch (code) {
@@ -66,8 +90,14 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <!-- dashboard>riwayat pengguna>detail -->
     <div class="row">
       <!-- Table -->
@@ -108,20 +138,11 @@ export default {
       <!-- Accordion -->
       <div class="col-12 mb-3">
         <div class="accordion" role="tablist">
-          <div
-            v-for="component in dataDetail.components"
-            class="card z-depth-0 bordered m-0"
-          >
+          <div v-for="component in dataDetail.components" class="card z-depth-0 bordered m-0">
             <div class="card-header">
               <h5 class="mb-0">
-                <button
-                  class="btn btn-link btn-block text-left"
-                  v-on:click="
-                    $event.target.parentElement.parentElement.parentElement.children[1].classList.toggle(
-                      'show'
-                    )
-                  "
-                >
+                <button class="btn btn-link btn-block text-left"
+                    v-on:click="$event.target.parentElement.parentElement.parentElement.children[1].classList.toggle('show')">
                   ► &nbsp;
                   <i class="mdi mdi-bell text-danger" v-if="component.status === 2"></i>
                   <i class="mdi mdi-bell text-success" v-if="component.status === 1"></i>
@@ -129,15 +150,14 @@ export default {
                 </button>
               </h5>
             </div>
-            <div
-              class="collapse"
-              aria-labelledby="headingTwo"
-              data-parent="#accordionExample"
-            >
+            <div class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
               <b-card-body>
                 <b-card-text>
                   <div class="mb-3">
                     <b>Status</b> : {{ convertSafe(component.status) }}
+                  </div>
+                  <div class="row">
+                    <img v-for="pic in component.images" :src="pic.file" :alt="pic.file" class="mx-auto d-block col-sm-6 mb-3"/>
                   </div>
                   <div class="form-group">
                     <b>Catatan</b><br />

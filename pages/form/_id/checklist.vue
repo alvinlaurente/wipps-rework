@@ -1,7 +1,7 @@
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
     <div class="row">
       <div class="col-12 mb-3" v-for="(d) in data" >
         <label>{{ d.sub }}</label>
@@ -31,8 +31,9 @@
                     ref="myVueDropzone"
                     :use-custom-slot="true"
                     :options="dropzoneOptions"
-                    @vdropzone-complete="afterComplete(f.id, ...arguments)"
-                  >
+                    @vdropzone-file-added="fileAdded(f.id, ...arguments)">
+
+                    >
                     <div class="dropzone-custom-content">
                       <i class="display-4 text-muted bx bxs-cloud-upload"></i>
                       <p>Seret gambar kesini atau klik untuk upload gambar.</p>
@@ -146,7 +147,7 @@
 <script>
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
-
+import InsideLoading from "@/components/InsideLoading";
 export default {
   methods: {
     afterComplete(id, response) {
@@ -156,6 +157,48 @@ export default {
           link: JSON.parse(response.xhr.response).data
         })
       }
+    },
+    fileAdded(id, file) {
+      let reader = new FileReader();
+      reader.onload  = () => {
+        let imageData = event.target.result;
+        console.log(file)
+        console.log(imageData);
+        this.isLoading = true
+        fetch(process.env.baseUrl + "/forms/upload/file", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            name: file.name.replace(/\.[^/.]+$/, ""),
+            file: imageData.substring(23)
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json()
+        })
+        .then(result => {
+          this.isLoading = false
+          console.log(result)
+          if (result.success) {
+            this.imageList.push({
+              formId: id,
+              link: result.data
+            })
+            console.log(this.imageList)
+          }
+        })
+        .catch(error => {
+          this.isLoading = false
+          this.showAlert(error, "danger")
+        })
+      }
+      reader.readAsDataURL(file);
     },
     showSafe(id) {
       document.getElementById("icon-"+id+"-safe").style.display = "inline"
@@ -211,6 +254,16 @@ export default {
       }
       return valid;
     },
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
+    hideAlert() {
+      document.getElementById("alert-div").style.display = "none";
+    },
     submitChecklist() {
       if (this.verifyInfoField(this.prevData.context)) {
         this.formData.components = []
@@ -253,6 +306,7 @@ export default {
           }
         }
         if (this.prevData.context === "inspeksi-ulang") {
+          this.isLoading = true
           fetch(process.env.baseUrl + "/item-inspections/" + localStorage.getItem("tmp_barcode"), {
             method: 'POST',
             headers: {
@@ -261,20 +315,23 @@ export default {
             },
             body: JSON.stringify(this.formData)
           })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error(response.statusText);
-              }
-              return response.json()
-            })
-            .then(result => {
-              alert("berhasil inspeksi ulang")
-              this.$router.push('/')
-            })
-            .catch(error => {
-              alert(error)
-            })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.statusText);
+            }
+            return response.json()
+          })
+          .then(result => {
+            this.isLoading = false
+            alert("berhasil inspeksi ulang")
+            this.$router.push('/')
+          })
+          .catch(error => {
+            this.isLoading = false
+            this.showAlert(error, "danger")
+          })
         } else {
+          this.isLoading = true
           fetch(process.env.baseUrl + endpoint, {
             method: 'POST',
             headers: {
@@ -290,11 +347,13 @@ export default {
             return response.json()
           })
           .then(result => {
+            this.isLoading = false
             alert("berhasil menyimpan form")
             this.$router.push('/')
           })
           .catch(error => {
-            alert(error)
+            this.isLoading = false
+            this.showAlert(error, "danger")
           })
         }
       }
@@ -302,6 +361,7 @@ export default {
   },
   components: {
     vueDropzone: vue2Dropzone,
+    InsideLoading
   },
   data() {
     return {
@@ -321,13 +381,9 @@ export default {
       prevData: {},
       data: [],
       dropzoneOptions: {
-        url: process.env.baseUrl + "/forms/upload/file",
+        url: "/",
         thumbnailWidth: 150,
         maxFilesize: 0.5,
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem("token"),
-          'id-upload': 'id-upload'
-        },
       },
       formData: {},
       imageList: []
@@ -366,6 +422,7 @@ export default {
         model: this.prevData.model
       }
     }
+    this.isLoading = true
     fetch(process.env.baseUrl + `/` + endPoint + this.prevData.slug, {
       method: 'GET',
       headers: {
@@ -375,6 +432,7 @@ export default {
     })
     .then(response => response.json())
     .then(result => {
+      this.isLoading = false
       console.log(result)
       let subs = []
       for (let i = 0; i < result.data.length; i++) {
