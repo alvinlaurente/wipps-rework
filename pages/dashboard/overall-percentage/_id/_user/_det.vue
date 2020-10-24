@@ -1,5 +1,7 @@
 <script>
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: this.title,
@@ -37,11 +39,13 @@ export default {
       dataDetail: {
         companies: [{}],
         percentage: [{}]
-      }
+      },
+      isLoading: false
     };
   },
   methods: {
     async loadData() {
+      this.isLoading = true
       await fetch(process.env.baseUrl + "/forms/" + this.$route.params.det, {
         method: "GET",
         headers: {
@@ -50,6 +54,7 @@ export default {
       })
         .then((response) => response.json())
         .then((result) => {
+          this.isLoading = false
           for (let i = 0; i < result.data.components.length; i++) {
             this.subs.push(result.data.components[i].sub)
           }
@@ -81,9 +86,8 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
-    <!-- dashboard>riwayat pengguna>detail -->
     <div class="row">
       <div class="col-12 mb-3">
         <table class="table table-light">

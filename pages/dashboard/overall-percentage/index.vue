@@ -1,5 +1,7 @@
 <script>
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: "Overall Percentage",
@@ -21,7 +23,8 @@ export default {
         value1: 59.27,
       },
       animate: true,
-      dataChart: []
+      dataChart: [],
+      isLoading: false
     };
   },
   methods: {
@@ -38,6 +41,7 @@ export default {
       }
     },
     async loadData() {
+      this.isLoading = true
       await fetch(process.env.baseUrl + "/charts/types", {
         method: "GET",
         headers: {
@@ -46,6 +50,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading = false
         this.dataChart = result.data;
         console.log(this.dataChart);
         setTimeout(() => {this.bgbar()}, 1);
@@ -64,8 +69,8 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
     <div class="row">
       <div class="col-xl-4 col-md-6 col-sm-12" v-for="(item, index) in dataChart" :key="index">
         <nuxt-link class="card" :to="'/dashboard/overall-percentage/'+item.slug+'/detail'" >

@@ -1,14 +1,11 @@
 <script>
 import vue2Dropzone from "vue2-dropzone";
-
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
-
-/**
- * Dashboard component
- */
+import InsideLoading from "@/components/InsideLoading";
 export default {
   components: {
-    vueDropzone: vue2Dropzone
+    vueDropzone: vue2Dropzone,
+    InsideLoading
   },
   head() {
     return {
@@ -46,10 +43,12 @@ export default {
       response: {
         user: {}
       },
+      isLoading: false
     };
   },
   methods: {
     async getData() {
+      this.isLoading = true
       await fetch(process.env.baseUrl + `/item-inspections/` +
         localStorage.getItem("selected-id-inspeksi") , {
         method: 'GET',
@@ -59,6 +58,7 @@ export default {
       })
       .then(response => response.json())
       .then(result => {
+        this.isLoading = false
         this.response = result.data
         document.getElementById("input-description").value = this.response.description
         document.getElementById("input-start-date").value = this.response.start_date
@@ -103,6 +103,7 @@ export default {
     },
     submitChecklist() {
       if (this.verifyInfoField()) {
+        this.isLoading = true
         this.formData = {
           description: document.getElementById("input-description").value,
           start_date: document.getElementById("input-start-date").value,
@@ -147,8 +148,9 @@ export default {
           return response.json()
         })
         .then(result => {
+          this.isLoading = false
           alert("berhasil mengubah data inspeksi")
-          this.$router.push('/')
+          this.$router.push('/barang/daftar-barang/daftar-riwayat-inspeksi-barang')
         })
         .catch(error => {
           alert(error)
@@ -169,8 +171,8 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
     <div class="accordion">
       <div :id="'form-menu-'+f.id" v-for="f in this.response.components" class="card z-depth-0 bordered m-0 checklist-menu">
         <div class="card-header">

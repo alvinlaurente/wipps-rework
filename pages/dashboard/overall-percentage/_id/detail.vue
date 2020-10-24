@@ -1,5 +1,7 @@
 <script>
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: this.title,
@@ -27,7 +29,8 @@ export default {
         }
       ],
       dataComponent: [],
-      subs: []
+      subs: [],
+      isLoading: false
     };
   },
   methods: {
@@ -44,6 +47,7 @@ export default {
       }
     },
     async loadData() {
+      this.isLoading = true
       await fetch(process.env.baseUrl + "/charts/checklists?type=" + this.$route.params.id, {
         method: "GET",
         headers: {
@@ -52,6 +56,7 @@ export default {
       })
         .then((response) => response.json())
         .then((result) => {
+          this.isLoading = false
           for (let i = 0; i < result.data.length; i++) {
             this.subs.push(result.data[i].sub)
           }
@@ -75,8 +80,8 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
     <!-- Calendar -->
     <div class="row mb-3">
       <div class="col-12">

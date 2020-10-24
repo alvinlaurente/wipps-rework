@@ -1,6 +1,8 @@
 <script>
 import Sortable from 'sortablejs'
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: this.title
@@ -34,7 +36,9 @@ export default {
       slug: this.$route.params.id,
       baseUrl: process.env.baseUrl,
       selectors: [],
-      components: []
+      components: [],
+      isLoading1: false,
+      isLoading2: false,
     };
   },
   methods: {
@@ -45,6 +49,8 @@ export default {
         ep = "item-requirements?item"
         ep2 = "requirements"
       }
+      this.isLoading1 = true
+      this.isLoading2 = true
       fetch(this.baseUrl + "/" + ep + "=" + this.slug, {
         method: "GET",
         headers: {
@@ -53,6 +59,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading1 = false
         console.log(result.data);
         this.components = result.data
         if (this.context === "barang"){
@@ -70,6 +77,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading2 = false
         console.log(result.data);
         this.selectors = result.data
       });
@@ -102,6 +110,8 @@ export default {
         }
       }
       console.log(sendData)
+      this.isLoading1 = true
+      this.isLoading2 = true
       fetch( process.env.baseUrl + `/` + ep + `/` + this.slug, {
         method: 'POST',
         headers: {
@@ -117,8 +127,10 @@ export default {
         return response.json()
       })
       .then(result => {
+        this.isLoading1 = false
+        this.isLoading2 = false
         alert("berhasil mengubah data")
-        this.$router.push('/')
+        this.$router.push('/detail/'+this.$route.params.context+'/'+this.$route.params.id)
       })
       .catch(error => {
         alert(error)
@@ -187,8 +199,8 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading1&&isLoading2"/>
     <PageHeader :title="title" :items="items" />
-
     <div class="row">
       <div class="col-12">
         <template>

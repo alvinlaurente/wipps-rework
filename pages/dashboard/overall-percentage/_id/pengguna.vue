@@ -1,5 +1,7 @@
 <script>
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: this.title,
@@ -26,11 +28,13 @@ export default {
           active: true,
         }
       ],
-      dataUser: []
+      dataUser: [],
+      isLoading: false
     };
   },
   methods: {
     async loadData() {
+      this.isLoading = true
       await fetch(process.env.baseUrl + "/charts/types", {
         method: "POST",
         headers: {
@@ -41,6 +45,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading = false
         this.dataUser = result.data;
         console.log(this.dataUser);
       });
@@ -58,8 +63,8 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
     <div class="row mb-2">
       <div class="col-12">
         <nuxt-link to="detail" class="btn btn-danger">Kembali</nuxt-link>

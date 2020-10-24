@@ -1,8 +1,7 @@
 <script>
-/**
- * Dashboard component
- */
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: "Detail"
@@ -32,7 +31,8 @@ export default {
         { text: "Safe", value: "Safe" },
         { text: "Unsafe", value: "Unsafe" },
         { text: "N/A", value: "N/A" }
-      ]
+      ],
+      isLoading: false
     };
   },
   methods: {
@@ -47,6 +47,7 @@ export default {
       }
     },
     async getData() {
+      this.isLoading = true
       await fetch(
         process.env.baseUrl +
           `/item-inspections/` +
@@ -60,6 +61,7 @@ export default {
       )
         .then(response => response.json())
         .then(result => {
+          this.isLoading = false
           this.response = result.data;
           console.log(result.data);
         });
@@ -78,6 +80,7 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
     <div class="row">
       <div class="col-12">

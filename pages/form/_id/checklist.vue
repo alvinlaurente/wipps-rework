@@ -1,7 +1,7 @@
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
     <div class="row">
       <div class="col-12 mb-3" v-for="(d) in data" >
         <label>{{ d.sub }}</label>
@@ -147,7 +147,7 @@
 <script>
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
-
+import InsideLoading from "@/components/InsideLoading";
 export default {
   methods: {
     afterComplete(id, response) {
@@ -285,6 +285,7 @@ export default {
           }
         }
         if (this.prevData.context === "inspeksi-ulang") {
+          this.isLoading = true
           fetch(process.env.baseUrl + "/item-inspections/" + localStorage.getItem("tmp_barcode"), {
             method: 'POST',
             headers: {
@@ -300,6 +301,7 @@ export default {
               return response.json()
             })
             .then(result => {
+              this.isLoading = false
               alert("berhasil inspeksi ulang")
               this.$router.push('/')
             })
@@ -307,6 +309,7 @@ export default {
               alert(error)
             })
         } else {
+          this.isLoading = true
           fetch(process.env.baseUrl + endpoint, {
             method: 'POST',
             headers: {
@@ -322,6 +325,7 @@ export default {
             return response.json()
           })
           .then(result => {
+            this.isLoading = false
             alert("berhasil menyimpan form")
             this.$router.push('/')
           })
@@ -334,6 +338,7 @@ export default {
   },
   components: {
     vueDropzone: vue2Dropzone,
+    InsideLoading
   },
   data() {
     return {
@@ -394,6 +399,7 @@ export default {
         model: this.prevData.model
       }
     }
+    this.isLoading = true
     fetch(process.env.baseUrl + `/` + endPoint + this.prevData.slug, {
       method: 'GET',
       headers: {
@@ -403,6 +409,7 @@ export default {
     })
     .then(response => response.json())
     .then(result => {
+      this.isLoading = false
       console.log(result)
       let subs = []
       for (let i = 0; i < result.data.length; i++) {

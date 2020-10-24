@@ -1,9 +1,9 @@
 <script>
 import NoData from "@/components/NoData";
 import LoadingTable from "@/components/LoadingTable";
-
+import InsideLoading from "@/components/InsideLoading";
 export default {
-  components: {NoData, LoadingTable},
+  components: {NoData, LoadingTable, InsideLoading},
   head() {
     return {
       title: this.title,
@@ -38,7 +38,8 @@ export default {
       dataDetail: {},
       formData: {},
       baseUrl: process.env.baseUrl,
-      loadTableFlag: true
+      loadTableFlag: true,
+      isLoading: false
     };
   },
   computed: {
@@ -88,6 +89,7 @@ export default {
       }
     },
     loadData() {
+      this.isLoading = true
       fetch(this.baseUrl + "/" + this.getEndpoint() + this.slug, {
         method: "GET",
         headers: {
@@ -97,6 +99,7 @@ export default {
       .then((response) => response.json())
       .then((result) => {
         console.log(result.data);
+        this.isLoading = false
         this.dataDetail = result.data
         if (this.context === "pengguna") {
           this.dataDetail.role = result.data.roles[0].name
@@ -169,8 +172,8 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-
     <div class="row">
       <div class="col-12">
         <b-card no-body class="mx-0">
@@ -185,7 +188,7 @@ export default {
                   class="not-barang not-area not-pekerjaan not-pelaksana-pekerjaan not-pengguna"
                 >
                   <td class="table-secondary">File</td>
-                  <td><img :src="baseUrl+'/form-types/'+dataDetail.file" alt="" /></td>
+                  <td><img :src="dataDetail.file" alt class="img-fluid mx-auto d-block"/></td>
                 </tr>
                 <tr
                   class="not-judul not-barang not-pekerjaan not-pelaksana-pekerjaan"

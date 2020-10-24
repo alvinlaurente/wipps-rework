@@ -1,61 +1,64 @@
 <script>
-/**
- * Dashboard component
- */
+import InsideLoading from "@/components/InsideLoading";
 export default {
-    head() {
-        return {
-            title: "Beranda",
-        };
-    },
-    data() {
-        return {
-            title: "Beranda",
-            items: [{
-                    text: "Dashboard",
-                },
-                {
-                    text: "Beranda",
-                    active: true,
-                },
-            ],
-            user: JSON.parse(localStorage.getItem("user")),
-            menus: []
-        };
-    },
-    methods: {
-      goTo(path, id) {
-        localStorage.setItem("id-form", id)
-        localStorage.setItem("prevPath", this.$route.path)
-        this.$router.push(path)
+  components: {InsideLoading},
+  head() {
+    return {
+        title: "Beranda",
+    };
+  },
+  data() {
+    return {
+      title: "Beranda",
+      items: [{
+        text: "Dashboard",
       },
-      async getData() {
-        await fetch( process.env.baseUrl + `/form-types/form`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem("token"),
-          }
-        })
-        .then(response => response.json())
-        .then(result => {
-          console.log(result)
-          this.menus = result.data.sort((a, b) => (a.name > b.name) ? 1 : -1)
-        })
-      }
+      {
+        text: "Beranda",
+        active: true,
+      },
+      ],
+      user: JSON.parse(localStorage.getItem("user")),
+      menus: [],
+      isLoading: false
+    };
+  },
+  methods: {
+    goTo(path, id) {
+      localStorage.setItem("id-form", id)
+      localStorage.setItem("prevPath", this.$route.path)
+      this.$router.push(path)
     },
-    mounted: function () {
-        this.$activateMenuDropdown(this.items[1].text)
-        this.getData()
-    },
-    middleware: [
-      "authentication",'block-supervisor'
-    ],
+    async getData() {
+      this.isLoading = true
+      await fetch( process.env.baseUrl + `/form-types/form`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        }
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        this.menus = result.data.sort((a, b) => (a.name > b.name) ? 1 : -1)
+        this.isLoading = false
+      })
+    }
+  },
+  mounted: function () {
+      this.$activateMenuDropdown(this.items[1].text)
+      this.getData()
+  },
+  middleware: [
+    "authentication",'block-supervisor'
+  ],
 };
 </script>
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
     <div class="row">
       <div class="col-md-3" v-for="menu in menus">
