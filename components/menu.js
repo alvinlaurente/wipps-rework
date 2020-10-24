@@ -8,7 +8,7 @@ export const menuItems = [
   },
   {
     id: 2,
-    label: "Dashboard",
+    label: "Site Safety Inspection",
     icon: "uil-dashboard",
     roles: ['super-admin','administrator','safety-inspector','safety-man','supervisor'],
     rus: ['ru2','ru3','ru4','ru5','ru6','loc'],
@@ -71,14 +71,14 @@ export const menuItems = [
   },
   {
     id: 200,
-    label: "Barang",
+    label: "Tools and Equipment Inspection",
     icon: "uil-copy-alt",
     roles: ['super-admin','administrator','safety-inspector','safety-man','supervisor'],
     rus: ['ru3','ru6','loc'],
     subItems: [
       {
         id: 201,
-        label: "Input Barang",
+        label: "Input Tools and Equipment",
         icon: "uil-bag",
         link: "/barang/input-barang",
         parentId: 200,
@@ -87,7 +87,7 @@ export const menuItems = [
       },
       {
         id: 201,
-        label: "Daftar Barang",
+        label: "Tools and Equipment List",
         icon: "uil-list-ul",
         link: "/table/daftar-barang",
         parentId: 200,

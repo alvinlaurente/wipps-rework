@@ -220,7 +220,7 @@ export default {
                   'has-dropdown': item.badge
                 }">
                             <i :class="`${item.icon}`" v-if="item.icon"></i>
-                            <span>{{ $t(item.label) }}</span>
+                            <span class="font-size-14">{{ $t(item.label) }}</span>
                             <span :class="
                     `badge badge-pill badge-${item.badge.variant} float-right`
                   " v-if="item.badge">{{ $t(item.badge.text) }}</span>

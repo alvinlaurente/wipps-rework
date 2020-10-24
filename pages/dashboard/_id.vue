@@ -926,19 +926,19 @@ export default {
             <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
               <b-card-body class="p-0">
                 <b-card-text>
-                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
+                  <b-button block variant="light" class="m-0 py-2 px-3 bg-white" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="success" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">Last 7 Days</span>
                   </b-button>
-                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
+                  <b-button block variant="light" class="m-0 py-2 px-3 bg-white" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="warning" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">Last 30 Days</span>
                   </b-button>
-                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
+                  <b-button block variant="light" class="m-0 py-2 px-3 bg-white" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="danger" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">This Year</span>
                   </b-button>
-                  <b-button block variant="light" class="m-0 py-2 px-3" @click="changeDate($event.target.children[1].innerText)">
+                  <b-button block variant="light" class="m-0 py-2 px-3 bg-white" @click="changeDate($event.target.children[1].innerText)">
                     <b-badge variant="primary" pill>&nbsp;&nbsp;&nbsp;</b-badge>
                     <span class="ml-3">By Date</span>
                   </b-button>
@@ -964,25 +964,25 @@ export default {
     <div class="row step mb-3 px-2">
       <b-button-group class="w-100">
         <div class="col-3 p-0">
-          <b-button variant="light" class="w-100">
+          <b-button variant="light" class="w-100 bg-white">
             <div class="title">Total Inspection</div>
             <div>{{totInspection}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
-          <b-button variant="light" class="w-100">
+          <b-button variant="light" class="w-100 bg-white">
             <div class="title">Positive Observation</div>
             <div>{{posObservation}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
-          <b-button variant="light" class="w-100">
+          <b-button variant="light" class="w-100 bg-white">
             <div class="title">Negative Observation</div>
             <div>{{negObservation}}</div>
           </b-button>
         </div>
         <div class="col-3 p-0">
-          <b-button variant="light" class="w-100">
+          <b-button variant="light" class="w-100 bg-white">
             <div class="title">Total Observation</div>
             <div>{{posObservation+negObservation}}</div>
           </b-button>
