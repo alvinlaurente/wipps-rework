@@ -6,6 +6,7 @@ import "echarts/lib/chart/pie";
 import "echarts/lib/chart/scatter";
 import "echarts/lib/chart/candlestick";
 import "echarts/lib/chart/gauge";
+import InsideLoading from "@/components/InsideLoading";
 
 import "echarts/lib/component/legend";
 import "echarts/lib/component/title";
@@ -15,7 +16,6 @@ import "echarts/lib/component/toolbox";
 import "echarts/lib/component/grid";
 import "echarts/lib/component/axis";
 import "echarts/lib/component/dataZoom";
-
 export default {
   head() {
     return {
@@ -24,6 +24,7 @@ export default {
   },
   components: {
     "v-chart": ECharts,
+    InsideLoading
   },
   data() {
     return {
@@ -41,6 +42,15 @@ export default {
       to: '2020-12-31',
       selectedTitle: 'This Year',
       selectedVariant: 'danger',
+      isLoading1: false,
+      isLoading2: false,
+      isLoading3: false,
+      isLoading4: false,
+      isLoading5: false,
+      isLoading6: false,
+      isLoading7: false,
+      isLoading8: false,
+      isLoading9: false,
       dataObservation: {
         visualMap: {
           show: false,
@@ -581,6 +591,7 @@ export default {
       }
     },
     loadData() {
+      this.isLoading1 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/svsu?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -589,6 +600,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading1 = false
         console.log(result);
         this.dataObservation.series[0].data = []
         for (let i = 0; i < result.length; i++) {
@@ -597,6 +609,7 @@ export default {
           })
         }
       });
+      this.isLoading2 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/inspection?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -605,6 +618,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading2 = false
         console.log(result);
         this.dataInspectionBar.xAxis[0].data = []
         this.dataInspectionBar.series[0].data = []
@@ -621,6 +635,7 @@ export default {
           this.negObservation += result[i].neg
         }
       });
+      this.isLoading3 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/types?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -629,6 +644,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading3 = false
         console.log(result);
         this.dataSafeInspectionByRule.xAxis[0].data = []
         this.dataSafeInspectionByRule.series[0].data = []
@@ -640,6 +656,7 @@ export default {
         this.dataSafeInspectionByRule.yAxis[1].min = result[result.length-1].percentage-result[result.length-1].percentage%25
         this.dataWorstInspectionCategory = result.reverse().slice(0,5)
       });
+      this.isLoading4 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/company_inspection?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -648,6 +665,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading4 = false
         console.log(result);
         this.dataInspectionByCompany.yAxis.data = []
         this.dataInspectionByCompany.series[0].data = []
@@ -661,6 +679,7 @@ export default {
         this.dataInspectionByCompany.yAxis.data.reverse()
         this.dataInspectionByCompany.series[0].data.reverse()
       });
+      this.isLoading5 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/company?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -669,6 +688,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading5 = false
         console.log(result);
         this.dataScoreByCompany.yAxis.data = []
         this.dataScoreByCompany.series[0].data = []
@@ -682,6 +702,7 @@ export default {
         this.dataScoreByCompany.yAxis.data.reverse()
         this.dataScoreByCompany.series[0].data.reverse()
       });
+      this.isLoading6 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/inspector?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -690,6 +711,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading6 = false
         console.log(result);
         this.dataInspectionByInspector.yAxis.data = []
         this.dataInspectionByInspector.series[0].data = []
@@ -703,6 +725,7 @@ export default {
         this.dataInspectionByInspector.yAxis.data.reverse()
         this.dataInspectionByInspector.series[0].data.reverse()
       });
+      this.isLoading7 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/inspector_score?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -711,6 +734,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading7 = false
         console.log(result);
         this.dataScoreByInspector.yAxis.data = []
         this.dataScoreByInspector.series[0].data = []
@@ -724,6 +748,7 @@ export default {
         this.dataScoreByInspector.yAxis.data.reverse()
         this.dataScoreByInspector.series[0].data.reverse()
       });
+      this.isLoading8 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/areaus?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -732,6 +757,7 @@ export default {
       })
         .then((response) => response.json())
         .then((result) => {
+          this.isLoading8 = false
           console.log(result);
           this.dataInspectionLocation.legend.data = []
           this.dataInspectionLocation.series[0].data = []
@@ -743,6 +769,7 @@ export default {
             })
           }
         });
+      this.isLoading9 = true
       fetch(process.env.baseUrl + "/dashboard-v2/chart/areas?from="+this.from+"&to="+this.to, {
         method: "GET",
         headers: {
@@ -751,6 +778,7 @@ export default {
       })
       .then((response) => response.json())
       .then((result) => {
+        this.isLoading9 = false
         console.log(result);
         this.dataTopInspectionLocation = result.slice(0,5)
       });
@@ -774,8 +802,8 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading1&isLoading2&isLoading3&isLoading4&isLoading5&isLoading6&isLoading7&isLoading8&isLoading9"/>
     <PageHeader :title="title" :items="items" />
-
     <div class="row">
       <div class="col-12 mb-3">
         <div class="title">
