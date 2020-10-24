@@ -2,6 +2,7 @@
 /**
  * Dashboard component
  */
+
 export default {
   head() {
     return {
@@ -11,7 +12,7 @@ export default {
   data() {
     return {
       title: "Tambah " + this.$route.params.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-      items: [
+      items : [
         {
           text: "Form",
         },
@@ -25,10 +26,15 @@ export default {
       ],
       jenis: ["Pihak Ketiga", "Pertamina"],
       peran: [],
-      file: null
+      file: null,
+      chips: [],
     };
   },
   methods: {
+    remove (item) {
+        this.chips.splice(this.chips.indexOf(item), 1)
+        this.chips = [...this.chips]
+    },
     hideAlert() {
       document.getElementById("alert-div").style.display = "none";
     },
@@ -59,6 +65,13 @@ export default {
             valid = false;
           } else {
             document.getElementById("invalid-nama").style.display = "none";
+          }
+
+          if (document.getElementById("input-area-email").value === "") {
+            document.getElementById("invalid-area-email").style.display = "block";
+            valid = false;
+          } else {
+            document.getElementById("invalid-area-email").style.display = "none";
           }
           return valid
         case "pelaksana-pekerjaan":
@@ -197,6 +210,10 @@ export default {
     }
   },
   mounted: function () {
+    document.getElementsByClassName("v-input__prepend-outer")[0].style.display = "none"
+
+    document.getElementsByClassName("v-input__icon--append")[0].style.display = "none"
+
     this.$activateMenuDropdown(this.items[2].text.substring(7))
     this.hideAlert()
     this.removeUneeded()
@@ -246,6 +263,31 @@ export default {
         <b-form-group label-cols-sm="2" label-cols-lg="2" label="Nama" label-for="text">
           <b-form-input type="text" placeholder="Nama" id="input-nama" @keyup.enter="submitData"></b-form-input>
           <div class="invalid-feedback" id="invalid-nama"><span>Kolom ini tidak boleh kosong.</span></div>
+        </b-form-group>
+
+        <b-form-group label-cols-sm="2" label-cols-lg="2" label="Email" label-for="text" class="not-judul not-barang not-pekerjaan not-pelaksana-pekerjaan not-pengguna">
+        <v-combobox
+          v-model="chips"
+          chips
+          clearable
+          multiple
+          prepend-icon="mdi-filter-variant"
+          solo
+        >
+          <template v-slot:selection="{ attrs, item, select, selected }">
+            <v-chip
+              v-bind="attrs"
+              :input-value="selected"
+              close
+              @click="select"
+              @click:close="remove(item)"
+            >
+              <span>{{ item }}</span>
+            </v-chip>
+          </template>
+
+          <div class="invalid-feedback" id="invalid-email"><span>Kolom ini tidak boleh kosong.</span></div>
+        </v-combobox>
         </b-form-group>
 
         <b-form-group label-cols-sm="2" label-cols-lg="2" label="File" label-for="text" class="not-barang not-area not-pekerjaan not-pelaksana-pekerjaan not-pengguna">
