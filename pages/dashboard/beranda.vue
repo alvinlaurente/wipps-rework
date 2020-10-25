@@ -11,7 +11,7 @@ export default {
     return {
       title: "Beranda",
       items: [{
-        text: "Dashboard",
+        text: "Site Safety Inspection",
       },
       {
         text: "Beranda",
