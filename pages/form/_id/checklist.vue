@@ -412,7 +412,7 @@ export default {
           path: "/",
         });
       }
-      this.$activateMenuDropdown("Input Barang")
+      this.$activateMenuDropdown("Input Tools and Equipment")
       endPoint = "item-requirements?item="
       this.formData.item = {
         area_id: this.prevData.area_id,

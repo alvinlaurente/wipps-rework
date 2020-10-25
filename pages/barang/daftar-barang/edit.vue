@@ -14,13 +14,13 @@ export default {
   },
   data() {
     return {
-      title: "Daftar Riwayat",
+      title: "Ubah Daftar Riwayat Inspeksi Barang",
       items: [
         {
-          text: "Barang"
+          text: "Tools and Equipment Inspection",
         },
         {
-          text: "Daftar Barang"
+          text: "Tools and Equipment List"
         },
         {
           text: "Ubah",
@@ -179,7 +179,7 @@ export default {
     }
   },
   mounted: function() {
-    this.$activateMenuDropdown("Daftar Barang");
+    this.$activateMenuDropdown(this.items[1].text)
     this.getData()
   },
   middleware: [

@@ -4,17 +4,17 @@ export default {
   components: {InsideLoading},
   head() {
     return {
-      title: "Input Barang",
+      title: "Input Tools and Equipment",
     };
   },
   data() {
     return {
-      title: "Input Barang",
+      title: "Input Tools and Equipment",
       items: [{
-          text: "Barang",
+          text: "Tools and Equipment Inspection",
         },
         {
-          text: "Input Barang",
+          text: "Input Tools and Equipment",
           active: true,
         },
       ],

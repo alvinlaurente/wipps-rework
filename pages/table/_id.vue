@@ -19,18 +19,6 @@ export default {
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" "),
-      items: [
-        {
-          text: "Table",
-        },
-        {
-          text: this.$route.params.id
-            .split("-")
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" "),
-          active: true,
-        },
-      ],
       tableItem: [],
       totalRows: 1,
       currentPage: 1,
@@ -281,6 +269,24 @@ export default {
     rows() {
       return this.tableItem.length;
     },
+    items() {
+      let subHeader = this.$route.params.id
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+      if (subHeader==="Daftar Barang"){
+        subHeader="Tools and Equipment List"
+      }
+      return [
+        {
+          text: "Table",
+        },
+        {
+          text: subHeader,
+          active: true,
+        },
+      ]
+    }
   },
   mounted() {
     if ((this.$route.params.id==="daftar-barang"&&['ru2','ru4','ru5'].includes(localStorage.getItem("ru")))

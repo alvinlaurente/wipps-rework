@@ -15,10 +15,10 @@ export default {
       title: "Daftar Riwayat Inspeksi Barang",
       items: [
         {
-          text: "Barang",
+          text: "Tools and Equipment Inspection",
         },
         {
-          text: "Daftar Barang"
+          text: "Tools and Equipment List"
         },
         {
           text: "Daftar Riwayat Inspeksi Barang",
@@ -78,7 +78,7 @@ export default {
   },
   mounted() {
     // Set the initial number of items
-    this.$activateMenuDropdown("Daftar Barang")
+    this.$activateMenuDropdown(this.items[1].text)
     this.loadData()
     this.totalRows = this.items.length;
   },

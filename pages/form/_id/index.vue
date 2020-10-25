@@ -194,7 +194,7 @@ export default {
           path: "/",
         });
       }
-      this.$activateMenuDropdown("Input Barang")
+      this.$activateMenuDropdown("Input Tools and Equipment")
       this.context = this.contexts.BARANG
     } else {
       this.$activateMenuDropdown("Beranda")

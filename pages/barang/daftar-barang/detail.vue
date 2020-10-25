@@ -9,13 +9,13 @@ export default {
   },
   data() {
     return {
-      title: "Daftar Barang",
+      title: "Tools and Equipment Detail",
       items: [
         {
-          text: "Barang"
+          text: "Tools and Equipment Inspection"
         },
         {
-          text: "Daftar Barang"
+          text: "Tools and Equipment List"
         },
         {
           text: "Detail",
@@ -87,7 +87,7 @@ export default {
     }
   },
   mounted: function() {
-    this.$activateMenuDropdown("Daftar Barang");
+    this.$activateMenuDropdown(this.items[1].text)
     this.getData();
   },
   middleware: [
