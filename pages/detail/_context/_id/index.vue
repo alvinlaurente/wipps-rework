@@ -237,7 +237,7 @@ export default {
                   class="not-judul not-barang not-pekerjaan not-pelaksana-pekerjaan"
                 >
                   <td class="table-secondary">Email</td>
-                  <td>{{ dataDetail.email }} {{ dataDetail.emailString }}</td>
+                  <td>{{ dataDetail.emailString }}</td>
                 </tr>
                 <tr
                   class="not-judul not-barang not-area not-pekerjaan not-pengguna"

@@ -1,8 +1,7 @@
 <script>
-/**
- * Dashboard component
- */
+import InsideLoading from "@/components/InsideLoading";
 export default {
+  components: {InsideLoading},
   head() {
     return {
       title: this.title,
@@ -25,10 +24,19 @@ export default {
       ],
       jenis: ["Pihak Ketiga", "Pertamina"],
       peran: [],
-      file: null
+      file: null,
+      chips: [],
+      isLoading: false
     };
   },
   methods: {
+    showAlert(text, type) {
+      document.getElementById("alert-message").innerText = text;
+      document.getElementById("alert-div").style.display = "block";
+      document.getElementById("alert-div").classList.remove("alert-danger");
+      document.getElementById("alert-div").classList.remove("alert-success");
+      document.getElementById("alert-div").classList.add("alert-"+type);
+    },
     hideAlert() {
       document.getElementById("alert-div").style.display = "none";
     },
@@ -157,6 +165,9 @@ export default {
           name: document.getElementById("input-nama").value
         }
         switch (this.$route.params.id) {
+          case "area":
+            sendData.email = this.chips
+                break
           case "judul":
             sendData.file = this.file
                 break
@@ -171,6 +182,7 @@ export default {
             sendData.role_id = document.getElementById("input-peran").value
                 break
         }
+        this.isLoading = true
         fetch( process.env.baseUrl + `/` + this.getEndpoint() + `/` + localStorage.getItem("slug-edit"), {
           method: 'PUT',
           headers: {
@@ -186,24 +198,36 @@ export default {
           return response.json()
         })
         .then(result => {
+          this.isLoading = false
           alert(this.title + " berhasil");
           this.$router.push('/table/'+this.$route.params.id)
         })
         .catch(error => {
-          document.getElementById("alert-message").innerText = this.title + " gagal";
-          document.getElementById("alert-div").style.display = "block";
+          this.isLoading = false
+          this.showAlert(error, "danger")
         })
       }
     },
+    remove (item) {
+      this.chips.splice(this.chips.indexOf(item), 1)
+      this.chips = [...this.chips]
+    },
     getData() {
+      this.isLoading = true
       fetch( process.env.baseUrl + '/' + this.getEndpoint() + "/" + localStorage.getItem("slug-edit"), {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then(result => {
+        this.isLoading = false
         console.log(result.data)
         switch (this.$route.params.id) {
           case "pelaksana-pekerjaan":
@@ -219,13 +243,22 @@ export default {
           case "pekerjaan":
           case "area":
             document.getElementById("input-nama").value = result.data.name
+            this.chips = result.data.email
+                break
         }
+      })
+      .catch(error => {
+        this.isLoading = false
+        this.showAlert(error, "danger")
       })
 
     }
   },
   mounted: function () {
-    this.$activateMenuDropdown(this.items[2].text.substring(7))
+    document.getElementsByClassName("v-input__prepend-outer")[0].style.display = "none"
+    document.getElementsByClassName("v-input__icon--append")[0].style.display = "none"
+    this.$activateMenuDropdown(this.items[2].text.substring(5))
+    console.log(this.items[2].text.substring(5))
     this.hideAlert()
     this.removeUneeded()
     if (this.$route.params.id === "pengguna") {
@@ -236,11 +269,19 @@ export default {
           'Authorization': 'Bearer ' + localStorage.getItem("token"),
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json()
+      })
       .then(result => {
         this.peran = result.data
         this.getData()
         console.log(this.peran)
+      })
+      .catch(error => {
+        this.showAlert(error, "danger")
       })
     } else {
       this.getData()
@@ -254,24 +295,14 @@ export default {
 
 <template>
   <div>
+    <InsideLoading v-show="isLoading"/>
     <PageHeader :title="title" :items="items" />
-    <div
-      class="alert alert-warning alert-dismissible fade show"
-      role="alert"
-      id="alert-div"
-    >
-      <h6 style="margin: 0" id="alert-message">berhasil disimpan</h6>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-        v-on:click="hideAlert"
-      >
+    <div class="alert alert alert-dismissible fade show" role="alert" id="alert-div" style="display: none">
+      <h6 style="margin: 0" id="alert-message"></h6>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="hideAlert">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-
     <div class="row bg-white pt-3">
       <div class="col-12 form-horizontal">
         <b-form-group label-cols-sm="2" label-cols-lg="2" label="Nama" label-for="text">
@@ -315,6 +346,16 @@ export default {
           <div class="invalid-feedback" id="invalid-konfirmasipassword"><span>Kolom ini tidak boleh kosong.</span></div>
         </b-form-group>
 
+        <b-form-group label-cols-sm="2" label-cols-lg="2" label="Email" label-for="text" class="not-judul not-barang not-pekerjaan not-pelaksana-pekerjaan not-pengguna">
+          <v-combobox v-model="chips" chips clearable multiple prepend-icon="mdi-filter-variant" solo>
+            <template v-slot:selection="{ attrs, item, select, selected }">
+              <v-chip v-bind="attrs" :input-value="selected" close @click="select" @click:close="remove(item)">
+                <span>{{ item }}</span>
+              </v-chip>
+            </template>
+          </v-combobox>
+        </b-form-group>
+
         <div class="form-group row not-area not-judul not-barang not-pekerjaan not-pelaksana-pekerjaan">
           <label class="col-md-2 col-form-label" for="input-peran">Peran</label>
           <div class="col-md-10">
@@ -344,3 +385,16 @@ export default {
     </div>
   </div>
 </template>
+
+<style>
+.v-input__slot{
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  height: calc(1.5em + 0.94rem + 2px) !important;
+  min-height: 0;
+  margin: 0 !important;
+}
+</style>
