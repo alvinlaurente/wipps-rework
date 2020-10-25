@@ -51,6 +51,7 @@ export default {
       isLoading7: false,
       isLoading8: false,
       isLoading9: false,
+      listCompany: [],
       dataObservation: {
         visualMap: {
           show: false,
@@ -721,6 +722,7 @@ export default {
         }
         this.dataInspectionByCompany.yAxis.data.reverse()
         this.dataInspectionByCompany.series[0].data.reverse()
+        this.listCompany = result.reverse()
       })
       .catch(error => {
         this.isLoading4 = false
@@ -875,6 +877,11 @@ export default {
         this.showAlert(error, "danger")
       })
     },
+    companyClicked (eventInfo) {
+      if (this.$route.params.id==="complete-dashboard") {
+        this.$router.push('/company/'+this.listCompany[eventInfo.dataIndex].slug)
+      }
+    }
   },
   mounted: function () {
     this.loadData()
@@ -1009,7 +1016,7 @@ export default {
     <div class="row dataContent">
       <div class="col-6">
         <div class="title">Inspections by Company</div>
-        <v-chart :options="dataInspectionByCompany" autoresize />
+        <v-chart :options="dataInspectionByCompany" autoresize @click="companyClicked"/>
       </div>
       <div class="col-6">
         <div class="title">Average Score by Company</div>
