@@ -44,6 +44,7 @@ export default {
       from: "2020-01-01",
       to: "2020-12-31",
       companyName: this.$route.params.id.split("-").join(" ").toUpperCase(),
+      companySlug: this.$route.params.id,
       token: localStorage.getItem('token'),
       baseUrl: process.env.baseUrl,
       dataResume: [],
@@ -276,7 +277,7 @@ export default {
             perPage * (currentPage - 1) + (data.index + 1)
           }}</template>
         <template v-slot:cell(aksi)="data">
-          <nuxt-link to="" class="px-2 text-primary" v-b-tooltip.hover title="Lihat">
+          <nuxt-link :to="companySlug+'/'+data.item.slug" class="px-2 text-primary" v-b-tooltip.hover title="Lihat">
             <i class="uil uil-eye font-size-18"></i>
           </nuxt-link>
           <a class="px-2 text-success" v-b-tooltip.hover title="XLS" :href="baseUrl+'/export/single/excel?slug='+data.item.slug+'&token='+token">
