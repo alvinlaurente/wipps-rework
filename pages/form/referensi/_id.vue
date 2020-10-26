@@ -1,5 +1,6 @@
 <script>
 import InsideLoading from "@/components/InsideLoading";
+
 export default {
   components: {InsideLoading},
   head() {
@@ -346,7 +347,7 @@ export default {
   </div>
 </template>
 
-<style>
+<style scoped src="@/components/vuetify/vuetify.css">
 .v-input__slot{
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
