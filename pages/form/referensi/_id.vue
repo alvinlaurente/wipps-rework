@@ -1,7 +1,6 @@
 <script>
 import InsideLoading from "@/components/InsideLoading";
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+import Vuetify from 'vuetify';
 
 export default {
   components: {InsideLoading},
@@ -217,9 +216,9 @@ export default {
     }
   },
   mounted: function () {
-    // document.getElementsByClassName("v-input__prepend-outer")[0].style.display = "none"
+    document.getElementsByClassName("v-input__prepend-outer")[0].style.display = "none"
 
-    // document.getElementsByClassName("v-input__icon--append")[0].style.display = "none"
+    document.getElementsByClassName("v-input__icon--append")[0].style.display = "none"
 
     this.$activateMenuDropdown(this.items[2].text.substring(7))
     this.hideAlert()
@@ -349,7 +348,7 @@ export default {
   </div>
 </template>
 
-<style scoped>
+<style scoped >
 .v-input__slot{
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
