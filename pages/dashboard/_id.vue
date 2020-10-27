@@ -31,7 +31,7 @@ export default {
       title: this.$route.params.id.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" "),
       items: [
         {
-          text: "Site Safety Inspection"
+          text: "Dashboard"
         },
         {
           text: this.$route.params.id.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" "),

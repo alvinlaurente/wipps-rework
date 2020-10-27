@@ -14,7 +14,7 @@ export default {
       title: "Riwayat",
       items: [
         {
-          text: "Site Safety Inspection",
+          text: "Dashboard",
         },
         {
           text: "Riwayat",

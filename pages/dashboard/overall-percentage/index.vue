@@ -12,7 +12,7 @@ export default {
       title: "Overall Percentage",
       items: [
         {
-          text: "Site Safety Inspection",
+          text: "Dashboard",
         },
         {
           text: "Overall Percentage",
