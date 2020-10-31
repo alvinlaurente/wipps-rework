@@ -84,6 +84,7 @@ export default {
    */
   build: {},
   env: {
-    baseUrl: 'https://ru2-api.wipps-pertamina.id/api'
+    baseUrl: process.env.BASE_URL || 'https://ru2-api.wipps-pertamina.id/api',
+    ru: process.env.RU || ''
   }
 };

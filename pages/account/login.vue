@@ -111,24 +111,28 @@ export default {
     }
   },
   mounted: function () {
-    localStorage.setItem("ru",window.location.origin.substring(window.location.protocol.length+2,window.location.protocol.length+5))
-    switch (localStorage.getItem("ru")) {
-      case "ru2":
-        document.getElementById("ru-location").innerText = "RU II Dumai"
-        break
-      case "ru3":
-        document.getElementById("ru-location").innerText = "RU III Plaju"
-        break
-      case "ru4":
-        document.getElementById("ru-location").innerText = "RU IV Cilacap"
-        break
-      case "ru5":
-        document.getElementById("ru-location").innerText = "RU V Balikpapan"
-        break
-      default:
-        document.getElementById("ru-location").innerText = "RU VI Balongan"
-        localStorage.setItem("ru","ru6")
-        break
+    if (process.env.ru==='') {
+      localStorage.setItem("ru",window.location.origin.substring(window.location.protocol.length+2,window.location.protocol.length+5))
+      switch (localStorage.getItem("ru")) {
+        case "ru2":
+          document.getElementById("ru-location").innerText = "RU II Dumai"
+          break
+        case "ru3":
+          document.getElementById("ru-location").innerText = "RU III Plaju"
+          break
+        case "ru4":
+          document.getElementById("ru-location").innerText = "RU IV Cilacap"
+          break
+        case "ru5":
+          document.getElementById("ru-location").innerText = "RU V Balikpapan"
+          break
+        default:
+          document.getElementById("ru-location").innerText = "RU VI Balongan"
+          localStorage.setItem("ru","ru6")
+          break
+      }
+    } else {
+      localStorage.setItem("ru",process.env.ru)
     }
   },
   data() {
