@@ -74,7 +74,7 @@ export const menuItems = [
     label: "Tools and Equipment Inspection",
     icon: "uil-copy-alt",
     roles: ['super-admin','administrator','safety-inspector','safety-man','supervisor'],
-    rus: ['ru3','ru6','loc'],
+    rus: ['ru2','ru3','ru6','loc'],
     subItems: [
       {
         id: 201,
@@ -83,7 +83,7 @@ export const menuItems = [
         link: "/barang/input-barang",
         parentId: 200,
         roles: ['super-admin','administrator','safety-inspector','safety-man','supervisor'],
-        rus: ['ru3','ru6','loc'],
+        rus: ['ru2','ru3','ru6','loc'],
       },
       {
         id: 201,
@@ -92,7 +92,7 @@ export const menuItems = [
         link: "/table/daftar-barang",
         parentId: 200,
         roles: ['super-admin','administrator','safety-inspector','safety-man','supervisor'],
-        rus: ['ru3','ru6','loc'],
+        rus: ['ru2','ru3','ru6','loc'],
       }
     ]
   },
