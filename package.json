@@ -30,7 +30,7 @@
     "jspdf-autotable": "^3.5.13",
     "leaflet": "^1.6.0",
     "metismenujs": "^1.2.1",
-    "nuxt": "^2.14.0",
+    "nuxt": "^3.0.0",
     "popper.js": "^1.16.1",
     "qrcode": "^1.4.4",
     "simplebar-vue": "^1.5.1",
@@ -61,7 +61,7 @@
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
-    "@nuxtjs/vuetify": "^1.11.2",
+    "@nuxtjs/vuetify": "^1.12.3",
     "node-sass": "^4.14.1",
     "sass-loader": "^9.0.3",
     "vuetify": "git+https://github.com/cipauuu/vuetify.git"
